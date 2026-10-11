@@ -259,3 +259,11 @@ body[data-tab="today"]{--accent:var(--orange); --accent2:var(--pink); --accent-s
 #gsum .wd{min-height:0}
 #run-view .wg{display:grid}
 .progress{display:flex;justify-content:center}
+
+.wd-delta{font-size:.8rem;font-weight:600;padding:4px 10px;border-radius:12px;background:var(--bg)}
+.wd-delta.up{color:var(--orange)}.wd-delta.down{color:var(--green)}
+.wd-wc{width:100%;height:auto}
+.wd-wc text{font:10px var(--mono);fill:var(--muted)}
+.wd-add{display:flex;gap:8px}
+.wd-add input{flex:1;min-width:0;font:500 16px var(--body);color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:10px}
+.wd-add button{font:700 .9rem var(--body);color:#fff;background:var(--blue);border:0;border-radius:12px;padding:0 16px;cursor:pointer}

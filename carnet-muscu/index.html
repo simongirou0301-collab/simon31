@@ -193,7 +193,7 @@ const byId = id => ALL.find(e => e.id === id) || (st.custom && st.custom[id]) ||
 
 /* ---------- stockage local ---------- */
 const KEY = "carnet-pp-app-v1";
-let st = {tab:null, done:{}, feel:{}, loads:null, reps:{}, log:[], prog:{}, ovr:{}, custom:{}};
+let st = {tab:null, done:{}, feel:{}, loads:null, reps:{}, log:[], prog:{}, ovr:{}, custom:{}, weights:[]};
 try { const v = JSON.parse(localStorage.getItem(KEY)); if (v) st = Object.assign(st, v); } catch (e) {}
 if (!st.loads) st.loads = JSON.parse(JSON.stringify(DEFAULT_LOADS));
 for (const k in DEFAULT_LOADS) if (!st.loads[k]) st.loads[k] = {...DEFAULT_LOADS[k]};
@@ -421,6 +421,29 @@ function spark(vals, color){
   const d = pts.map((q, i) => (i ? "L" : "M") + q[0].toFixed(1) + " " + q[1].toFixed(1)).join(" ");
   return `<svg viewBox="0 0 ${W} ${H}" class="wd-sp"><path d="${d} L${W} ${H} L0 ${H}Z" fill="${color}" fill-opacity=".18"/><path d="${d}" fill="none" stroke="${color}" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
 }
+const dk2 = d => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+function weightSeries(R){
+  const m = {};
+  Object.keys(R.well || {}).forEach(k => { const w = R.well[k]; if (w && w.weight) m[k] = w.weight; });
+  (st.weights || []).forEach(x => { m[x.d] = x.kg; });
+  return Object.keys(m).sort().map(d => ({d, kg: m[d]}));
+}
+function weightWidget(R){
+  const ser = weightSeries(R).slice(-90), last = ser[ser.length - 1];
+  const ref = last ? ser.find(x => (new Date(last.d) - new Date(x.d)) <= 30 * 864e5) : null, dl = last && ref && ref !== last ? last.kg - ref.kg : null;
+  return wd("Poids", "Suivi corporel", "trend", "var(--blue)",
+    (last ? `<div class="wd-row">${wbig(fmt(last.kg), "kg")}${dl != null ? `<span class="wd-delta ${dl > 0 ? "up" : "down"}">${dl > 0 ? "+" : "−"}${fmt(Math.abs(dl))} kg · 30 j</span>` : ""}</div>${weightChart(ser)}` : `<div class="wd-s">Aucune mesure. Saisis ton poids pour voir la courbe.</div>`) +
+    `<div class="wd-add"><input id="w-in" type="text" inputmode="decimal" placeholder="Poids du jour (kg)" autocomplete="off"><button type="button" data-wadd>Ajouter</button></div>`, "full");
+}
+function weightChart(ser){
+  const W = 320, H = 96, P = 8, v = ser.map(x => x.kg), mn = Math.min(...v), mx = Math.max(...v), sp = (mx - mn) || 1;
+  const X = i => ser.length === 1 ? W / 2 : P + i * (W - 2 * P) / (ser.length - 1), Y = x => H - 18 - (x - mn) / sp * (H - 34);
+  const d = ser.map((x, i) => (i ? "L" : "M") + X(i).toFixed(1) + " " + Y(x.kg).toFixed(1)).join(" ");
+  const li = ser.length - 1;
+  return `<svg viewBox="0 0 ${W} ${H}" class="wd-wc">${ser.length > 1 ? `<path d="${d} L${X(li)} ${H - 14} L${X(0)} ${H - 14}Z" fill="var(--blue)" fill-opacity=".14"/><path d="${d}" fill="none" stroke="var(--blue)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>` : ""}
+    <circle cx="${X(li).toFixed(1)}" cy="${Y(v[li]).toFixed(1)}" r="5" fill="var(--blue)" stroke="var(--surface)" stroke-width="2.5"/>
+    <text x="${P}" y="${H - 2}">${new Date(ser[0].d).toLocaleDateString("fr-FR", {day: "numeric", month: "short"})}</text><text x="${W - P}" y="${H - 2}" text-anchor="end">${new Date(ser[li].d).toLocaleDateString("fr-FR", {day: "numeric", month: "short"})}</text></svg>`;
+}
 function renderToday(){
   const now = new Date(), wd0 = now.getDay(), tab = (wd0 === 1 || wd0 === 4) ? "push" : (wd0 === 2 || wd0 === 5) ? "pull" : null;
   const dayIdx = (wd0 + 6) % 7, monD = new Date(now.getFullYear(), now.getMonth(), now.getDate() - dayIdx), mon = monD.getTime();
@@ -455,13 +478,19 @@ function renderToday(){
     ${wd("Anneaux", "Semaine", "ring", "var(--orange)", `<svg viewBox="0 0 120 120" class="wd-ring">${ring(52, sessions / 4, "var(--pink)")}${ring(38, kmW / G.km, "var(--green)")}${ring(24, runsW.length / G.n, "var(--blue)")}</svg>`)}
     ${wd(now.toLocaleDateString("fr-FR", {month: "long"}), "Régularité", "cal", "var(--blue)", cal)}
     ${wd("Forme", "Aujourd'hui", "trend", "var(--red)", `<div class="wd-big sm">${fz}</div><div class="wd-trio"><div><span>CTL</span><b>${ctl != null ? Math.round(ctl) : "–"}</b></div><div><span>ATL</span><b>${atl != null ? Math.round(atl) : "–"}</b></div><div><span>TSB</span><b>${form != null ? Math.round(form) : "–"}</b></div></div>`, "full")}
+    ${weightWidget(R)}
     ${wd("Volume", "Dernières séances", "bolt", "var(--orange)", wbig(lastV ? nf(lastV) : "–", lastV ? "kg" : "") + spark(vols, "var(--orange)"))}
     ${wd("Série", "Semaines d'affilée", "flame", "var(--orange)", wbig(streakWeeks(), "") + `<div class="wd-s">avec au moins une séance</div>`)}
     ${sl ? wd("Sommeil", "Dernière nuit", "moon", "var(--indigo)", wbig(sl, "")) : ""}
     ${well && well.rhr ? wd("Cœur au repos", "Garmin", "heart", "var(--red)", wbig(Math.round(well.rhr), "bpm") + (well.hrv ? `<div class="wd-s">HRV ${Math.round(well.hrv)} ms</div>` : "")) : ""}
   </div>`;
 }
-document.getElementById("today-view").addEventListener("click", ev => { const b = ev.target.closest("[data-go]"); if (b) { st.tab = b.dataset.go; save(); render(); window.scrollTo(0, 0); } });
+document.getElementById("today-view").addEventListener("click", ev => {
+  if (ev.target.closest("[data-wadd]")) {
+    const v = parseFloat(document.getElementById("w-in").value.replace(",", "."));
+    if (v > 20 && v < 300) { const d = dk2(new Date()); st.weights = (st.weights || []).filter(x => x.d !== d); st.weights.push({d, kg: Math.round(v * 10) / 10}); save(); renderToday(); }
+    return;
+  } const b = ev.target.closest("[data-go]"); if (b) { st.tab = b.dataset.go; save(); render(); window.scrollTo(0, 0); } });
 
 /* ---------- journal ---------- */
 const jr = document.getElementById("journal");
