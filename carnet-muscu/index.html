@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <title>Carnet Push Pull</title>
 <meta name="theme-color" content="#c8372d">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -26,7 +26,9 @@
   --bg:#13171c; --surface:#1d232a; --ink:#e8ecf0; --muted:#97a3ae; --line:#2e3740;
   --plate:#ec5a4d; --plate-soft:#3a2120; --done:#5cc48a; --scrim:rgba(0,0,0,.9); color-scheme:dark}}
 *{box-sizing:border-box}
-html{-webkit-text-size-adjust:100%}
+html{-webkit-text-size-adjust:100%;touch-action:manipulation}
+body,button,input,label{touch-action:manipulation}
+input{font-size:16px!important}
 body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.45;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
 img{max-width:100%}
 [hidden]{display:none!important}
@@ -332,6 +334,10 @@ document.getElementById("lb-default").addEventListener("click", async () => {
   delete photoUrls[lbId];
   openLb(lbId); render();
 });
+
+/* bloque le zoom par pincement (le double-tap est bloqué en CSS) */
+["gesturestart","gesturechange","gestureend"].forEach(t => document.addEventListener(t, e => e.preventDefault(), {passive:false}));
+document.addEventListener("touchmove", e => { if (e.scale !== undefined && e.scale !== 1) e.preventDefault(); }, {passive:false});
 
 render();
 loadCustomPhotos();
