@@ -126,3 +126,22 @@ footer{font-size:.75rem;text-align:center}
 .route path{stroke:var(--orange);stroke-width:4}
 .zone{font-family:var(--body);font-weight:600}
 .legend{font-weight:600}
+
+/* Minuteur de repos */
+.timer{position:fixed;left:12px;right:12px;bottom:calc(76px + env(safe-area-inset-bottom,0px));z-index:30;display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:20px;background:var(--bar);-webkit-backdrop-filter:saturate(180%) blur(20px);backdrop-filter:saturate(180%) blur(20px);box-shadow:0 8px 30px rgba(0,0,0,.18);border:.5px solid var(--line)}
+.t-ring{width:44px;height:44px;flex:none;transform:rotate(-90deg)}
+.t-ring circle{fill:none;stroke-width:5}
+.t-bg{stroke:var(--surface2)}
+.t-fg{stroke:var(--accent);stroke-linecap:round;transition:stroke-dashoffset .25s linear}
+.t-main{flex:1;min-width:0}
+.t-time{font:800 1.6rem var(--display);letter-spacing:-.02em;line-height:1;font-variant-numeric:tabular-nums;color:var(--ink)}
+.t-lbl{font-size:.75rem;color:var(--muted);font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.t-btn{border:0;background:var(--surface2);color:var(--ink);font:700 .85rem var(--body);border-radius:999px;min-width:44px;height:36px;padding:0 10px;cursor:pointer}
+.t-skip{min-width:36px;color:var(--muted)}
+.timer.over{background:var(--green);border-color:transparent;animation:pulse 1s ease-in-out infinite}
+.timer.over .t-time,.timer.over .t-lbl{color:#fff}
+.timer.over .t-fg{stroke:#fff}.timer.over .t-bg{stroke:rgba(255,255,255,.35)}
+.timer.over .t-btn{background:rgba(255,255,255,.25);color:#fff}
+@keyframes pulse{50%{transform:scale(1.02)}}
+@media (prefers-reduced-motion:reduce){.timer.over{animation:none}}
+.scheme .rest{color:var(--muted);font-weight:500}

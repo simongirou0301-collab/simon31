@@ -126,6 +126,14 @@ footer{color:var(--muted);font-size:.78rem}
   <footer id="gym-foot">Les poids sont le total sur la machine ou la barre, sauf mention « / côté » ou « / haltère ». Tes données restent sur ce téléphone.</footer>
 </div>
 
+<div class="timer" id="timer" hidden role="timer" aria-live="polite">
+  <svg class="t-ring" viewBox="0 0 44 44" aria-hidden="true"><circle cx="22" cy="22" r="19" class="t-bg"/><circle cx="22" cy="22" r="19" class="t-fg" id="t-fg"/></svg>
+  <div class="t-main"><div class="t-time" id="t-time">0:00</div><div class="t-lbl" id="t-lbl">Repos</div></div>
+  <button type="button" class="t-btn" id="t-minus" aria-label="Retirer 15 secondes">−15</button>
+  <button type="button" class="t-btn" id="t-plus" aria-label="Ajouter 15 secondes">+15</button>
+  <button type="button" class="t-btn t-skip" id="t-skip" aria-label="Arrêter le minuteur">✕</button>
+</div>
+
 <div class="lightbox" id="lb" hidden>
   <img id="lb-img" alt="">
   <p id="lb-title"></p>
@@ -139,23 +147,23 @@ footer{color:var(--muted);font-size:.78rem}
 <script>
 const EX = {
   push: [
-    {id:"push-1", n:"Développé couché à la Smith", s:3, r:"6-8 · échec", note:"Incliné ou plat · monte le poids progressivement"},
-    {id:"push-2", n:"Pec fly à la machine", s:3, r:"10", note:"Pleine amplitude"},
-    {id:"push-3", n:"Chest press prise serrée", s:3, r:"10-12 · échec", note:"Prise serrée, à plat"},
-    {id:"push-6", n:"Développé militaire à la Smith, assis", s:4, r:"8 · échec", note:"3 à 4 séries"},
-    {id:"push-4", n:"Élévation latérale unilatérale à la poulie", s:3, r:"12", note:"Charge modérée, bonne amplitude"},
-    {id:"push-5", n:"Élévation latérale aux haltères", s:3, r:"6-8 · échec", note:"Lourd, sans balancer le buste"},
-    {id:"push-7", n:"Extension triceps poulie haute, barre", s:3, r:"10-12 · échec", note:"Coudes collés aux côtes"},
-    {id:"push-8", n:"Extension triceps unilatérale à la poulie", s:3, r:"10-12 · échec", note:"Bras calé contre la barre"}
+    {id:"push-1", rest:150, n:"Développé couché à la Smith", s:3, r:"6-8 · échec", note:"Incliné ou plat · monte le poids progressivement"},
+    {id:"push-2", rest:90, n:"Pec fly à la machine", s:3, r:"10", note:"Pleine amplitude"},
+    {id:"push-3", rest:120, n:"Chest press prise serrée", s:3, r:"10-12 · échec", note:"Prise serrée, à plat"},
+    {id:"push-6", rest:150, n:"Développé militaire à la Smith, assis", s:4, r:"8 · échec", note:"3 à 4 séries"},
+    {id:"push-4", rest:75, n:"Élévation latérale unilatérale à la poulie", s:3, r:"12", note:"Charge modérée, bonne amplitude"},
+    {id:"push-5", rest:90, n:"Élévation latérale aux haltères", s:3, r:"6-8 · échec", note:"Lourd, sans balancer le buste"},
+    {id:"push-7", rest:90, n:"Extension triceps poulie haute, barre", s:3, r:"10-12 · échec", note:"Coudes collés aux côtes"},
+    {id:"push-8", rest:75, n:"Extension triceps unilatérale à la poulie", s:3, r:"10-12 · échec", note:"Bras calé contre la barre"}
   ],
   pull: [
-    {id:"pull-1", n:"Tirage vertical, barre en V", s:3, r:"8 · échec", note:"2 min 30 de repos · vers le haut de la poitrine"},
-    {id:"pull-2", n:"Tirage horizontal prise serrée", s:3, r:"8 lourdes + 12 légères", note:"Enchaîne les deux sans pause"},
-    {id:"pull-3", n:"Tirage horizontal prise large, poignée ergo", s:3, r:"12", note:"Prise neutre, serre les omoplates"},
-    {id:"pull-4", n:"Pec fly inversé (arrière d'épaule)", s:3, r:"10", note:"2 min de repos · ouvre les bras en T"},
-    {id:"pull-5", n:"Curl marteau à la poulie, corde", s:3, r:"8 lourdes + 12 légères", note:"Coudes contre les côtes"},
-    {id:"pull-6", n:"Curl supination aux haltères, assis", s:3, r:"8-10", note:"Dos collé au dossier"},
-    {id:"pull-7", n:"Curl inversé, barre droite", s:3, r:"10", note:"Prise pronation, coudes fixes"}
+    {id:"pull-1", rest:150, n:"Tirage vertical, barre en V", s:3, r:"8 · échec", note:"2 min 30 de repos · vers le haut de la poitrine"},
+    {id:"pull-2", rest:120, n:"Tirage horizontal prise serrée", s:3, r:"8 lourdes + 12 légères", note:"Enchaîne les deux sans pause"},
+    {id:"pull-3", rest:90, n:"Tirage horizontal prise large, poignée ergo", s:3, r:"12", note:"Prise neutre, serre les omoplates"},
+    {id:"pull-4", rest:120, n:"Pec fly inversé (arrière d'épaule)", s:3, r:"10", note:"2 min de repos · ouvre les bras en T"},
+    {id:"pull-5", rest:90, n:"Curl marteau à la poulie, corde", s:3, r:"8 lourdes + 12 légères", note:"Coudes contre les côtes"},
+    {id:"pull-6", rest:90, n:"Curl supination aux haltères, assis", s:3, r:"8-10", note:"Dos collé au dossier"},
+    {id:"pull-7", rest:75, n:"Curl inversé, barre droite", s:3, r:"10", note:"Prise pronation, coudes fixes"}
   ]
 };
 const DEFAULT_LOADS = {
@@ -245,7 +253,7 @@ function render(){
         <button class="save" type="submit">Enregistrer</button>
         <button class="btn" type="button" data-cancel>Annuler</button></form>` : "";
     li.innerHTML = `<button class="thumb" type="button" data-photo="${e.id}" aria-label="Agrandir la photo"><img src="${photoOf(e.id)}" alt="${esc(e.n)}" loading="lazy"></button>
-      <div class="info"><h2>${esc(e.n)}</h2><div class="scheme">${e.s} × ${esc(e.r)}</div><div class="note">${esc(e.note)}</div></div>
+      <div class="info"><h2>${esc(e.n)}</h2><div class="scheme">${e.s} × ${esc(e.r)} <span class="rest">· repos ${Math.floor((e.rest||90)/60)}:${String((e.rest||90)%60).padStart(2,"0")}</span></div><div class="note">${esc(e.note)}</div></div>
       <button class="load" type="button" data-edit="${e.id}">${kg}</button>
       ${ed}
       <div class="foot"><div class="sets">${sets}</div></div>
@@ -270,7 +278,11 @@ document.getElementById("reset").addEventListener("click", () => { EX[st.tab].fo
 
 list.addEventListener("click", ev => {
   const s = ev.target.closest(".set");
-  if (s) { const a = st.done[s.dataset.id] || []; a[+s.dataset.k] = !a[+s.dataset.k]; st.done[s.dataset.id] = a; save(); render(); return; }
+  if (s) {
+    const a = st.done[s.dataset.id] || []; a[+s.dataset.k] = !a[+s.dataset.k]; st.done[s.dataset.id] = a;
+    if (a[+s.dataset.k]) startTimer(s.dataset.id, +s.dataset.k);
+    save(); render(); return;
+  }
   const ed = ev.target.closest("[data-edit]");
   if (ed) { editing = editing === ed.dataset.edit ? null : ed.dataset.edit; render(); return; }
   if (ev.target.closest("[data-cancel]")) { editing = null; render(); return; }
@@ -354,6 +366,59 @@ document.getElementById("lb-default").addEventListener("click", async () => {
   delete photoUrls[lbId];
   openLb(lbId); render();
 });
+
+
+/* ---------- minuteur de repos ---------- */
+const tEl = document.getElementById("timer"), tTime = document.getElementById("t-time"), tLbl = document.getElementById("t-lbl"), tFg = document.getElementById("t-fg");
+const RING = 2 * Math.PI * 19; tFg.style.strokeDasharray = RING;
+let actx = null, tTick = null;
+function unlockAudio(){ try { if (!actx) actx = new (window.AudioContext || window.webkitAudioContext)(); if (actx.state === "suspended") actx.resume(); } catch(e){} }
+function beep(){
+  try {
+    unlockAudio(); if (!actx) return;
+    [0, .28, .56].forEach((t, i) => {
+      const o = actx.createOscillator(), g = actx.createGain();
+      o.type = "sine"; o.frequency.value = i === 2 ? 1320 : 880;
+      g.gain.setValueAtTime(0.0001, actx.currentTime + t); g.gain.exponentialRampToValueAtTime(0.4, actx.currentTime + t + .02); g.gain.exponentialRampToValueAtTime(0.0001, actx.currentTime + t + .22);
+      o.connect(g); g.connect(actx.destination); o.start(actx.currentTime + t); o.stop(actx.currentTime + t + .25);
+    });
+  } catch(e){}
+  try { navigator.vibrate && navigator.vibrate([200, 100, 200]); } catch(e){}
+}
+function startTimer(id, k){
+  unlockAudio();
+  const e = byId(id), dur = e.rest || 90;
+  st.timer = {end: Date.now() + dur * 1000, dur, id, k, rang: false};
+  save(); runTimer();
+}
+function runTimer(){
+  clearInterval(tTick);
+  if (!st.timer) { tEl.hidden = true; return; }
+  tEl.hidden = false; tick(); tTick = setInterval(tick, 250);
+}
+function tick(){
+  const t = st.timer; if (!t) return runTimer();
+  const left = Math.ceil((t.end - Date.now()) / 1000);
+  const e = byId(t.id);
+  if (left <= 0) {
+    tEl.classList.add("over");
+    tTime.textContent = "Go !";
+    tLbl.textContent = `Série ${t.k + 2 <= e.s ? t.k + 2 : t.k + 1} · ${e.n}`;
+    tFg.style.strokeDashoffset = 0;
+    if (!t.rang) { t.rang = true; save(); beep(); }
+    if (left < -60) { st.timer = null; save(); tEl.classList.remove("over"); runTimer(); }
+    return;
+  }
+  tEl.classList.remove("over");
+  tTime.textContent = `${Math.floor(left / 60)}:${String(left % 60).padStart(2, "0")}`;
+  tLbl.textContent = `Repos · ${e.n}`;
+  tFg.style.strokeDashoffset = RING * (1 - left / t.dur);
+}
+document.getElementById("t-plus").addEventListener("click", () => { if (!st.timer) return; st.timer.end += 15000; st.timer.dur += 15; st.timer.rang = false; save(); tick(); });
+document.getElementById("t-minus").addEventListener("click", () => { if (!st.timer) return; st.timer.end -= 15000; st.timer.dur = Math.max(15, st.timer.dur - 15); save(); tick(); });
+document.getElementById("t-skip").addEventListener("click", () => { st.timer = null; save(); tEl.classList.remove("over"); runTimer(); });
+document.addEventListener("visibilitychange", () => { if (!document.hidden && st.timer) tick(); });
+runTimer();
 
 /* bloque le zoom par pincement (le double-tap est bloqué en CSS) */
 ["gesturestart","gesturechange","gestureend"].forEach(t => document.addEventListener(t, e => e.preventDefault(), {passive:false}));
