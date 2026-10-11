@@ -582,8 +582,24 @@ function renderProg(){
       </tbody></table>
       <p class="muted">Allure en min/km. « Longue » : ta plus longue sortie. « Rapide » : ta meilleure allure moyenne sur 3 km ou plus.</p>
       <p class="muted">${pending ? `Calcul des records en cours (${pending} course${pending > 1 ? "s" : ""} à analyser)…` : "Meilleurs passages trouvés à l'intérieur de toutes tes courses de l'année."}</p>
-    </div>`;
+    </div>
+    ${predCard(rec)}`;
   bindSubnav();
+}
+function predCard(rec){
+  const bases = [[1000], [5000], [10000], [21097.5]].map(([d]) => rec[d] ? {d, t: rec[d].v} : null).filter(Boolean);
+  const good = bases.filter(b => b.d >= 5000), pool = good.length ? good : bases;
+  const rows = [[5000, "5 km"], [10000, "10 km"], [21097.5, "Semi"]].map(([d, l]) => {
+    if (!pool.length) return null;
+    const b = pool.reduce((m, x) => Math.abs(Math.log(x.d / d)) < Math.abs(Math.log(m.d / d)) ? x : m);
+    const t = b.t * Math.pow(d / b.d, 1.06);
+    return {d, l, t, own: rec[d] ? rec[d].v : null, from: b.d === d ? null : b};
+  }).filter(Boolean);
+  if (!rows.length) return `<div class="card"><h3>Prédictions</h3><p class="muted">Elles apparaîtront dès que tes records seront calculés.</p></div>`;
+  return `<div class="card"><h3>Prédictions</h3>
+    <table class="splits"><tbody><tr><th></th><th>Prédit</th><th>Allure</th><th>Record</th></tr>
+    ${rows.map(r => `<tr><td>${r.l}</td><td><b>${fmtDur(r.t)}</b></td><td>${fmtPace(r.t / 60 / (r.d / 1000))}</td><td class="muted">${r.own ? fmtDur(r.own) : "–"}</td></tr>`).join("")}</tbody></table>
+    <p class="muted">Estimation à partir de tes meilleurs temps (formule de Riegel). Elle suppose un entraînement régulier sur la distance visée : sur un semi, compte plutôt un peu plus.</p></div>`;
 }
 
 /* ---------- Forme ---------- */
