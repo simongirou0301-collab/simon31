@@ -272,7 +272,7 @@ function render(){
       </div>`;
     list.appendChild(li);
   });
-  document.getElementById("count").textContent = `${ok} / ${tot} séries faites`;
+  { const v = liveVol(); document.getElementById("count").textContent = `${ok} / ${tot} séries faites` + (v ? ` · ${nf(v)} kg soulevés` : ""); }
   if (editing) { const i = document.getElementById("kg-" + editing); if (i) i.focus(); }
 }
 
@@ -300,6 +300,15 @@ list.addEventListener("change", ev => {
   const r = st.reps[i.dataset.rid] = st.reps[i.dataset.rid] || [];
   r[+i.dataset.rk] = i.value === "" ? null : Math.max(0, Math.min(99, parseInt(i.value, 10) || 0)); save();
 });
+const kgN = k => { const m = /\d+(?:[.,]\d+)?/.exec(k || ""); return m ? parseFloat(m[0].replace(",", ".")) : null; };
+const volEx = (kg, unit, reps) => { const v = kgN(kg); if (v == null) return 0; const m = /côté|haltère/i.test(unit || "") ? 2 : 1; return v * m * reps.reduce((a, b) => a + (b || 0), 0); };
+const nf = n => Math.round(n).toLocaleString("fr-FR");
+function liveVol(){
+  let t = 0;
+  EX[st.tab].forEach(e => { const L = st.loads[e.id] || {}, d = st.done[e.id] || [], rp = st.reps[e.id] || []; t += volEx(L.kg, L.unit, d.map((x, k) => x ? (rp[k] ?? targetReps(e.id)) : 0)); });
+  return t;
+}
+const lastVol = tab => { for (let i = st.log.length - 1; i >= 0; i--) if (st.log[i].tab === tab) return st.log[i].vol || 0; return 0; };
 const targetReps = id => { const m = /\d+/.exec(byId(id).r); return m ? +m[0] : 8; };
 list.addEventListener("submit", ev => {
   ev.preventDefault();
@@ -344,6 +353,7 @@ document.getElementById("confirm-yes").addEventListener("click", () => {
     const L = st.loads[e.id] || {}, rp = st.reps[e.id] || [];
     entry.ex.push({id: e.id, kg: L.kg || "", unit: L.unit || "", feel: st.feel[e.id] || null, reps: d.map((x, k) => x ? (rp[k] ?? targetReps(e.id)) : null).filter(x => x != null)});
   });
+  entry.vol = liveVol(); const prevVol = lastVol(st.tab);
   if (entry.ex.length) st.log.push(entry);
   const today = new Date().toLocaleDateString("fr-FR", {day:"numeric", month:"short"});
   const label = {up:"facile", same:"moyen", down:"dur"};
@@ -354,7 +364,8 @@ document.getElementById("confirm-yes").addEventListener("click", () => {
   });
   EX[st.tab].forEach(e => { delete st.done[e.id]; delete st.feel[e.id]; delete st.reps[e.id]; });
   save(); confirmBox.hidden = true; finishBtn.hidden = false; render();
-  document.getElementById("finish-note").textContent = ids.length ? "Séance terminée, charges mises à jour pour la prochaine fois." : "Séance terminée.";
+  const dv = entry.vol - prevVol, volTxt = entry.vol ? ` Volume : ${nf(entry.vol)} kg` + (prevVol ? ` (${dv >= 0 ? "+" : "−"}${nf(Math.abs(dv))} kg vs la dernière séance).` : ".") : "";
+  document.getElementById("finish-note").textContent = (ids.length ? "Séance terminée, charges mises à jour pour la prochaine fois." : "Séance terminée.") + volTxt;
 });
 
 /* ---------- journal ---------- */
@@ -381,7 +392,7 @@ function renderJournal(){
     body = L.length ? L.map(s => {
       const d = new Date(s.t).toLocaleDateString("fr-FR", {weekday:"short", day:"numeric", month:"short"});
       const sets = s.ex.reduce((a, x) => a + x.reps.length, 0);
-      return `<div class="jr-s"><div class="jr-h"><b>${s.tab === "push" ? "Push" : "Pull"}</b><span>${d} · ${sets} séries</span></div>` +
+      return `<div class="jr-s"><div class="jr-h"><b>${s.tab === "push" ? "Push" : "Pull"}</b><span>${d} · ${sets} séries${s.vol ? " · " + nf(s.vol) + " kg" : ""}</span></div>` +
         s.ex.map(x => `<div class="jr-e"><span class="n">${esc(byId(x.id).n)}</span><span class="v">${esc(x.kg || "—")} · ${x.reps.join("/")}</span></div>`).join("") + `</div>`;
     }).join("") : `<p class="muted">Aucune séance enregistrée pour l'instant.</p>`;
   } else {
