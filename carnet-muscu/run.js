@@ -56,7 +56,7 @@ async function sync(force){
   syncing = true; syncErr = ""; render();
   try {
     const newest = runs.list.reduce((m, r) => Math.max(m, Date.parse(r.start.replace("Z",""))), 0);
-    const oldest = newest ? new Date(newest - 3 * 864e5) : new Date(Date.now() - 120 * 864e5);
+    const oldest = newest ? new Date(newest - 3 * 864e5) : new Date(Date.now() - 365 * 864e5);
     const acts = await api(`/athlete/${encodeURIComponent(auth.athleteId)}/activities?oldest=${day(oldest)}&newest=${day(new Date(Date.now() + 864e5))}`);
     const byId = new Map(runs.list.map(r => [r.id, r]));
     for (const a of acts || []) {
@@ -68,13 +68,51 @@ async function sync(force){
       byId.set(String(a.id), {
         id: String(a.id), name: a.name || "Course", start: a.start_date_local || a.start_date, dist, moving, elapsed: num(a.elapsed_time, moving),
         elev: num(a.total_elevation_gain, a.icu_elevation_gain), speed: num(a.average_speed, moving ? dist / moving : null), maxSpeed: num(a.max_speed),
-        hr: num(a.average_heartrate, a.icu_average_hr), maxHr: num(a.max_heartrate, a.icu_hr_max), cad, type
+        hr: num(a.average_heartrate, a.icu_average_hr), maxHr: num(a.max_heartrate, a.icu_hr_max), cad, type,
+        load: num(a.icu_training_load, a.training_load), kcal: num(a.calories, a.icu_calories),
+        best: (byId.get(String(a.id)) || {}).best || null
       });
     }
     runs.list = [...byId.values()].sort((a, b) => Date.parse(b.start) - Date.parse(a.start));
     runs.lastSync = Date.now(); saveRuns();
+    try {
+      const w = await api(`/athlete/${encodeURIComponent(auth.athleteId)}/wellness?oldest=${day(new Date(Date.now() - 180 * 864e5))}&newest=${day(new Date(Date.now() + 864e5))}`);
+      runs.well = {};
+      for (const x of w || []) if (x && x.id) runs.well[x.id] = {ctl: num(x.ctl), atl: num(x.atl), rhr: num(x.restingHR), hrv: num(x.hrv, x.hrvSDNN), sleep: num(x.sleepSecs), sleepScore: num(x.sleepScore), vo2: num(x.vo2max), steps: num(x.steps), weight: num(x.weight)};
+      saveRuns();
+    } catch(e){ /* santé facultative */ }
   } catch(e){ syncErr = e.message || "Synchronisation impossible."; }
   syncing = false; render();
+  fillBest();
+}
+
+/* Meilleurs temps : calculés à partir des courbes, en tâche de fond */
+let filling = false;
+async function fillBest(){
+  if (filling) return; filling = true;
+  try {
+    let n = 0;
+    for (const r of runs.list) {
+      if (r.best || n >= 40) continue;
+      try { const s = await getStreams(r.id); r.best = bestEfforts(s); n++; saveRuns(); } catch(e){ break; }
+    }
+  } finally { filling = false; }
+  if (sub === "prog" && !current) render();
+}
+function bestEfforts(s){
+  const D = s.distance, T = s.time, out = {};
+  if (!D || !T) return out;
+  for (const target of [1000, 5000, 10000, 21097.5]) {
+    if (D[D.length - 1] < target) continue;
+    let best = Infinity, j = 0;
+    for (let i = 0; i < D.length; i++) {
+      while (j < D.length && D[j] - D[i] < target) j++;
+      if (j >= D.length) break;
+      const t = T[j] - T[i]; if (t > 0 && t < best) best = t;
+    }
+    if (isFinite(best)) out[target] = best;
+  }
+  return out;
 }
 
 async function getStreams(id){
@@ -248,7 +286,22 @@ function render(){
   charts = [];
   if (!connected()) return renderSetup();
   if (current) return renderDetail(current);
+  if (sub === "prog") return renderProg();
+  if (sub === "forme") return renderForme();
+  if (sub === "sante") return renderSante();
   renderList();
+}
+let sub = "list";
+function subnav(){
+  const items = [["list","Courses"],["prog","Progrès"],["forme","Forme"],["sante","Santé"]];
+  return `<div class="subnav" role="tablist">${items.map(([k, l]) => `<button type="button" role="tab" data-sub="${k}" aria-selected="${sub === k}">${l}</button>`).join("")}</div>`;
+}
+function bindSubnav(){
+  view.querySelectorAll("[data-sub]").forEach(b => b.addEventListener("click", () => { sub = b.dataset.sub; window.scrollTo(0, 0); render(); }));
+  const sb = document.getElementById("sv-sync"); if (sb) sb.addEventListener("click", () => sync(true));
+}
+function syncBar(title){
+  return `<div class="row spread"><h2>${title}</h2><button class="btn" id="sv-sync" type="button" ${syncing ? "disabled" : ""}>${syncing ? "Synchro…" : "Actualiser"}</button></div>`;
 }
 
 function renderSetup(){
@@ -301,9 +354,9 @@ function renderList(){
   const wk = weeklyBars();
   const last30 = runs.list.filter(r => Date.now() - Date.parse(r.start.replace("Z","")) < 30 * 864e5);
   const d30 = last30.reduce((a, r) => a + r.dist, 0), t30 = last30.reduce((a, r) => a + r.moving, 0);
-  view.innerHTML = `
+  view.innerHTML = `${subnav()}
     <div class="card">
-      <div class="row spread"><h2>Mes courses</h2><button class="btn" id="sv-sync" type="button" ${syncing ? "disabled" : ""}>${syncing ? "Synchro…" : "Actualiser"}</button></div>
+      ${syncBar("Mes courses")}
       <div class="kpis">
         <div class="kpi"><b>${wk.thisWeek.toFixed(1).replace(".", ",")}</b><span>km cette semaine</span></div>
         <div class="kpi"><b>${(d30/1000).toFixed(0)}</b><span>km sur 30 jours</span></div>
@@ -324,7 +377,7 @@ function renderList(){
       <label class="field">Fréquence cardiaque max (pour les zones)<input id="sv-fc" inputmode="numeric" value="${esc(runs.fcMax || "")}" placeholder="${fcMax()} (estimée)"></label>
       <div class="row"><button class="btn" id="sv-fc-save" type="button">Enregistrer</button><button class="btn" id="sv-logout" type="button">Déconnecter Garmin</button></div>
     </div>`;
-  document.getElementById("sv-sync").addEventListener("click", () => sync(true));
+  bindSubnav();
   document.getElementById("sv-fc-save").addEventListener("click", () => { const v = parseInt(document.getElementById("sv-fc").value, 10); runs.fcMax = v > 120 && v < 230 ? v : null; saveRuns(); render(); });
   document.getElementById("sv-logout").addEventListener("click", () => { auth = {athleteId: auth.athleteId}; saveAuth(); render(); });
   view.querySelectorAll("[data-run]").forEach(b => b.addEventListener("click", () => { current = b.dataset.run; window.scrollTo(0, 0); render(); }));
@@ -347,6 +400,9 @@ async function renderDetail(id){
         <div class="kpi"><b>${r.cad ? Math.round(r.cad) : "–"}</b><span>pas / min</span></div>
         <div class="kpi"><b>${fmtPace(paceFromSpeed(r.maxSpeed))}</b><span>allure max</span></div>
         <div class="kpi"><b>${fmtDur(r.elapsed || r.moving)}</b><span>temps total</span></div>
+        <div class="kpi"><b>${r.speed ? (r.speed * 3.6).toFixed(1).replace(".", ",") : "–"}</b><span>km/h moyen</span></div>
+        <div class="kpi"><b>${r.kcal ? Math.round(r.kcal) : "–"}</b><span>kcal</span></div>
+        <div class="kpi"><b>${r.load ? Math.round(r.load) : "–"}</b><span>charge</span></div>
       </div>
     </div>
     <div id="sv-detail"><div class="card"><p class="muted">Chargement des courbes…</p></div></div>`;
@@ -398,6 +454,158 @@ async function renderDetail(id){
   if (rs) html += `<div class="card"><h3>Parcours</h3>${rs}<p class="muted">Point vert : départ · point foncé : arrivée.</p></div>`;
   document.getElementById("sv-detail").innerHTML = html || `<div class="card"><p class="muted">Pas de courbes pour cette activité.</p></div>`;
   bindCursor();
+}
+
+
+/* ---------- Graphiques dans le temps ---------- */
+function timeChart(dates, series, opt){
+  opt = opt || {};
+  const n = dates.length; if (!n) return `<p class="muted">Pas encore de données.</p>`;
+  const all = series.flatMap(s => s.ys).filter(v => v != null && isFinite(v));
+  if (!all.length) return `<p class="muted">Pas encore de données.</p>`;
+  let lo = Math.min(...all), hi = Math.max(...all);
+  if (opt.min0 || series.some(s => s.type === "bar")) lo = Math.min(0, lo);
+  if (hi === lo) { hi += 1; lo -= opt.min0 ? 0 : 1; }
+  const padY = (hi - lo) * .1; if (!(opt.min0 && lo === 0)) lo -= padY; hi += padY;
+  const bw = (W - PL - PR) / n;
+  const sx = i => PL + bw * (i + .5);
+  const shortD = iso => { const d = new Date(iso.replace("Z", "")); return d.getDate() + "/" + (d.getMonth() + 1); };
+  const sy = v => { const t = (v - lo) / (hi - lo); return opt.invert ? PT + t * (H - PT - PB) : H - PB - t * (H - PT - PB); };
+  let g = "";
+  const yfmt = opt.fmt || (hi - lo < 6 ? (v => v.toFixed(1).replace(".", ",")) : (v => Math.round(v)));
+  for (const t of niceTicks(lo, hi, 4)) { const y = sy(t); if (y < PT - .5 || y > H - PB + .5) continue; g += `<line class="grid" x1="${PL}" x2="${W-PR}" y1="${y.toFixed(1)}" y2="${y.toFixed(1)}"/><text x="${PL-4}" y="${(y+3).toFixed(1)}" text-anchor="end">${esc(yfmt(t))}</text>`; }
+  const every = Math.max(1, Math.ceil(n / 6));
+  dates.forEach((d, i) => { if ((n - 1 - i) % every === 0) g += `<text x="${sx(i).toFixed(1)}" y="${H-6}" text-anchor="${i === n - 1 && n > 8 ? "end" : "middle"}">${esc(opt.xfmt ? opt.xfmt(d) : d.getDate() + "/" + (d.getMonth() + 1))}</text>`; });
+  for (const s of series) {
+    if (s.type === "bar") {
+      const z = sy(Math.max(lo, 0));
+      s.ys.forEach((v, i) => { if (v == null || !isFinite(v) || v === 0) return; const y = sy(v); g += `<rect x="${(sx(i) - bw * .32).toFixed(1)}" y="${Math.min(y, z).toFixed(1)}" width="${(bw * .64).toFixed(1)}" height="${Math.abs(z - y).toFixed(1)}" rx="2" fill="${s.color}" fill-opacity="${i === n - 1 ? 1 : .6}"/>`; });
+    } else {
+      let d = "", on = false;
+      s.ys.forEach((v, i) => { if (v == null || !isFinite(v)) { on = false; return; } d += `${on ? "L" : "M"}${sx(i).toFixed(1)},${sy(v).toFixed(1)}`; on = true; });
+      g += `<path d="${d}" fill="none" stroke="${s.color}" stroke-width="2" stroke-linejoin="round" ${s.dash ? 'stroke-dasharray="4 3"' : ""}/>`;
+      const li = s.ys.map((v, i) => v != null && isFinite(v) ? i : -1).filter(i => i >= 0).pop();
+      if (li != null) g += `<circle cx="${sx(li).toFixed(1)}" cy="${sy(s.ys[li]).toFixed(1)}" r="3.5" fill="${s.color}"/>`;
+      if (s.ys.filter(v => v != null).length === 1) g += "";
+    }
+  }
+  const legend = series.length > 1 ? `<div class="legend">${series.map(s => `<span><i style="background:${s.color}"></i>${esc(s.name)}</span>`).join("")}</div>` : "";
+  return `<svg class="chart" viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(opt.label || "")}">${g}</svg>${legend}`;
+}
+const dayKey = d => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+const runDate = r => new Date(r.start.replace("Z", ""));
+function weeksBack(n){
+  const now = new Date(), mon = new Date(now.getFullYear(), now.getMonth(), now.getDate() - (now.getDay() + 6) % 7);
+  const out = []; for (let w = n - 1; w >= 0; w--) out.push(new Date(mon.getTime() - w * 7 * 864e5)); return out;
+}
+
+/* ---------- Progrès ---------- */
+const sd = iso => { const d = new Date(iso.replace("Z", "")); return d.getDate() + "/" + (d.getMonth() + 1); };
+function renderProg(){
+  const weeks = weeksBack(16), first = weeks[0].getTime();
+  const agg = weeks.map(() => ({d: 0, t: 0, hrT: 0, hrS: 0}));
+  for (const r of runs.list) {
+    const wi = Math.floor((runDate(r).getTime() - first) / (7 * 864e5));
+    if (wi < 0 || wi >= weeks.length) continue;
+    const a = agg[wi]; a.d += r.dist; a.t += r.moving; if (r.hr) { a.hrS += r.hr * r.moving; a.hrT += r.moving; }
+  }
+  const paceW = agg.map(a => a.d > 0 ? a.t / 60 / (a.d / 1000) : null);
+  const hrW = agg.map(a => a.hrT ? a.hrS / a.hrT : null);
+  const now = new Date(); const months = []; for (let m = 5; m >= 0; m--) months.push(new Date(now.getFullYear(), now.getMonth() - m, 1));
+  const kmM = months.map(m => runs.list.filter(r => { const d = runDate(r); return d.getFullYear() === m.getFullYear() && d.getMonth() === m.getMonth(); }).reduce((a, r) => a + r.dist / 1000, 0));
+  const monthName = d => d.toLocaleDateString("fr-FR", {month: "short"}).replace(".", "");
+  const year = runs.list.filter(r => runDate(r).getFullYear() === now.getFullYear());
+  const yKm = year.reduce((a, r) => a + r.dist, 0) / 1000;
+
+  const rec = {}; const targets = [[1000, "1 km"], [5000, "5 km"], [10000, "10 km"], [21097.5, "Semi"]];
+  for (const r of runs.list) if (r.best) for (const [t] of targets) { const v = r.best[t]; if (v && (!rec[t] || v < rec[t].v)) rec[t] = {v, r}; }
+  const longest = runs.list.reduce((m, r) => !m || r.dist > m.dist ? r : m, null);
+  const fastest = runs.list.filter(r => r.dist >= 3000).reduce((m, r) => !m || r.speed > m.speed ? r : m, null);
+  const pending = runs.list.filter(r => !r.best).length;
+
+  view.innerHTML = `${subnav()}
+    <div class="card">${syncBar("Progrès")}
+      <div class="kpis">
+        <div class="kpi"><b>${yKm.toFixed(0)}</b><span>km en ${now.getFullYear()}</span></div>
+        <div class="kpi"><b>${year.length}</b><span>courses en ${now.getFullYear()}</span></div>
+        <div class="kpi"><b>${(year.reduce((a, r) => a + r.moving, 0) / 3600).toFixed(1).replace(".", ",")}</b><span>heures de course</span></div>
+      </div>
+    </div>
+    <div class="card"><div class="chead"><h3>Allure moyenne par semaine</h3><span class="val">plus haut = plus rapide</span></div>
+      ${timeChart(weeks, [{ys: paceW, color: "var(--pace)"}], {invert: true, fmt: fmtPace, label: "Allure moyenne par semaine"})}</div>
+    <div class="card"><div class="chead"><h3>BPM moyen par semaine</h3></div>
+      ${timeChart(weeks, [{ys: hrW, color: "var(--hr)"}], {label: "Fréquence cardiaque moyenne par semaine"})}
+      <p class="muted">Si ton allure s'améliore pendant que tes BPM baissent ou restent stables, ton endurance progresse.</p></div>
+    <div class="card"><div class="chead"><h3>Kilomètres par mois</h3></div>
+      ${timeChart(months, [{ys: kmM, color: "#d9480f", type: "bar"}], {min0: true, xfmt: monthName, label: "Kilomètres par mois"})}</div>
+    <div class="card"><h3>Records</h3>
+      <table class="splits"><tbody>
+        <tr><th></th><th>Temps</th><th>Allure</th><th>Date</th></tr>
+        ${targets.map(([t, l]) => `<tr><td>${l}</td><td>${rec[t] ? fmtDur(rec[t].v) : "–"}</td><td>${rec[t] ? fmtPace(rec[t].v / 60 / (t / 1000)) : ""}</td><td class="muted">${rec[t] ? sd(rec[t].r.start) : ""}</td></tr>`).join("")}
+        <tr><td>Longue</td><td>${longest ? km(longest.dist) + " km" : "–"}</td><td>${longest ? fmtPace(paceFromSpeed(longest.speed)) : ""}</td><td class="muted">${longest ? sd(longest.start) : ""}</td></tr>
+        <tr><td>Rapide</td><td>${fastest ? km(fastest.dist) + " km" : "–"}</td><td>${fastest ? fmtPace(paceFromSpeed(fastest.speed)) : ""}</td><td class="muted">${fastest ? sd(fastest.start) : ""}</td></tr>
+      </tbody></table>
+      <p class="muted">Allure en min/km. « Longue » : ta plus longue sortie. « Rapide » : ta meilleure allure moyenne sur 3 km ou plus.</p>
+      <p class="muted">${pending ? `Calcul des records en cours (${pending} course${pending > 1 ? "s" : ""} à analyser)…` : "Meilleurs passages trouvés à l'intérieur de toutes tes courses de l'année."}</p>
+    </div>`;
+  bindSubnav();
+}
+
+/* ---------- Forme ---------- */
+function wellDays(n){ const out = []; const t = new Date(); for (let i = n - 1; i >= 0; i--) out.push(new Date(t.getFullYear(), t.getMonth(), t.getDate() - i)); return out; }
+function renderForme(){
+  const days = wellDays(90), W_ = runs.well || {};
+  const ctl = days.map(d => (W_[dayKey(d)] || {}).ctl ?? null), atl = days.map(d => (W_[dayKey(d)] || {}).atl ?? null);
+  const form = days.map((d, i) => ctl[i] != null && atl[i] != null ? ctl[i] - atl[i] : null);
+  const li = form.map((v, i) => v != null ? i : -1).filter(i => i >= 0).pop();
+  const f = li != null ? form[li] : null;
+  const zone = f == null ? null : f > 25 ? ["Transition", "Tu t'entraînes peu en ce moment : ta forme baisse doucement."] : f > 5 ? ["Frais", "Bien reposé : bon moment pour une course rapide ou une compétition."] : f > -10 ? ["Équilibré", "Charge stable : tu entretiens ta forme."] : f > -30 ? ["Productif", "Fatigue utile : tu progresses. Garde des jours faciles."] : ["Risque de surmenage", "Beaucoup de fatigue accumulée : lève le pied quelques jours."];
+  view.innerHTML = `${subnav()}
+    <div class="card">${syncBar("Forme")}
+      <div class="kpis">
+        <div class="kpi"><b>${li != null ? Math.round(ctl[li]) : "–"}</b><span>condition</span></div>
+        <div class="kpi"><b>${li != null ? Math.round(atl[li]) : "–"}</b><span>fatigue</span></div>
+        <div class="kpi"><b>${f != null ? (f > 0 ? "+" : "") + Math.round(f) : "–"}</b><span>fraîcheur</span></div>
+      </div>
+      ${zone ? `<p><b>${zone[0]}</b> · ${zone[1]}</p>` : `<p class="muted">Ces chiffres apparaîtront quand Intervals.icu aura reçu tes courses.</p>`}
+    </div>
+    <div class="card"><div class="chead"><h3>Condition et fatigue · 90 jours</h3></div>
+      ${timeChart(days, [{ys: ctl, color: "var(--pace)", name: "Condition (6 semaines)"}, {ys: atl, color: "var(--hr)", name: "Fatigue (7 jours)", dash: true}], {label: "Condition et fatigue"})}</div>
+    <div class="card"><div class="chead"><h3>Fraîcheur</h3></div>
+      ${timeChart(days, [{ys: form, color: "var(--done)", type: "bar"}], {label: "Fraîcheur"})}
+      <p class="muted">Condition = ta charge d'entraînement moyenne des 6 dernières semaines. Fatigue = celle des 7 derniers jours. Fraîcheur = condition moins fatigue : négative quand tu t'entraînes dur, positive quand tu récupères.</p></div>`;
+  bindSubnav();
+}
+
+/* ---------- Santé ---------- */
+function renderSante(){
+  const days30 = wellDays(30), days90 = wellDays(90), W_ = runs.well || {};
+  const get = (d, k) => (W_[dayKey(d)] || {})[k] ?? null;
+  const latest = k => { for (let i = 0; i < 10; i++) { const d = new Date(Date.now() - i * 864e5); const v = get(d, k); if (v != null) return v; } return null; };
+  const sleepH = days30.map(d => { const v = get(d, "sleep"); return v != null ? v / 3600 : null; });
+  const hasAny = Object.keys(W_).length > 0;
+  const sl = latest("sleep");
+  const tiles = [
+    ["rhr", latest("rhr"), v => Math.round(v), "FC au repos"],
+    ["hrv", latest("hrv"), v => Math.round(v), "VFC (ms)"],
+    ["sleep", sl, v => `${Math.floor(v / 3600)}h${pad(Math.round(v % 3600 / 60))}`, "sommeil"],
+    ["sleepScore", latest("sleepScore"), v => Math.round(v), "score sommeil"],
+    ["vo2", latest("vo2"), v => Math.round(v), "VO2 max"],
+    ["steps", latest("steps"), v => Math.round(v).toLocaleString("fr-FR"), "pas"],
+  ];
+  const charts_ = [];
+  if (sleepH.some(v => v != null)) charts_.push(`<div class="card"><div class="chead"><h3>Sommeil · 30 jours</h3></div>${timeChart(days30, [{ys: sleepH, color: "#6b5bd2", type: "bar"}], {min0: true, fmt: v => v + "h", label: "Heures de sommeil"})}</div>`);
+  const rhr = days30.map(d => get(d, "rhr")); if (rhr.some(v => v != null)) charts_.push(`<div class="card"><div class="chead"><h3>FC au repos · 30 jours</h3></div>${timeChart(days30, [{ys: rhr, color: "var(--hr)"}], {label: "Fréquence cardiaque au repos"})}<p class="muted">Une FC au repos qui monte de plusieurs battements peut signaler de la fatigue ou un début de maladie.</p></div>`);
+  const hrv = days30.map(d => get(d, "hrv")); if (hrv.some(v => v != null)) charts_.push(`<div class="card"><div class="chead"><h3>VFC · 30 jours</h3></div>${timeChart(days30, [{ys: hrv, color: "var(--done)"}], {label: "Variabilité de la fréquence cardiaque"})}<p class="muted">Plus elle est haute par rapport à ta normale, mieux tu as récupéré.</p></div>`);
+  const steps = days30.map(d => get(d, "steps")); if (steps.some(v => v != null)) charts_.push(`<div class="card"><div class="chead"><h3>Pas · 30 jours</h3></div>${timeChart(days30, [{ys: steps, color: "var(--pace)", type: "bar"}], {min0: true, fmt: v => v >= 1000 ? Math.round(v / 1000) + "k" : v, label: "Pas par jour"})}</div>`);
+  const vo2 = days90.map(d => get(d, "vo2")); if (vo2.some(v => v != null)) charts_.push(`<div class="card"><div class="chead"><h3>VO2 max · 90 jours</h3></div>${timeChart(days90, [{ys: vo2, color: "#d9480f"}], {label: "VO2 max"})}</div>`);
+  view.innerHTML = `${subnav()}
+    <div class="card">${syncBar("Santé")}
+      <div class="kpis">${tiles.map(([, v, f, l]) => `<div class="kpi"><b>${v != null ? esc(f(v)) : "–"}</b><span>${l}</span></div>`).join("")}</div>
+      ${hasAny ? "" : `<p class="muted">Les données santé de ta montre arrivent via Intervals.icu (case « Télécharger les données de santé »). Touche Actualiser dans quelques minutes.</p>`}
+    </div>
+    ${charts_.join("")}`;
+  bindSubnav();
 }
 
 window.Run = {
