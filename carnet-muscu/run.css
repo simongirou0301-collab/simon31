@@ -67,3 +67,6 @@ ol.steps{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:4px;f
 .route.map .rline{stroke:#0a84ff;stroke-width:4.5}
 .route.map .attr{font:9px sans-serif;fill:#444;paint-order:stroke;stroke:#fffc;stroke-width:3px}
 @media (prefers-color-scheme:dark){.route.map .attr{fill:#ddd;stroke:#0008}}
+
+.sel{flex:1;min-width:0;font:500 16px var(--body);color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:10px}
+.splits td.win{color:var(--green);font-weight:700}

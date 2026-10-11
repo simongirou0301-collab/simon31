@@ -9,7 +9,7 @@ const RUN_TYPES = ["Run","TrailRun","VirtualRun","Treadmill"];
 
 let auth = load(SKEY) || {};
 let runs = load(RKEY) || {list:[], lastSync:0, fcMax:null};
-let current = null;
+let current = null, cmp = null;
 let syncing = false, syncErr = "", setupErr = "";
 let streamCache = {};
 
@@ -313,6 +313,7 @@ function render(){
   if (document.getElementById("run-view").hidden) return;
   charts = [];
   if (!connected()) return renderSetup();
+  if (cmp) return renderCompare();
   if (current) return renderDetail(current);
   if (sub === "prog") return renderProg();
   if (sub === "forme") return renderForme();
@@ -453,6 +454,53 @@ function renderList(){
   view.querySelectorAll("[data-run]").forEach(b => b.addEventListener("click", () => { current = b.dataset.run; window.scrollTo(0, 0); render(); }));
 }
 
+function overlay(series, opt){
+  const xMax = Math.max(1, ...series.map(q => q.xs[q.xs.length - 1] || 0));
+  const all = series.flatMap(q => q.ys);
+  let lo = quantile(all, .02), hi = quantile(all, .98); if (!isFinite(lo) || !isFinite(hi)) return `<p class="muted">Pas de données.</p>`;
+  const pad = (hi - lo) * .12 || 1; lo -= pad; hi += pad;
+  const sx = x => PL + (x / xMax) * (W - PL - PR), sy = y => { const t = (y - lo) / (hi - lo); return opt.invert ? PT + t * (H - PT - PB) : H - PB - t * (H - PT - PB); };
+  let grid = ""; for (const t of niceTicks(lo, hi, 4)) { const y = sy(t); if (y < PT || y > H - PB) continue; grid += `<line class="grid" x1="${PL}" x2="${W-PR}" y1="${y.toFixed(1)}" y2="${y.toFixed(1)}"/><text x="${PL-4}" y="${(y+3).toFixed(1)}" text-anchor="end">${esc(opt.fmt(t))}</text>`; }
+  for (const t of niceTicks(0, xMax / 1000, 5)) { const x = sx(t * 1000); if (x <= W - PR + .5) grid += `<text x="${x.toFixed(1)}" y="${H-6}" text-anchor="middle">${t.toString().replace(".", ",")}</text>`; }
+  const paths = series.map(q => { let d = "", on = false; q.xs.forEach((x, i) => { const y = q.ys[i]; if (y == null || !isFinite(y)) { on = false; return; } d += `${on ? "L" : "M"}${sx(x).toFixed(1)},${Math.min(H - PB, Math.max(PT, sy(y))).toFixed(1)}`; on = true; }); return `<path d="${d}" fill="none" stroke="${q.color}" stroke-width="2" stroke-linejoin="round"/>`; }).join("");
+  return `<svg class="chart" viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(opt.label)}">${grid}${paths}</svg>`;
+}
+function cmpSeries(s, kind){
+  const D = s.distance || [], idx = downsample(D.length, 300), xs = idx.map(i => D[i]);
+  if (kind === "pace" && s.velocity_smooth) { const v = smooth(s.velocity_smooth.map(x => x > 0.8 ? x : null), 10); return {xs, ys: idx.map(i => v[i] ? paceFromSpeed(v[i]) : null).map(x => x != null && x < 15 ? x : null)}; }
+  if (kind === "hr" && s.heartrate) { const h = smooth(s.heartrate, 5); return {xs, ys: idx.map(i => h[i])}; }
+  return null;
+}
+async function renderCompare(){
+  const A = runs.list.find(x => x.id === cmp.a), B = runs.list.find(x => x.id === cmp.b);
+  if (!A || !B) { cmp = null; return render(); }
+  const back = `<button class="back" id="cmp-back" type="button">‹ Retour à la course</button>`;
+  view.innerHTML = back + `<div class="card"><p class="muted">Chargement de la comparaison…</p></div>`;
+  document.getElementById("cmp-back").addEventListener("click", () => { cmp = null; render(); });
+  let sa, sb; try { [sa, sb] = await Promise.all([getStreams(A.id), getStreams(B.id)]); } catch (e) { if (cmp) view.innerHTML = back + `<div class="card"><p class="err">${esc(e.message)}</p></div>`; document.getElementById("cmp-back").addEventListener("click", () => { cmp = null; render(); }); return; }
+  if (!cmp) return;
+  const ca = "var(--pace)", cb = "var(--orange)";
+  const pa = paceFromSpeed(A.speed), pb = paceFromSpeed(B.speed);
+  const row = (l, va, vb, better) => { const w = better == null ? 0 : better; return `<tr><td>${l}</td><td class="${w === 1 ? "win" : ""}">${va}</td><td class="${w === 2 ? "win" : ""}">${vb}</td></tr>`; };
+  const cmpv = (x, y, lowBetter) => x == null || y == null || x === y ? null : ((x < y) === !!lowBetter ? 1 : 2);
+  let html = back + `<div class="card"><h2>Comparaison</h2>
+    <div class="legend"><span><i style="background:${ca}"></i>${esc(fmtDate(A.start))}</span><span><i style="background:${cb}"></i>${esc(fmtDate(B.start))}</span></div>
+    <table class="splits"><tbody>
+    ${row("Distance", km(A.dist) + " km", km(B.dist) + " km")}
+    ${row("Temps", fmtDur(A.moving), fmtDur(B.moving))}
+    ${row("Allure", fmtPace(pa) + " /km", fmtPace(pb) + " /km", cmpv(pa, pb, true))}
+    ${row("Bpm moyen", A.hr ? Math.round(A.hr) : "–", B.hr ? Math.round(B.hr) : "–", cmpv(A.hr, B.hr, true))}
+    ${row("D+", A.elev != null ? Math.round(A.elev) + " m" : "–", B.elev != null ? Math.round(B.elev) + " m" : "–")}
+    ${row("Cadence", A.cad ? Math.round(A.cad) : "–", B.cad ? Math.round(B.cad) : "–")}
+    </tbody></table><p class="muted">En vert : la meilleure valeur (allure plus rapide, cœur plus bas pour le même effort).</p></div>`;
+  for (const [kind, title, opt] of [["pace", "Allure", {invert: true, fmt: fmtPace, label: "Allure comparée"}], ["hr", "Fréquence cardiaque", {fmt: v => Math.round(v), label: "Fréquence cardiaque comparée"}]]) {
+    const qa = cmpSeries(sa, kind), qb = cmpSeries(sb, kind); if (!qa || !qb) continue;
+    html += `<div class="card"><h3>${title}</h3>${overlay([{...qa, color: ca}, {...qb, color: cb}], opt)}</div>`;
+  }
+  view.innerHTML = html;
+  document.getElementById("cmp-back").addEventListener("click", () => { cmp = null; render(); });
+}
+
 async function renderDetail(id){
   const r = runs.list.find(x => x.id === id); if (!r) { current = null; return render(); }
   const pace = paceFromSpeed(r.speed);
@@ -475,7 +523,9 @@ async function renderDetail(id){
         <div class="kpi"><b>${r.load ? Math.round(r.load) : "–"}</b><span>charge</span></div>
       </div>
     </div>
+    ${runs.list.length > 1 ? `<div class="card"><h3>Comparer</h3><div class="row"><select id="cmp-sel" class="sel">${runs.list.filter(x => x.id !== r.id).map(x => `<option value="${x.id}">${esc(fmtDate(x.start))} · ${km(x.dist)} km</option>`).join("")}</select><button class="btn" id="cmp-go" type="button">Comparer</button></div></div>` : ""}
     <div id="sv-detail"><div class="card"><p class="muted">Chargement des courbes…</p></div></div>`;
+  const cg = document.getElementById("cmp-go"); if (cg) cg.addEventListener("click", () => { cmp = {a: id, b: document.getElementById("cmp-sel").value}; window.scrollTo(0, 0); render(); });
   document.getElementById("sv-back").addEventListener("click", () => { current = null; render(); });
   let s;
   try { s = await getStreams(id); } catch(e) { if (current === id) document.getElementById("sv-detail").innerHTML = `<div class="card"><p class="err">${esc(e.message)}</p><button class="btn" id="sv-retry" type="button">Réessayer</button></div>`; const b = document.getElementById("sv-retry"); if (b) b.addEventListener("click", () => render()); return; }
