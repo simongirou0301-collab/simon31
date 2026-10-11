@@ -1,0 +1,414 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Mon PEA au quotidien</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap">
+<style>
+/* Layout : une colonne façon appli mobile ; résumé du jour, onglets ETF, carte des entreprises, barres d'impact, fil des explications. */
+:root{
+  --bg:#F3F5F9; --card:#FFFFFF; --ink:#101A2E; --muted:#5B6680; --line:#E2E6EF;
+  --accent:#3B5BFF; --accent-soft:#E7ECFF;
+  --up:#0B9A6A; --up-soft:#DDF4EA; --down:#DC3B48; --down-soft:#FBE3E5; --flat:#A6AEC0;
+  --f-display:"Bricolage Grotesque", "Figtree", system-ui, sans-serif;
+  --f-body:"Figtree", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-num:"JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0B1120; --card:#141C2E; --ink:#E8ECF6; --muted:#9AA5BD; --line:#24304A;
+  --accent:#7C93FF; --accent-soft:#1E2950;
+  --up:#33C98E; --up-soft:#11352A; --down:#FF6B76; --down-soft:#3E1A22; --flat:#5D6782; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0B1120; --card:#141C2E; --ink:#E8ECF6; --muted:#9AA5BD; --line:#24304A;
+  --accent:#7C93FF; --accent-soft:#1E2950;
+  --up:#33C98E; --up-soft:#11352A; --down:#FF6B76; --down-soft:#3E1A22; --flat:#5D6782; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.5}
+.wrap{max-width:760px;margin:0 auto;padding:20px 16px 48px;display:flex;flex-direction:column;gap:18px}
+h1,h2,h3{font-family:var(--f-display);margin:0;text-wrap:balance}
+h1{font-size:1.9rem;font-weight:800;letter-spacing:-.02em;line-height:1.1}
+h2{font-size:1.25rem;font-weight:700}
+h3{font-size:1rem;font-weight:700}
+.num{font-family:var(--f-num);font-variant-numeric:tabular-nums}
+.muted{color:var(--muted)}
+.small{font-size:.82rem}
+.eyebrow{font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:600}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px}
+.up{color:var(--up)} .down{color:var(--down)} .flat{color:var(--muted)}
+.pill{display:inline-flex;align-items:center;gap:4px;border-radius:999px;padding:2px 9px;font-weight:700;font-size:.85rem}
+.pill.up{background:var(--up-soft)} .pill.down{background:var(--down-soft)} .pill.flat{background:var(--line)}
+
+header{display:flex;flex-direction:column;gap:6px}
+.hero{display:grid;grid-template-columns:1fr auto;gap:10px 16px;align-items:end}
+.hero .big{font-size:2.3rem;font-weight:700;line-height:1}
+.resume{margin:0;max-width:62ch}
+
+.tabs{display:flex;gap:6px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:5px;position:sticky;top:env(safe-area-inset-top,0px);z-index:5}
+.tab{flex:1;min-width:0;border:0;background:transparent;color:var(--ink);font:inherit;font-weight:600;padding:9px 6px;border-radius:10px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:1px}
+.tab .num{font-size:.78rem}
+.tab[aria-selected="true"]{background:var(--accent);color:#fff}
+.tab[aria-selected="true"] .num{color:#fff}
+.tab:focus-visible,button:focus-visible,.tile:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+.etfhead{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;align-items:flex-start}
+.kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:14px}
+.kpi{background:var(--bg);border-radius:12px;padding:10px}
+.kpi .v{font-size:1.15rem;font-weight:700}
+.kpi label{display:block;font-size:.75rem;color:var(--muted)}
+.kpi input{width:100%;font:inherit;font-family:var(--f-num);font-size:1.05rem;font-weight:700;color:var(--ink);background:transparent;border:0;border-bottom:1px dashed var(--muted);padding:0}
+.chart{width:100%;height:auto;display:block;margin-top:12px}
+
+.treemap{position:relative;width:100%;aspect-ratio:4/3;max-width:100%;margin-top:10px;border-radius:12px;overflow:hidden}
+.tile{position:absolute;border:2px solid var(--card);border-radius:8px;padding:5px 6px;overflow:hidden;cursor:pointer;color:#fff;display:flex;flex-direction:column;justify-content:space-between;transition:transform .15s}
+.tile:hover{transform:scale(1.02);z-index:2}
+.tile b{font-family:var(--f-display);font-size:.85rem;line-height:1.1}
+.tile .num{font-size:.75rem;font-weight:700}
+.tile.sm b{font-size:.68rem}.tile.sm .num{font-size:.62rem}
+.tile.xs b,.tile.xs .num{display:none}
+.legend{display:flex;gap:6px;align-items:center;font-size:.75rem;color:var(--muted);margin-top:8px;flex-wrap:wrap}
+.legend i{display:inline-block;width:18px;height:10px;border-radius:3px}
+
+.detail{margin-top:12px;background:var(--bg);border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:6px}
+.detail .row{display:flex;flex-wrap:wrap;gap:6px 16px;align-items:baseline}
+
+.bars{display:flex;flex-direction:column;gap:6px;margin-top:10px}
+.bar{display:grid;grid-template-columns:96px 1fr 72px;gap:8px;align-items:center;font-size:.85rem;cursor:pointer;border:0;background:none;color:var(--ink);font-family:inherit;text-align:left;padding:2px 0}
+.bar .name{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:600}
+.track{position:relative;height:14px}
+.track::before{content:"";position:absolute;left:50%;top:-3px;bottom:-3px;border-left:1px solid var(--line)}
+.fill{position:absolute;top:0;height:100%;border-radius:4px}
+.bar .num{text-align:right;font-size:.8rem}
+
+.news{display:flex;flex-direction:column;gap:10px}
+.newsitem{border-left:4px solid var(--flat);padding:2px 0 2px 12px;display:flex;flex-direction:column;gap:4px}
+.newsitem.up{border-color:var(--up)} .newsitem.down{border-color:var(--down)}
+.newsitem p{margin:0;color:var(--ink)}
+.chips{display:flex;flex-wrap:wrap;gap:4px}
+.chip{font-family:var(--f-num);font-size:.72rem;padding:1px 7px;border-radius:6px;background:var(--accent-soft);color:var(--accent);font-weight:700}
+
+.days{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px}
+.day{flex:none;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:10px;padding:6px 10px;font:inherit;font-size:.82rem;cursor:pointer}
+.day[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-soft);color:var(--accent);font-weight:700}
+
+.word{background:var(--accent-soft);border:0}
+.word h3{color:var(--accent)}
+.word p{margin:4px 0 0}
+details summary{cursor:pointer;font-weight:600}
+.foot{font-size:.78rem;color:var(--muted);display:flex;flex-direction:column;gap:6px}
+.empty{padding:40px 16px;text-align:center}
+@media (max-width:480px){
+  h1{font-size:1.55rem}.hero .big{font-size:1.9rem}
+  .kpis{grid-template-columns:1fr 1fr}
+  .kpis .kpi:first-child{grid-column:1/-1}
+  .bar{grid-template-columns:78px 1fr 62px}
+  .treemap{aspect-ratio:3/4}
+}
+@media (prefers-reduced-motion:reduce){.tile{transition:none}}
+body{margin:0}
+</style>
+</head>
+<body>
+<div class="wrap" id="app">
+  <header>
+    <span class="eyebrow">Mon PEA · Trade Republic</span>
+    <h1>Ce qui a fait bouger mon argent</h1>
+  </header>
+  <div class="card empty" id="loading">
+    <h3>Chargement de la dernière séance…</h3>
+    <p class="muted small">Les cours, les entreprises de chaque ETF et les explications du jour s'affichent ici dès qu'ils sont reçus.</p>
+  </div>
+</div>
+
+<script>
+const fmtPct = (v, d = 2) => v == null ? "n.d." : (v > 0 ? "+" : v < 0 ? "−" : "") + Math.abs(v).toFixed(d).replace(".", ",") + " %";
+const fmtEur = (v, d = 2) => (v > 0 ? "+" : v < 0 ? "−" : "") + Math.abs(v).toLocaleString("fr-FR", {minimumFractionDigits: d, maximumFractionDigits: d}) + " €";
+const fmtEurPlain = v => v.toLocaleString("fr-FR", {minimumFractionDigits: 2, maximumFractionDigits: 2}) + " €";
+const cls = v => v == null ? "flat" : v > 0.05 ? "up" : v < -0.05 ? "down" : "flat";
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;"}[c]));
+const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+
+const WORDS = [
+  ["ETF capitalisant", "Les dividendes versés par les entreprises ne te sont pas distribués : ils sont réinvestis dans l'ETF. C'est le cas de tes trois ETF (« Acc »)."],
+  ["Pondération", "La part d'une entreprise dans l'ETF. Nvidia pèse environ 8 % du Nasdaq 100 : sur 100 € investis, environ 8 € sont « dans » Nvidia."],
+  ["Contribution", "Pondération × variation. Une petite entreprise qui bondit de 10 % peut moins peser qu'un géant qui bouge de 1 %."],
+  ["Indice", "Une liste d'entreprises calculée par un fournisseur (MSCI, Nasdaq). L'ETF se contente de la copier, d'où ses frais bas."],
+  ["Effet de change", "Tes ETF sont en euros mais détiennent des actions en dollars. Si le dollar baisse face à l'euro, ton ETF baisse un peu même si les actions ne bougent pas."],
+  ["Recommandation d'analyste", "Une banque (Goldman Sachs, BMO…) conseille d'acheter, garder ou vendre une action. Un relèvement fait souvent monter le cours le jour même."],
+  ["Résultats trimestriels", "Tous les 3 mois, les entreprises publient chiffre d'affaires et bénéfices. C'est le moment où les cours bougent le plus."],
+  ["Valorisation", "Le prix que le marché paie pour les bénéfices d'une entreprise. Quand elle est jugée « tendue », même une bonne nouvelle peut faire baisser l'action."],
+  ["Investissement programmé", "Acheter le même montant chaque semaine lisse ton prix d'achat : tu achètes plus de parts quand c'est bas, moins quand c'est haut."],
+  ["Concentration", "Dans le Nasdaq 100, les 10 premières entreprises pèsent près de la moitié de l'indice. Le MSCI Monde (ACWI) est beaucoup plus dispersé."]
+];
+
+let LATEST = null, DATA = null, current = "nasdaq", selected = null, dayList = [];
+const store = {
+  get(k) { try { return localStorage.getItem(k); } catch { return null; } },
+  set(k, v) { try { localStorage.setItem(k, v); } catch {} }
+};
+current = store.get("pea-tab") || "nasdaq";
+
+const DEFAULT_INV = 1000;
+function invested(e) {
+  const s = parseFloat(store.get("pea-inv-" + e.id));
+  return isFinite(s) && s >= 0 ? s : DEFAULT_INV;
+}
+const hasOwn = () => DATA.etfs.some(e => store.get("pea-inv-" + e.id) != null);
+
+function colorFor(c) {
+  if (c == null) return css("--flat");
+  const t = Math.min(Math.abs(c) / 4, 1);
+  const base = c >= 0 ? css("--up") : css("--down");
+  return `color-mix(in srgb, ${base} ${Math.round(35 + t * 65)}%, ${css("--flat")})`;
+}
+
+/* Treemap « squarified » : chaque tuile a une surface proportionnelle au poids dans l'ETF. */
+function squarify(items, x, y, w, h) {
+  const out = [];
+  const total = items.reduce((s, i) => s + i.w, 0);
+  const scale = (w * h) / total;
+  let rest = items.map(i => ({...i, a: i.w * scale}));
+  while (rest.length) {
+    const short = Math.min(w, h);
+    let row = [rest[0]], best = worst(row, short), k = 1;
+    while (k < rest.length) {
+      const next = row.concat(rest[k]), wv = worst(next, short);
+      if (wv > best) break;
+      row = next; best = wv; k++;
+    }
+    const sum = row.reduce((s, r) => s + r.a, 0);
+    if (w >= h) {
+      const cw = sum / h; let cy = y;
+      row.forEach(r => { const rh = r.a / cw; out.push({...r, x, y: cy, w: cw, h: rh}); cy += rh; });
+      x += cw; w -= cw;
+    } else {
+      const ch = sum / w; let cx = x;
+      row.forEach(r => { const rw = r.a / ch; out.push({...r, x: cx, y, w: rw, h: ch}); cx += rw; });
+      y += ch; h -= ch;
+    }
+    rest = rest.slice(k);
+  }
+  return out;
+  function worst(r, s) {
+    const sum = r.reduce((a, b) => a + b.a, 0), mx = Math.max(...r.map(i => i.a)), mn = Math.min(...r.map(i => i.a));
+    return Math.max((s * s * mx) / (sum * sum), (sum * sum) / (s * s * mn));
+  }
+}
+
+function lineChart(hist) {
+  const W = 640, H = 170, P = {l: 8, r: 52, t: 14, b: 22};
+  const vals = hist.map(h => h[1]);
+  const base = vals[0];
+  const pcts = vals.map(v => (v / base - 1) * 100);
+  let mn = Math.min(...pcts, 0), mx = Math.max(...pcts, 0);
+  const pad = (mx - mn) * 0.12 || 1; mn -= pad; mx += pad;
+  const X = i => P.l + (i / (pcts.length - 1)) * (W - P.l - P.r);
+  const Y = v => P.t + (1 - (v - mn) / (mx - mn)) * (H - P.t - P.b);
+  const pts = pcts.map((v, i) => `${X(i).toFixed(1)},${Y(v).toFixed(1)}`).join(" ");
+  const last = pcts[pcts.length - 1];
+  const col = last >= 0 ? "var(--up)" : "var(--down)";
+  const months = ["janv.", "févr.", "mars", "avr.", "mai", "juin", "juil.", "août", "sept.", "oct.", "nov.", "déc."];
+  const lab = d => { const [, m, j] = d.split("-"); return `${+j} ${months[+m - 1]}`; };
+  return `<svg class="chart" viewBox="0 0 ${W} ${H}" role="img" aria-label="Évolution sur ${hist.length} séances : ${fmtPct(last, 1)}">
+    <line x1="${P.l}" x2="${W - P.r}" y1="${Y(0)}" y2="${Y(0)}" stroke="var(--line)" stroke-dasharray="4 4"/>
+    <text x="${W - P.r + 6}" y="${Y(0) + 4}" font-size="11" fill="var(--muted)" font-family="var(--f-num)">0 %</text>
+    <polygon points="${X(0)},${Y(0)} ${pts} ${X(pcts.length - 1)},${Y(0)}" fill="${col}" opacity=".12"/>
+    <polyline points="${pts}" fill="none" stroke="${col}" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+    <circle cx="${X(pcts.length - 1)}" cy="${Y(last)}" r="4.5" fill="${col}"/>
+    <text x="${W - P.r + 6}" y="${Y(last) + 4}" font-size="12" font-weight="700" fill="${col}" font-family="var(--f-num)">${fmtPct(last, 1)}</text>
+    <text x="${P.l}" y="${H - 5}" font-size="11" fill="var(--muted)">${lab(hist[0][0])}</text>
+    <text x="${W - P.r}" y="${H - 5}" font-size="11" fill="var(--muted)" text-anchor="end">${lab(hist[hist.length - 1][0])}</text>
+  </svg>`;
+}
+
+function newsFor(sym) { return (DATA.news || []).filter(n => (n.tickers || []).includes(sym)); }
+
+function render() {
+  const app = document.getElementById("app");
+  const etfs = DATA.etfs;
+  if (!etfs.find(e => e.id === current)) current = etfs[0].id;
+  const e = etfs.find(x => x.id === current);
+  const totalImpact = etfs.reduce((s, x) => s + invested(x) * (x.day || 0) / 100, 0);
+  const totalInv = etfs.reduce((s, x) => s + invested(x), 0);
+  const inv = invested(e);
+  const hold = e.holdings.slice().sort((a, b) => b.w - a.w);
+  const covered = hold.reduce((s, h) => s + h.w, 0);
+  const contrib = hold.filter(h => h.c != null).map(h => ({...h, ct: h.w * h.c / 100, eur: inv * h.w / 100 * h.c / 100})).sort((a, b) => b.ct - a.ct);
+  const maxCt = Math.max(...contrib.map(c => Math.abs(c.ct)), 0.01);
+  const ups = contrib.filter(c => c.c > 0).length, downs = contrib.filter(c => c.c < 0).length;
+  const winner = contrib[0], loser = contrib[contrib.length - 1];
+  const newsHere = (DATA.news || []).filter(n => !n.etfs || n.etfs.includes(e.id));
+  const word = WORDS[(new Date(DATA.date).getDate() + new Date(DATA.date).getMonth() * 31) % WORDS.length];
+  const sel = selected && hold.find(h => h.s === selected);
+
+  app.innerHTML = `
+  <header>
+    <span class="eyebrow">Mon PEA · séance du ${esc(DATA.label)}</span>
+    <h1>Ce qui a fait bouger mon argent</h1>
+  </header>
+
+  ${dayList.length > 1 ? `<div class="days" role="group" aria-label="Choisir une séance">${dayList.map(d => `<button class="day" data-day="${esc(d.id)}" aria-pressed="${d.id === DATA.date}">${esc(d.short)}</button>`).join("")}</div>` : ""}
+
+  <section class="card">
+    <div class="hero">
+      <div>
+        <div class="eyebrow">${hasOwn() ? "Mon PEA ce jour-là (estimation)" : "Pour 1 000 € dans chaque ETF"}</div>
+        <div class="big num ${cls(totalImpact)}">${fmtEur(totalImpact)}</div>
+      </div>
+      <span class="pill ${cls(totalImpact)} num">${fmtPct(totalInv ? totalImpact / totalInv * 100 : 0)}</span>
+    </div>
+    <p class="resume" style="margin-top:12px">${esc(DATA.resume)}</p>
+    ${hasOwn() ? "" : `<p class="muted small" style="margin:8px 0 0">Entre tes montants dans « Mon argent dedans » sous chaque ETF : ils restent uniquement sur ton appareil.</p>`}
+  </section>
+
+  <nav class="tabs" role="tablist">
+    ${etfs.map(x => `<button class="tab" role="tab" data-tab="${x.id}" aria-selected="${x.id === current}">
+      <span>${esc(x.short)}</span><span class="num ${x.id === current ? "" : cls(x.day)}">${fmtPct(x.day)}</span></button>`).join("")}
+  </nav>
+
+  <section class="card">
+    <div class="etfhead">
+      <div><h2>${esc(e.name)}</h2><div class="muted small">${esc(e.total)} · 30 dernières séances</div></div>
+      <span class="pill ${cls(e.day)} num">${fmtPct(e.day)} ce jour-là</span>
+    </div>
+    ${lineChart(e.history)}
+    <div class="kpis">
+      <div class="kpi"><label for="inv-${e.id}">Mon argent dedans</label><input id="inv-${e.id}" class="num" inputmode="decimal" value="${inv.toFixed(2).replace(".", ",")}" aria-label="Montant investi dans ${esc(e.name)} en euros"></div>
+      <div class="kpi"><label>Effet du jour</label><div class="v num ${cls(e.day)}">${fmtEur(inv * e.day / 100)}</div></div>
+      <div class="kpi"><label>Hausse / baisse</label><div class="v num"><span class="up">${ups}↑</span> <span class="down">${downs}↓</span></div></div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>La carte des entreprises</h2>
+    <p class="muted small" style="margin:4px 0 0">Plus la case est grande, plus l'entreprise pèse dans l'ETF. Vert = hausse, rouge = baisse. Touche une case pour le détail.</p>
+    <div class="treemap" id="tm"></div>
+    <div class="legend"><span>−4 %</span><i style="background:${colorFor(-4)}"></i><i style="background:${colorFor(-1.5)}"></i><i style="background:${colorFor(0)}"></i><i style="background:${colorFor(1.5)}"></i><i style="background:${colorFor(4)}"></i><span>+4 %</span><span>· gris = cours non disponible</span></div>
+    ${sel ? detailHtml(sel, inv) : `<p class="muted small" style="margin:10px 0 0">Ces ${hold.length} entreprises représentent ${covered.toFixed(0)} % de l'ETF.</p>`}
+  </section>
+
+  <section class="card">
+    <h2>Qui a tiré l'ETF vers le haut ou le bas</h2>
+    <p class="muted small" style="margin:4px 0 0">${winner && winner.ct > 0 ? `<b class="up">${esc(winner.n)}</b> a le plus aidé, ` : ""}${loser && loser.ct < 0 ? `<b class="down">${esc(loser.n)}</b> a le plus pesé.` : ""} Chiffre de droite : effet en euros sur ton argent.</p>
+    <div class="bars">${contrib.map(c => {
+      const wPct = Math.abs(c.ct) / maxCt * 50;
+      const left = c.ct >= 0 ? 50 : 50 - wPct;
+      return `<button class="bar" data-sym="${esc(c.s)}" aria-label="${esc(c.n)} ${fmtPct(c.c)}, ${fmtEur(c.eur)}">
+        <span class="name">${esc(c.n)}</span>
+        <span class="track"><span class="fill" style="left:${left}%;width:${Math.max(wPct, .6)}%;background:${c.ct >= 0 ? "var(--up)" : "var(--down)"}"></span></span>
+        <span class="num ${cls(c.c)}">${fmtEur(c.eur)}</span></button>`;
+    }).join("")}</div>
+  </section>
+
+  <section class="card">
+    <h2>Pourquoi ça a bougé</h2>
+    <div class="news" style="margin-top:10px">
+      ${newsHere.length ? newsHere.map(n => `<article class="newsitem ${n.sens === "up" ? "up" : n.sens === "down" ? "down" : ""}">
+        <h3>${esc(n.titre)}</h3><p>${esc(n.texte)}</p>
+        <div class="chips">${(n.tickers || []).map(t => `<span class="chip">${esc(t)}</span>`).join("")}</div>
+        <span class="muted small">Source : ${esc(n.source)}</span></article>`).join("") : `<p class="muted">Pas d'annonce marquante pour cet ETF ce jour-là.</p>`}
+    </div>
+  </section>
+
+  ${(DATA.agenda || []).length ? `<section class="card"><h2>À surveiller</h2>${DATA.agenda.map(a => `<p style="margin:8px 0 0"><b class="num">${esc(a.date.split("-").reverse().slice(0, 2).join("/"))}</b> · ${esc(a.texte)}</p>`).join("")}</section>` : ""}
+
+  <section class="card word">
+    <span class="eyebrow">Le mot du jour</span>
+    <h3>${esc(word[0])}</h3><p>${esc(word[1])}</p>
+  </section>
+
+  <footer class="foot">
+    <details><summary>D'où viennent les chiffres ?</summary>
+      <p>Cours de clôture du ${esc(DATA.label)} (StockAnalysis, Investing.com). ${esc(e.proxyNote)} Les variations de ton ETF en euros peuvent différer légèrement à cause du taux de change. Compositions au ${esc(e.holdingsDate.split("-").reverse().join("/"))}, seules les plus grosses positions sont affichées. Les montants « Mon argent dedans » sont enregistrés uniquement dans ton navigateur, jamais en ligne.</p>
+    </details>
+    <span>Mis à jour chaque soir de semaine après la clôture américaine. Dernière mise à jour : ${new Date(DATA.updatedAt).toLocaleString("fr-FR", {dateStyle: "medium", timeStyle: "short"})}.</span>
+  </footer>`;
+
+  drawTreemap(hold);
+  wire(e);
+}
+
+function detailHtml(h, inv) {
+  const ns = newsFor(h.s);
+  const eur = h.c == null ? null : inv * h.w / 100 * h.c / 100;
+  return `<div class="detail" aria-live="polite">
+    <div class="row"><h3>${esc(h.n)}</h3><span class="chip">${esc(h.s)}</span><span class="pill ${cls(h.c)} num">${fmtPct(h.c)}</span></div>
+    <div class="row small"><span>Poids : <b class="num">${h.w.toFixed(2).replace(".", ",")} %</b></span><span>${esc(h.sec)} · ${esc(h.pays)}</span>
+    <span>Ton argent dedans : <b class="num">${fmtEurPlain(inv * h.w / 100)}</b></span>
+    ${eur != null ? `<span>Effet du jour : <b class="num ${cls(h.c)}">${fmtEur(eur)}</b></span>` : ""}</div>
+    ${ns.length ? ns.map(n => `<p style="margin:0"><b>${esc(n.titre)}.</b> ${esc(n.texte)}</p>`).join("") : `<p class="muted small" style="margin:0">Pas d'annonce particulière trouvée : mouvement en ligne avec le marché.</p>`}
+  </div>`;
+}
+
+function drawTreemap(hold) {
+  const tm = document.getElementById("tm");
+  const W = tm.clientWidth, H = tm.clientHeight;
+  if (!W || !H) return;
+  const rects = squarify(hold, 0, 0, W, H);
+  tm.innerHTML = rects.map(r => {
+    const size = r.w < 46 || r.h < 34 ? "xs" : r.w < 80 || r.h < 50 ? "sm" : "";
+    return `<div class="tile ${size}" tabindex="0" role="button" data-sym="${esc(r.s)}" aria-label="${esc(r.n)} ${fmtPct(r.c)}"
+      style="left:${r.x}px;top:${r.y}px;width:${r.w}px;height:${r.h}px;background:${colorFor(r.c)};${selected === r.s ? "outline:3px solid var(--ink);outline-offset:-3px;" : ""}">
+      <b>${esc(r.n)}</b><span class="num">${fmtPct(r.c, 1)}</span></div>`;
+  }).join("");
+}
+
+function wire(e) {
+  document.querySelectorAll(".tab").forEach(b => b.onclick = () => { current = b.dataset.tab; selected = null; store.set("pea-tab", current); render(); });
+  document.querySelectorAll("[data-sym]").forEach(t => {
+    const pick = () => { selected = selected === t.dataset.sym ? null : t.dataset.sym; render(); document.getElementById("tm").scrollIntoView({block: "nearest", behavior: "smooth"}); };
+    t.onclick = pick;
+    t.onkeydown = ev => { if (ev.key === "Enter" || ev.key === " ") { ev.preventDefault(); pick(); } };
+  });
+  document.querySelectorAll(".day").forEach(b => b.onclick = () => loadDay(b.dataset.day));
+  const inp = document.getElementById("inv-" + e.id);
+  if (inp) inp.onchange = () => {
+    const v = parseFloat(inp.value.replace(/\s/g, "").replace(",", "."));
+    if (isFinite(v) && v >= 0) store.set("pea-inv-" + e.id, String(v));
+    render();
+  };
+}
+
+let rz; addEventListener("resize", () => { clearTimeout(rz); rz = setTimeout(() => DATA && render(), 150); });
+matchMedia("(prefers-color-scheme: dark)").addEventListener?.("change", () => DATA && render());
+new MutationObserver(() => DATA && render()).observe(document.documentElement, {attributes: true, attributeFilter: ["data-theme"]});
+
+function showMessage(title, text) {
+  const l = document.getElementById("loading");
+  if (l) l.innerHTML = `<h3>${esc(title)}</h3><p class="muted small">${esc(text)}</p>`;
+}
+
+async function loadDay(id) {
+  try {
+    if (id === LATEST.date) { DATA = LATEST; selected = null; render(); return; }
+    const r = await fetch("jours/" + id + ".json", {cache: "no-cache"});
+    if (!r.ok) return;
+    const d = await r.json();
+    d.etfs.forEach(e => {
+      const l = LATEST.etfs.find(x => x.id === e.id);
+      if (!e.history && l) e.history = l.history.filter(h => h[0] <= d.date);
+    });
+    DATA = d; selected = null; render();
+  } catch {}
+}
+
+(async () => {
+  try {
+    const r = await fetch("data.json", {cache: "no-cache"});
+    if (!r.ok) throw new Error(r.status);
+    LATEST = DATA = await r.json();
+    render();
+    const q = await fetch("jours/index.json", {cache: "no-cache"});
+    if (q.ok) {
+      const jours = ["dim.", "lun.", "mar.", "mer.", "jeu.", "ven.", "sam."];
+      dayList = (await q.json()).sort().reverse().slice(0, 10).map(id => { const dt = new Date(id + "T12:00:00"); return {id, short: `${jours[dt.getDay()]} ${dt.getDate()}/${dt.getMonth() + 1}`}; });
+      if (dayList.length > 1) render();
+    }
+  } catch (err) {
+    showMessage("Chargement impossible", "Les données n'ont pas pu être lues. Recharge la page dans un instant.");
+  }
+})();
+</script>
+</body>
+</html>
