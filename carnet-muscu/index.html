@@ -1,0 +1,341 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Carnet Push Pull</title>
+<meta name="theme-color" content="#c8372d">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Carnet">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icons/icon-180.png">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;800&family=Archivo:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap">
+<style>
+:root{
+  --bg:#eef0f2; --surface:#ffffff; --ink:#1b2129; --muted:#5d6874; --line:#d6dbe0;
+  --plate:#c8372d; --plate-soft:#f6dedb; --done:#2f7a4f; --scrim:rgba(10,12,15,.88);
+  --display:"Barlow Condensed","Arial Narrow",sans-serif;
+  --body:"Archivo",system-ui,-apple-system,sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,monospace;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){:root{
+  --bg:#13171c; --surface:#1d232a; --ink:#e8ecf0; --muted:#97a3ae; --line:#2e3740;
+  --plate:#ec5a4d; --plate-soft:#3a2120; --done:#5cc48a; --scrim:rgba(0,0,0,.9); color-scheme:dark}}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.45;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+img{max-width:100%}
+[hidden]{display:none!important}
+.wrap{max-width:680px;margin:0 auto;padding-inline:16px;padding-block:16px 48px;display:flex;flex-direction:column;gap:18px}
+header h1{font-family:var(--display);font-weight:800;font-size:2.4rem;line-height:1;margin:0;text-transform:uppercase;letter-spacing:.01em}
+header p{margin:6px 0 0;color:var(--muted);font-size:.85rem}
+.tabs{display:grid;grid-template-columns:1fr 1fr;gap:8px;position:sticky;top:env(safe-area-inset-top,0px);background:var(--bg);padding-block:8px;z-index:2}
+.tab{font-family:var(--display);font-weight:800;font-size:1.25rem;text-transform:uppercase;letter-spacing:.04em;padding:10px 12px;border:2px solid var(--line);background:var(--surface);color:var(--ink);border-radius:10px;cursor:pointer;text-align:left;display:flex;flex-direction:column;gap:2px}
+.tab small{font-family:var(--body);font-weight:500;font-size:.75rem;letter-spacing:0;text-transform:none;color:var(--muted)}
+.tab[aria-selected="true"]{border-color:var(--plate);box-shadow:inset 0 0 0 1px var(--plate)}
+button:focus-visible,input:focus-visible,label:focus-within{outline:3px solid var(--plate);outline-offset:2px}
+.progress{display:flex;justify-content:space-between;align-items:center;font-size:.85rem;color:var(--muted)}
+.btn{font:600 .8rem var(--body);color:var(--muted);background:none;border:1px solid var(--line);border-radius:8px;padding:6px 10px;cursor:pointer}
+.list{display:flex;flex-direction:column;gap:12px;list-style:none;margin:0;padding:0}
+.ex{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px;display:grid;grid-template-columns:76px 1fr auto;gap:10px 12px;align-items:start}
+.ex.complete{border-color:var(--done)}
+.thumb{width:76px;height:76px;border-radius:10px;overflow:hidden;border:1px solid var(--line);background:var(--bg);display:grid;place-items:center;padding:0;cursor:pointer}
+.thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.info{min-width:0}
+.ex h2{font-family:var(--display);font-weight:600;font-size:1.3rem;line-height:1.1;margin:0;text-wrap:balance}
+.scheme{font-family:var(--mono);font-size:.8rem;margin-top:4px}
+.note{color:var(--muted);font-size:.8rem;margin-top:3px}
+.load{text-align:right;min-width:78px;background:none;border:0;padding:4px;border-radius:8px;cursor:pointer;color:inherit}
+.load .kg{font-family:var(--display);font-weight:800;font-size:1.9rem;line-height:1;color:var(--plate);font-variant-numeric:tabular-nums}
+.load .kg.empty{color:var(--muted)}
+.load .unit{font-size:.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;max-width:110px;margin-left:auto}
+.load .edit{font-size:.68rem;color:var(--plate);margin-top:2px}
+.editor{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:8px;align-items:end;background:var(--bg);border-radius:10px;padding:10px}
+.editor label{display:flex;flex-direction:column;gap:3px;font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.editor input{font:600 1rem var(--mono);color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:8px;width:110px}
+.editor input.wide{width:150px}
+.save{font:600 .85rem var(--body);background:var(--plate);color:#fff;border:0;border-radius:8px;padding:9px 14px;cursor:pointer}
+.foot{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.sets{display:flex;gap:6px;flex-wrap:wrap}
+.set{width:38px;height:38px;border-radius:50%;border:2px solid var(--line);background:var(--bg);color:var(--muted);font:600 .8rem var(--mono);cursor:pointer;display:grid;place-items:center}
+.set[aria-pressed="true"]{background:var(--done);border-color:var(--done);color:var(--surface)}
+.feel{grid-column:1/-1;display:flex;flex-direction:column;gap:6px;border-top:1px solid var(--line);padding-top:10px}
+.feel-q{font-size:.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.feel-btns{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.fb{font:600 .85rem var(--body);border-radius:8px;padding:8px 4px;cursor:pointer;border:1px solid var(--line);background:var(--bg);color:var(--ink);display:flex;flex-direction:column;align-items:center;gap:1px}
+.fb small{font-weight:500;font-size:.68rem;color:var(--muted)}
+.fb:disabled{opacity:.45;cursor:not-allowed}
+.fb[aria-pressed="true"]{border-color:var(--ink);background:var(--surface);box-shadow:inset 0 0 0 1px var(--ink)}
+.fb.f-easy[aria-pressed="true"]{border-color:var(--done);box-shadow:inset 0 0 0 1px var(--done)}
+.fb.f-hard[aria-pressed="true"]{border-color:var(--plate);box-shadow:inset 0 0 0 1px var(--plate)}
+.last{font-size:.75rem;color:var(--muted)}
+.finish{font:800 1.15rem var(--display);text-transform:uppercase;letter-spacing:.04em;background:var(--plate);color:#fff;border:0;border-radius:10px;padding:14px;cursor:pointer;width:100%}
+.finish-note{font-size:.8rem;color:var(--muted);text-align:center;margin:-8px 0 0}
+.confirm{display:flex;flex-direction:column;gap:8px;background:var(--surface);border:1px solid var(--plate);border-radius:10px;padding:12px}
+.confirm-row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.lightbox{position:fixed;inset:0;background:var(--scrim);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:calc(16px + env(safe-area-inset-top,0px)) 16px calc(16px + env(safe-area-inset-bottom,0px));z-index:10}
+.lightbox img{max-width:100%;max-height:72vh;border-radius:10px;object-fit:contain;background:#fff}
+.lightbox p{color:#fff;font-family:var(--display);font-size:1.3rem;margin:0;text-align:center}
+.lb-actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+.lb-actions button,.lb-actions label{font:600 .85rem var(--body);background:#fff;color:#1b2129;border:0;border-radius:8px;padding:9px 14px;cursor:pointer}
+.vh{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+footer{color:var(--muted);font-size:.78rem}
+@media (max-width:420px){.ex{grid-template-columns:64px 1fr auto}.thumb{width:64px;height:64px}}
+@media (prefers-reduced-motion:no-preference){.set,.ex{transition:background .15s,border-color .15s}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Carnet Push / Pull</h1>
+    <p>Touche une charge pour la modifier · Touche une photo pour l'agrandir</p>
+  </header>
+
+  <div class="tabs" role="tablist">
+    <button class="tab" role="tab" data-s="push">Push<small>Lundi · Jeudi</small></button>
+    <button class="tab" role="tab" data-s="pull">Pull<small>Mardi · Vendredi</small></button>
+  </div>
+
+  <div class="progress"><span id="count"></span><button class="btn" id="reset" type="button">Remettre les séries à zéro</button></div>
+
+  <ul class="list" id="list"></ul>
+
+  <button class="finish" type="button" id="finish">Terminer la séance</button>
+  <div class="confirm" id="confirm" hidden>
+    <div id="confirm-txt"></div>
+    <div class="confirm-row"><button class="save" type="button" id="confirm-yes">Valider</button><button class="btn" type="button" id="confirm-no">Retour</button></div>
+  </div>
+  <p class="finish-note" id="finish-note"></p>
+
+  <footer>Les poids sont le total sur la machine ou la barre, sauf mention « / côté » ou « / haltère ». Tes données restent sur ce téléphone.</footer>
+</div>
+
+<div class="lightbox" id="lb" hidden>
+  <img id="lb-img" alt="">
+  <p id="lb-title"></p>
+  <div class="lb-actions">
+    <label>Changer la photo<input class="vh" type="file" accept="image/*" id="lb-file"></label>
+    <button type="button" id="lb-default" hidden>Photo d'origine</button>
+    <button type="button" id="lb-close">Fermer</button>
+  </div>
+</div>
+
+<script>
+const EX = {
+  push: [
+    {id:"push-1", n:"Développé couché à la Smith", s:3, r:"6-8 · échec", note:"Incliné ou plat · monte le poids progressivement"},
+    {id:"push-2", n:"Pec fly à la machine", s:3, r:"10", note:"Pleine amplitude"},
+    {id:"push-3", n:"Chest press prise serrée", s:3, r:"10-12 · échec", note:"Prise serrée, à plat"},
+    {id:"push-6", n:"Développé militaire à la Smith, assis", s:4, r:"8 · échec", note:"3 à 4 séries"},
+    {id:"push-4", n:"Élévation latérale unilatérale à la poulie", s:3, r:"12", note:"Charge modérée, bonne amplitude"},
+    {id:"push-5", n:"Élévation latérale aux haltères", s:3, r:"6-8 · échec", note:"Lourd, sans balancer le buste"},
+    {id:"push-7", n:"Extension triceps poulie haute, barre", s:3, r:"10-12 · échec", note:"Coudes collés aux côtes"},
+    {id:"push-8", n:"Extension triceps unilatérale à la poulie", s:3, r:"10-12 · échec", note:"Bras calé contre la barre"}
+  ],
+  pull: [
+    {id:"pull-1", n:"Tirage vertical, barre en V", s:3, r:"8 · échec", note:"2 min 30 de repos · vers le haut de la poitrine"},
+    {id:"pull-2", n:"Tirage horizontal prise serrée", s:3, r:"8 lourdes + 12 légères", note:"Enchaîne les deux sans pause"},
+    {id:"pull-3", n:"Tirage horizontal prise large, poignée ergo", s:3, r:"12", note:"Prise neutre, serre les omoplates"},
+    {id:"pull-4", n:"Pec fly inversé (arrière d'épaule)", s:3, r:"10", note:"2 min de repos · ouvre les bras en T"},
+    {id:"pull-5", n:"Curl marteau à la poulie, corde", s:3, r:"8 lourdes + 12 légères", note:"Coudes contre les côtes"},
+    {id:"pull-6", n:"Curl supination aux haltères, assis", s:3, r:"8-10", note:"Dos collé au dossier"},
+    {id:"pull-7", n:"Curl inversé, barre droite", s:3, r:"10", note:"Prise pronation, coudes fixes"}
+  ]
+};
+const DEFAULT_LOADS = {
+  "push-1":{kg:"20",unit:"kg / côté"}, "push-2":{kg:"",unit:"conseillé 30-35 kg"}, "push-3":{kg:"40",unit:"kg"},
+  "push-4":{kg:"",unit:"conseillé 5 kg"}, "push-5":{kg:"",unit:"conseillé 8-10 kg / haltère"}, "push-6":{kg:"10",unit:"kg / côté"},
+  "push-7":{kg:"30",unit:"kg"}, "push-8":{kg:"",unit:"conseillé 7-10 kg"},
+  "pull-1":{kg:"60",unit:"kg"}, "pull-2":{kg:"40 / 25",unit:"kg (lourd / léger)"}, "pull-3":{kg:"",unit:"conseillé 30 kg"},
+  "pull-4":{kg:"",unit:"conseillé 15-20 kg"}, "pull-5":{kg:"35 / 20",unit:"kg (lourd / léger)"},
+  "pull-6":{kg:"",unit:"conseillé 10-12 kg / haltère"}, "pull-7":{kg:"15",unit:"kg"}
+};
+const ALL = [...EX.push, ...EX.pull];
+const byId = id => ALL.find(e => e.id === id);
+
+/* ---------- stockage local ---------- */
+const KEY = "carnet-pp-app-v1";
+let st = {tab:null, done:{}, feel:{}, loads:null};
+try { const v = JSON.parse(localStorage.getItem(KEY)); if (v) st = Object.assign(st, v); } catch (e) {}
+if (!st.loads) st.loads = JSON.parse(JSON.stringify(DEFAULT_LOADS));
+for (const k in DEFAULT_LOADS) if (!st.loads[k]) st.loads[k] = {...DEFAULT_LOADS[k]};
+if (!st.tab) { const d = new Date().getDay(); st.tab = (d === 2 || d === 5) ? "pull" : "push"; }
+const save = () => { try { localStorage.setItem(KEY, JSON.stringify(st)); } catch (e) {} };
+save();
+if (navigator.storage && navigator.storage.persist) navigator.storage.persist().catch(() => {});
+
+/* photos perso dans IndexedDB */
+const photoUrls = {};
+let idb = null;
+function openIdb(){
+  return new Promise(res => {
+    try {
+      const r = indexedDB.open("carnet-photos", 1);
+      r.onupgradeneeded = () => r.result.createObjectStore("photos");
+      r.onsuccess = () => res(r.result);
+      r.onerror = () => res(null);
+    } catch (e) { res(null); }
+  });
+}
+function idbDo(mode, fn){
+  return new Promise(res => {
+    if (!idb) return res(null);
+    try { const tx = idb.transaction("photos", mode); const r = fn(tx.objectStore("photos")); tx.oncomplete = () => res(r && r.result); tx.onerror = () => res(null); }
+    catch (e) { res(null); }
+  });
+}
+async function loadCustomPhotos(){
+  idb = await openIdb(); if (!idb) return;
+  for (const e of ALL) {
+    const blob = await idbDo("readonly", s => s.get(e.id));
+    if (blob) photoUrls[e.id] = URL.createObjectURL(blob);
+  }
+  render();
+}
+const photoOf = id => photoUrls[id] || `photos/${id}.jpg`;
+
+/* ---------- rendu ---------- */
+let editing = null;
+const list = document.getElementById("list");
+function esc(s){ return String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c])); }
+const canAdj = L => !!(L && L.kg && /\d/.test(L.kg));
+
+function render(){
+  document.querySelectorAll(".tab").forEach(t => t.setAttribute("aria-selected", t.dataset.s === st.tab));
+  let tot = 0, ok = 0; list.innerHTML = "";
+  EX[st.tab].forEach(e => {
+    const L = st.loads[e.id] || {}; const d = st.done[e.id] || [];
+    const nd = d.filter(Boolean).length; tot += e.s; ok += nd;
+    const li = document.createElement("li");
+    li.className = "ex" + (nd === e.s ? " complete" : "");
+    const kg = L.kg
+      ? `<div class="kg">${esc(L.kg)}</div><div class="unit">${esc(L.unit || "kg")}</div>`
+      : `<div class="kg empty">—</div><div class="unit">${esc(L.unit || "à définir")}</div>`;
+    let sets = ""; for (let k = 0; k < e.s; k++) sets += `<button class="set" type="button" aria-pressed="${!!d[k]}" aria-label="Série ${k+1}" data-id="${e.id}" data-k="${k}">${k+1}</button>`;
+    const f = st.feel[e.id];
+    const ed = editing === e.id ? `<form class="editor" data-form="${e.id}">
+        <label>Charge<input id="kg-${e.id}" name="kg" value="${esc(L.kg || "")}" inputmode="decimal" autocomplete="off"></label>
+        <label>Unité / précision<input class="wide" id="unit-${e.id}" name="unit" value="${esc(L.kg ? (L.unit || "kg") : "kg")}" autocomplete="off"></label>
+        <button class="save" type="submit">Enregistrer</button>
+        <button class="btn" type="button" data-cancel>Annuler</button></form>` : "";
+    li.innerHTML = `<button class="thumb" type="button" data-photo="${e.id}" aria-label="Agrandir la photo"><img src="${photoOf(e.id)}" alt="${esc(e.n)}" loading="lazy"></button>
+      <div class="info"><h2>${esc(e.n)}</h2><div class="scheme">${e.s} × ${esc(e.r)}</div><div class="note">${esc(e.note)}</div></div>
+      <button class="load" type="button" data-edit="${e.id}">${kg}<div class="edit">Modifier</div></button>
+      ${ed}
+      <div class="foot"><div class="sets">${sets}</div></div>
+      <div class="feel">
+        <div class="feel-q">Comment se sont passées tes séries ?</div>
+        <div class="feel-btns">
+          <button class="fb f-easy" type="button" data-feel="up" data-fid="${e.id}" aria-pressed="${f==="up"}" ${canAdj(L) ? "" : "disabled"}>Facile<small>charge +</small></button>
+          <button class="fb" type="button" data-feel="same" data-fid="${e.id}" aria-pressed="${f==="same"}" ${L.kg ? "" : "disabled"}>Moyen<small>charge =</small></button>
+          <button class="fb f-hard" type="button" data-feel="down" data-fid="${e.id}" aria-pressed="${f==="down"}" ${canAdj(L) ? "" : "disabled"}>Dur<small>charge −</small></button>
+        </div>
+        ${L.ressenti ? `<div class="last">Dernière fois : ${esc(L.ressenti)}</div>` : (L.kg ? "" : `<div class="last">Indique d'abord ta charge pour activer les boutons.</div>`)}
+      </div>`;
+    list.appendChild(li);
+  });
+  document.getElementById("count").textContent = `${ok} / ${tot} séries faites`;
+  if (editing) { const i = document.getElementById("kg-" + editing); if (i) i.focus(); }
+}
+
+/* ---------- interactions ---------- */
+document.querySelectorAll(".tab").forEach(t => t.addEventListener("click", () => { st.tab = t.dataset.s; editing = null; save(); render(); window.scrollTo(0, 0); }));
+document.getElementById("reset").addEventListener("click", () => { EX[st.tab].forEach(e => { delete st.done[e.id]; delete st.feel[e.id]; }); save(); render(); });
+
+list.addEventListener("click", ev => {
+  const s = ev.target.closest(".set");
+  if (s) { const a = st.done[s.dataset.id] || []; a[+s.dataset.k] = !a[+s.dataset.k]; st.done[s.dataset.id] = a; save(); render(); return; }
+  const ed = ev.target.closest("[data-edit]");
+  if (ed) { editing = editing === ed.dataset.edit ? null : ed.dataset.edit; render(); return; }
+  if (ev.target.closest("[data-cancel]")) { editing = null; render(); return; }
+  const ph = ev.target.closest("[data-photo]");
+  if (ph) { openLb(ph.dataset.photo); return; }
+  const fb = ev.target.closest("[data-feel]");
+  if (fb) { const id = fb.dataset.fid; if (st.feel[id] === fb.dataset.feel) delete st.feel[id]; else st.feel[id] = fb.dataset.feel; save(); render(); }
+});
+list.addEventListener("submit", ev => {
+  ev.preventDefault();
+  const f = ev.target, id = f.dataset.form;
+  const kg = f.kg.value.trim(), unit = f.unit.value.trim() || "kg";
+  st.loads[id] = {...st.loads[id], kg, unit}; editing = null; save(); render();
+});
+
+/* ---------- ajustement des charges ---------- */
+function stepFor(v, unit){
+  const u = (unit || "").toLowerCase();
+  if (u.includes("côté") || u.includes("haltère") || v < 20) return 2.5;
+  return 5;
+}
+const fmt = n => (Math.round(n * 10) / 10).toString().replace(".", ",");
+function shift(kg, unit, dir){
+  return kg.replace(/\d+(?:[.,]\d+)?/g, m => {
+    const v = parseFloat(m.replace(",", "."));
+    return fmt(Math.max(0, v + dir * stepFor(v, unit)));
+  });
+}
+function nextKg(id){
+  const L = st.loads[id], f = st.feel[id];
+  return f === "same" ? L.kg : shift(L.kg, L.unit, f === "up" ? 1 : -1);
+}
+
+const finishBtn = document.getElementById("finish"), confirmBox = document.getElementById("confirm");
+const pendingIds = () => EX[st.tab].map(e => e.id).filter(id => st.feel[id] && st.loads[id] && st.loads[id].kg);
+finishBtn.addEventListener("click", () => {
+  const ids = pendingIds();
+  document.getElementById("confirm-txt").innerHTML = ids.length
+    ? `<strong>Charges pour la prochaine séance</strong><br>${ids.map(id => esc(`${byId(id).n} : ${st.loads[id].kg} → ${nextKg(id)}`)).join("<br>")}`
+    : "Aucun ressenti noté. Seules les séries cochées seront remises à zéro.";
+  confirmBox.hidden = false; finishBtn.hidden = true;
+});
+document.getElementById("confirm-no").addEventListener("click", () => { confirmBox.hidden = true; finishBtn.hidden = false; });
+document.getElementById("confirm-yes").addEventListener("click", () => {
+  const ids = pendingIds();
+  const today = new Date().toLocaleDateString("fr-FR", {day:"numeric", month:"short"});
+  const label = {up:"facile", same:"moyen", down:"dur"};
+  ids.forEach(id => {
+    const L = st.loads[id], f = st.feel[id], kg = nextKg(id);
+    const txt = f === "same" ? `moyen (${today}) · charge gardée à ${L.kg}` : `${label[f]} (${today}) · ${L.kg} → ${kg}`;
+    st.loads[id] = {...L, kg, ressenti: txt};
+  });
+  EX[st.tab].forEach(e => { delete st.done[e.id]; delete st.feel[e.id]; });
+  save(); confirmBox.hidden = true; finishBtn.hidden = false; render();
+  document.getElementById("finish-note").textContent = ids.length ? "Séance terminée, charges mises à jour pour la prochaine fois." : "Séance terminée.";
+});
+
+/* ---------- photos ---------- */
+const lb = document.getElementById("lb"); let lbId = null;
+function openLb(id){
+  lbId = id;
+  const img = document.getElementById("lb-img"); img.src = photoOf(id); img.alt = byId(id).n;
+  document.getElementById("lb-title").textContent = byId(id).n;
+  document.getElementById("lb-default").hidden = !photoUrls[id];
+  lb.hidden = false;
+}
+const closeLb = () => { lb.hidden = true; lbId = null; };
+document.getElementById("lb-close").addEventListener("click", closeLb);
+lb.addEventListener("click", ev => { if (ev.target === lb) closeLb(); });
+document.getElementById("lb-file").addEventListener("change", async ev => {
+  const file = ev.target.files[0]; ev.target.value = ""; if (!file || !lbId) return;
+  await idbDo("readwrite", s => s.put(file, lbId));
+  if (photoUrls[lbId]) URL.revokeObjectURL(photoUrls[lbId]);
+  photoUrls[lbId] = URL.createObjectURL(file);
+  openLb(lbId); render();
+});
+document.getElementById("lb-default").addEventListener("click", async () => {
+  if (!lbId) return;
+  await idbDo("readwrite", s => s.delete(lbId));
+  if (photoUrls[lbId]) URL.revokeObjectURL(photoUrls[lbId]);
+  delete photoUrls[lbId];
+  openLb(lbId); render();
+});
+
+render();
+loadCustomPhotos();
+if ("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js").catch(() => {});
+</script>
+</body>
+</html>
