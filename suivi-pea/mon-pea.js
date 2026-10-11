@@ -268,7 +268,7 @@ function krachHtml(toujours) {
       <li><b>Garde ton plan.</b> Chaque semaine, tes ${eur0(num("pea-hebdo", 0) || 300)} achètent plus de parts quand c'est bas : c'est là que se prépare la remontée.</li>
       <li><b>Regarde loin.</b> Avec un horizon de plus de 5 ans, une baisse de 10 à 20 % arrive presque chaque année ou deux.</li></ul>`;
   if (!touches.length) return `<section class="card"><details><summary><h2 style="display:inline">Si ça chute un jour</h2></summary>
-      <p style="margin:8px 0 0">Ce mode s'affiche tout seul en haut de « La séance » quand un de tes ETF recule de plus de 5 % par rapport à son plus haut récent. Voici ce qu'il te rappellera :</p>${conseils}${tableau}</details></section>`;
+      <p style="margin:8px 0 0">Cette partie devient une alerte quand un de tes ETF recule de plus de 5 % par rapport à son plus haut récent. Voici ce qu'elle te rappellera :</p>${conseils}${tableau}</details></section>`;
   return `<section class="card krach" role="alert">
     <span class="eyebrow">Mode krach</span>
     <h2>${touches.map(t => `${esc(t.nom)} ${fmtPct(t.dd, 1)}`).join(" · ")} depuis son plus haut récent</h2>

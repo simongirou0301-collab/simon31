@@ -327,8 +327,6 @@ function render() {
     ${hasOwn() ? "" : `<p class="muted small" style="margin:8px 0 0">Entre tes montants dans l'onglet « Mon PEA » : ils restent uniquement sur ton appareil.</p>`}
   </section>
 
-  ${typeof krachHtml === "function" ? krachHtml(false) : ""}
-
   <nav class="tabs" role="tablist">
     ${etfs.map(x => `<button class="tab" role="tab" data-tab="${x.id}" aria-selected="${x.id === current}">
       <span>${esc(x.short)}</span><span class="num ${x.id === current ? "" : cls(x.day)}">${fmtPct(x.day)}</span></button>`).join("")}
