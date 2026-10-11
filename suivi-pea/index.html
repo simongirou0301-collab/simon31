@@ -289,6 +289,8 @@ function squarify(items, x, y, w, h) {
   }
 }
 
+function courbe(e) { return (e.eur && e.eur.history) || e.history; }
+
 function lineChart(hist) {
   const W = 640, H = 170, P = {l: 8, r: 52, t: 14, b: 22};
   const vals = hist.map(h => h[1]);
@@ -443,7 +445,7 @@ ${tabs}
       <div><h2>${esc(e.name)}</h2><div class="muted small">${esc(e.total)} · 30 dernières séances</div></div>
       <span class="pill ${cls(e.day)} num">${fmtPct(e.day)} ce jour-là</span>
     </div>
-    ${lineChart(e.history)}
+    ${lineChart(courbe(e))}
     <div class="kpis">
       <div class="kpi"><label for="inv-${e.id}">Mon argent dedans</label><input id="inv-${e.id}" class="num" inputmode="decimal" value="${inv.toFixed(2).replace(".", ",")}" aria-label="Montant investi dans ${esc(e.name)} en euros"></div>
       <div class="kpi"><label>Effet du jour</label><div class="v num ${cls(e.day)}">${fmtEur(inv * e.day / 100)}</div></div>
@@ -461,7 +463,7 @@ ${tabs}
 
   <footer class="foot">
     <details><summary>D'où viennent les chiffres ?</summary>
-      <p>Cours de clôture du ${esc(DATA.label)} (StockAnalysis, Investing.com). ${esc(e.proxyNote)} Les variations de ton ETF en euros peuvent différer légèrement à cause du taux de change. Compositions au ${esc(e.holdingsDate.split("-").reverse().join("/"))}, seules les plus grosses positions sont affichées. Les montants « Mon argent dedans » sont enregistrés uniquement dans ton navigateur, jamais en ligne.</p>
+      <p>Cours de clôture du ${esc(DATA.label)}. ${esc(e.proxyNote)} Trade Republic affiche le cours de LS Exchange, qui cote jusqu'à 23 h : sa variation peut différer un peu de la clôture de Paris (17 h 35). Compositions au ${esc(e.holdingsDate.split("-").reverse().join("/"))}, seules les plus grosses positions sont affichées. Les montants « Mon argent dedans » sont enregistrés uniquement dans ton navigateur, jamais en ligne.</p>
     </details>
     <span>Mis à jour chaque soir de semaine après la clôture américaine. Dernière mise à jour : ${new Date(DATA.updatedAt).toLocaleString("fr-FR", {dateStyle: "medium", timeStyle: "short"})}.</span>
   </footer>`;
@@ -543,6 +545,7 @@ async function loadDay(id) {
     d.etfs.forEach(e => {
       const l = LATEST.etfs.find(x => x.id === e.id);
       if (!e.history && l) e.history = l.history.filter(h => h[0] <= d.date);
+      if (l && l.eur && !(e.eur && e.eur.history)) e.eur = Object.assign({}, l.eur, e.eur || {}, {history: l.eur.history.filter(h => h[0] <= d.date)});
     });
     DATA = d; selected = null; render();
   } catch {}

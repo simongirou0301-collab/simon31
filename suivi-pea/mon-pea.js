@@ -254,7 +254,7 @@ fetch("composition.json", {cache: "no-cache"}).then(r => r.ok ? r.json() : null)
 
 function baisses() {
   return (LATEST || DATA).etfs.map(e => {
-    const h = (DATA.etfs.find(x => x.id === e.id) || e).history || e.history;
+    const h = courbe(DATA.etfs.find(x => x.id === e.id) || e);
     const hi = Math.max(...h.map(p => p[1])), last = h[h.length - 1][1];
     return {id: e.id, nom: e.short, dd: (last / hi - 1) * 100};
   });
