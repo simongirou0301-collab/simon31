@@ -316,13 +316,14 @@ function render(){
   if (cmp) return renderCompare();
   if (current) return renderDetail(current);
   if (sub === "prog") return renderProg();
+  if (sub === "plan") return renderPlan();
   if (sub === "forme") return renderForme();
   if (sub === "sante") return renderSante();
   renderList();
 }
 let sub = "list";
 function subnav(){
-  const items = [["list","Courses"],["prog","Progrès"],["forme","Forme"],["sante","Santé"]];
+  const items = [["list","Courses"],["prog","Progrès"],["plan","Plan"],["forme","Forme"],["sante","Santé"]];
   return `<div class="subnav" role="tablist">${items.map(([k, l]) => `<button type="button" role="tab" data-sub="${k}" aria-selected="${sub === k}">${l}</button>`).join("")}</div>`;
 }
 function bindSubnav(){
@@ -685,6 +686,53 @@ function predCard(rec){
     <table class="splits"><tbody><tr><th></th><th>Prédit</th><th>Allure</th><th>Record</th></tr>
     ${rows.map(r => `<tr><td>${r.l}</td><td><b>${fmtDur(r.t)}</b></td><td>${fmtPace(r.t / 60 / (r.d / 1000))}</td><td class="muted">${r.own ? fmtDur(r.own) : "–"}</td></tr>`).join("")}</tbody></table>
     <p class="muted">Estimation à partir de tes meilleurs temps (formule de Riegel). Elle suppose un entraînement régulier sur la distance visée : sur un semi, compte plutôt un peu plus.</p></div>`;
+}
+
+/* ---------- Plan 10 km ---------- */
+const PL_EASY = [5,5,6,6,7,5,7,4], PL_QUAL = [4,5,5,6,6,5,6,3], PL_LONG = [6,7,8,9,10,8,10,10];
+const PL_Q = ["Fartlek : 6 × 1 min rapide / 1 min lent","Fartlek : 8 × 1 min rapide / 1 min lent","Tempo : 2 × 8 min allure seuil, 3 min de trot","Fractionné : 6 × 400 m vite, 1 min de trot","Tempo : 2 × 10 min allure seuil, 3 min de trot","Footing facile + 4 lignes droites de 100 m","Fractionné : 5 × 600 m, 90 s de trot","Footing + 4 lignes droites de 100 m"];
+function makePlan(mon){
+  const sessions = [];
+  for (let w = 0; w < 8; w++) {
+    const day = o => dayKey(new Date(mon.getFullYear(), mon.getMonth(), mon.getDate() + w * 7 + o));
+    sessions.push({d: day(2), t: "easy", km: PL_EASY[w], txt: "Footing facile, tu peux parler", w: w + 1});
+    sessions.push({d: day(5), t: "qual", km: PL_QUAL[w], txt: PL_Q[w], w: w + 1});
+    sessions.push(w === 7 ? {d: day(6), t: "race", km: 10, txt: "COURSE 10 km : pars prudent, accélère sur la fin", w: w + 1} : {d: day(6), t: "long", km: PL_LONG[w], txt: "Sortie longue à allure facile", w: w + 1});
+  }
+  return {start: dayKey(mon), sessions};
+}
+function recAll(){ const rec = {}; for (const r of runs.list) if (r.best) for (const t of [5000, 10000, 21097.5]) { const v = r.best[t]; if (v && (!rec[t] || v < rec[t])) rec[t] = v; } return rec; }
+function pace10(){ const rec = recAll(); if (rec[10000]) return rec[10000] / 600; if (rec[5000]) return rec[5000] * Math.pow(2, 1.06) / 600; return null; }
+const pr = (a, b) => `${fmtPace(a)}–${fmtPace(b)} /km`;
+function sessDone(x){ return runs.list.some(r => dayKey(runDate(r)) === x.d && r.dist >= x.km * 700); }
+function renderPlan(){
+  const P = runs.plan;
+  if (!P) {
+    const now = new Date(), mon = new Date(now.getFullYear(), now.getMonth(), now.getDate() - (now.getDay() + 6) % 7), nxt = new Date(mon.getTime() + 7 * 864e5);
+    const opts = [[nxt, "Lundi prochain"]]; if ((now.getDay() + 6) % 7 <= 1) opts.unshift([mon, "Cette semaine"]);
+    view.innerHTML = subnav() + `<div class="card"><h3>Plan 10 km · 8 semaines</h3><p class="muted">3 sorties par semaine : un footing facile le mercredi, une séance de rythme le samedi et une sortie longue le dimanche. La semaine 6 allège, la semaine 8 se termine par ta course de 10 km. Chaque sortie apparaît dans ton calendrier.</p>
+      <label class="field">Début<select id="pl-start" class="sel">${opts.map(([d, l]) => `<option value="${dayKey(d)}">${l} · ${d.toLocaleDateString("fr-FR", {day: "numeric", month: "long"})}</option>`).join("")}</select></label>
+      <button class="btn-main" id="pl-go" type="button">Démarrer le plan</button></div>`;
+    bindSubnav();
+    document.getElementById("pl-go").addEventListener("click", () => { const [y, m, d] = document.getElementById("pl-start").value.split("-").map(Number); runs.plan = makePlan(new Date(y, m - 1, d)); saveRuns(); render(); });
+    return;
+  }
+  const today = dayKey(new Date()), S = P.sessions, p10 = pace10();
+  const cur = (S.find(x => x.d >= today) || S[S.length - 1]).w, doneN = S.filter(sessDone).length;
+  const hint = x => !p10 ? "" : x.t === "easy" || x.t === "long" ? ` · ${pr(p10 + 1, p10 + 1.25)}` : x.t === "race" ? ` · ${fmtPace(p10)} /km` : ` · ${pr(p10 - .1, p10 + .15)}`;
+  const names = {easy: "Footing", qual: "Rythme", long: "Sortie longue", race: "Course"};
+  let weeks = "";
+  for (let w = 1; w <= 8; w++) {
+    const ws = S.filter(x => x.w === w), tot = ws.reduce((a, x) => a + x.km, 0);
+    weeks += `<details class="pl-w" ${w === cur ? "open" : ""}><summary><b>Semaine ${w}</b><span>${tot} km · ${ws.filter(sessDone).length}/3</span></summary>
+      ${ws.map(x => { const dn = sessDone(x), miss = !dn && x.d < today, d = new Date(x.d + "T12:00");
+        return `<div class="pl-s ${dn ? "ok" : miss ? "miss" : ""} ${x.d === today ? "now" : ""}"><span class="pl-i">${dn ? "✓" : miss ? "–" : "○"}</span><div><b>${names[x.t]} · ${x.km} km</b><div class="muted">${d.toLocaleDateString("fr-FR", {weekday: "short", day: "numeric", month: "short"})} · ${esc(x.txt)}${hint(x)}</div></div></div>`; }).join("")}</details>`;
+  }
+  view.innerHTML = subnav() + `<div class="wg"><div class="wd"><div class="wd-h"><div><div class="wd-t">Plan 10 km</div><div class="wd-s">Semaine ${cur} / 8</div></div></div><div class="wd-n">${doneN}<small>/ 24 sorties</small></div><div class="wd-prog"><i style="width:${doneN / 24 * 100}%;background:var(--green)"></i></div></div>
+    <div class="wd"><div class="wd-h"><div><div class="wd-t">Allure facile</div><div class="wd-s">Estimée</div></div></div><div class="wd-n" style="font-size:1.5rem">${p10 ? pr(p10 + 1, p10 + 1.25) : "–"}</div><div class="wd-s">${p10 ? "d'après tes records" : "Disponible après tes premiers records"}</div></div></div>
+    <div class="card">${weeks}<button class="btn" id="pl-stop" type="button">Abandonner le plan</button></div>`;
+  bindSubnav();
+  document.getElementById("pl-stop").addEventListener("click", () => { if (confirm("Abandonner le plan ?")) { delete runs.plan; saveRuns(); render(); } });
 }
 
 /* ---------- Forme ---------- */

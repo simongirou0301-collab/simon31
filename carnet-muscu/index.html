@@ -444,6 +444,7 @@ function weightChart(ser){
     <circle cx="${X(li).toFixed(1)}" cy="${Y(v[li]).toFixed(1)}" r="5" fill="var(--blue)" stroke="var(--surface)" stroke-width="2.5"/>
     <text x="${P}" y="${H - 2}">${new Date(ser[0].d).toLocaleDateString("fr-FR", {day: "numeric", month: "short"})}</text><text x="${W - P}" y="${H - 2}" text-anchor="end">${new Date(ser[li].d).toLocaleDateString("fr-FR", {day: "numeric", month: "short"})}</text></svg>`;
 }
+function plannedToday(R){ const n = new Date(), k = `${n.getFullYear()}-${String(n.getMonth() + 1).padStart(2, "0")}-${String(n.getDate()).padStart(2, "0")}`; return ((R.plan || {}).sessions || []).find(x => x.d === k) || null; }
 function renderToday(){
   const now = new Date(), wd0 = now.getDay(), tab = (wd0 === 1 || wd0 === 4) ? "push" : (wd0 === 2 || wd0 === 5) ? "pull" : null;
   const dayIdx = (wd0 + 6) % 7, monD = new Date(now.getFullYear(), now.getMonth(), now.getDate() - dayIdx), mon = monD.getTime();
@@ -465,11 +466,12 @@ function renderToday(){
   let top;
   if (doneToday.length) { const v = doneToday.reduce((a, x) => a + (x.vol || 0), 0); top = wd("Séance du jour", "Terminée", "dumb", "var(--green)", `<div class="wd-big">Bien joué ✓</div><div class="wd-s">${v ? nf(v) + " kg soulevés aujourd'hui" : "Séance enregistrée"}</div>`, "full"); }
   else if (tab) top = wd("Séance du jour", now.toLocaleDateString("fr-FR", {weekday: "long"}), "dumb", "var(--pink)", `<div class="wd-big">${tab === "push" ? "Push" : "Pull"}</div><div class="wd-s">${EX[tab].length} exercices · ${EX[tab].reduce((a, e) => a + e.s, 0)} séries</div><button class="td-go" type="button" data-go="${tab}">Commencer</button>`, "full");
+  else if (!tab && plannedToday(R)) { const x = plannedToday(R), nm = {easy: "Footing", qual: "Rythme", long: "Sortie longue", race: "Course"}[x.t]; top = wd("Séance du jour", "Plan 10 km · semaine " + x.w, "run", "var(--green)", `<div class="wd-big">${nm} ${x.km} km</div><div class="wd-s">${esc(x.txt)}</div><button class="td-go alt" type="button" data-go="run">Voir le plan</button>`, "full"); }
   else top = wd("Séance du jour", now.toLocaleDateString("fr-FR", {weekday: "long"}), "run", "var(--green)", `<div class="wd-big">Repos ou course</div><div class="wd-s">Pas de muscu prévue aujourd'hui.</div><button class="td-go alt" type="button" data-go="run">Voir mes courses</button>`, "full");
   // calendrier
-  const {gym, run} = calData(), y = now.getFullYear(), m = now.getMonth(), nd = new Date(y, m + 1, 0).getDate(), first = (new Date(y, m, 1).getDay() + 6) % 7;
+  const {gym, run, plan} = calData(), y = now.getFullYear(), m = now.getMonth(), nd = new Date(y, m + 1, 0).getDate(), first = (new Date(y, m, 1).getDay() + 6) % 7;
   let cal = '<div class="wd-cal">' + "LMMJVSD".split("").map(x => `<span>${x}</span>`).join("") + "<b></b>".repeat(first);
-  for (let d = 1; d <= nd; d++) { const k = dk(new Date(y, m, d)), g = gym.has(k), r = run.has(k); cal += `<b class="${g && r ? "both" : g ? "g" : r ? "r" : ""}${d === now.getDate() ? " now" : ""}"></b>`; }
+  for (let d = 1; d <= nd; d++) { const k = dk(new Date(y, m, d)), g = gym.has(k), r = run.has(k); cal += `<b class="${g && r ? "both" : g ? "g" : r ? "r" : plan.has(k) ? "p" : ""}${d === now.getDate() ? " now" : ""}"></b>`; }
   cal += "</div>";
   const sl = well && well.sleep ? `${Math.floor(well.sleep / 3600)}<small>h</small> ${String(Math.floor(well.sleep % 3600 / 60)).padStart(2, "0")}<small>m</small>` : null;
   document.getElementById("today-view").innerHTML = `<div class="wg">${top}
@@ -514,7 +516,8 @@ function calData(){
   const gym = new Set(), run = new Set();
   st.log.forEach(s => gym.add(dk(new Date(s.t))));
   try { (JSON.parse(localStorage.getItem("carnet-runs-icu-v1")).list || []).forEach(r => run.add(dk(new Date(r.start.replace("Z", ""))))); } catch (e) {}
-  return {gym, run};
+  const plan = new Set(); try { ((JSON.parse(localStorage.getItem("carnet-runs-icu-v1")).plan || {}).sessions || []).forEach(x => { const [y, m, d] = x.d.split("-").map(Number); plan.add(`${y}-${m - 1}-${d}`); }); } catch (e) {}
+  return {gym, run, plan};
 }
 function streakWeeks(){
   const {gym, run} = calData(), any = new Set([...gym, ...run]); const mon = d => new Date(d.getFullYear(), d.getMonth(), d.getDate() - (d.getDay() + 6) % 7);
@@ -524,13 +527,13 @@ function streakWeeks(){
   return n;
 }
 function calHtml(){
-  const {gym, run} = calData(), y = calM.getFullYear(), m = calM.getMonth();
+  const {gym, run, plan} = calData(), y = calM.getFullYear(), m = calM.getMonth();
   const first = (new Date(y, m, 1).getDay() + 6) % 7, nd = new Date(y, m + 1, 0).getDate(), today = dk(new Date());
   let cells = ["L","M","M","J","V","S","D"].map(x => `<div class="cal-w">${x}</div>`).join("") + '<div></div>'.repeat(first);
   let g = 0, r = 0;
   for (let d = 1; d <= nd; d++) {
     const k = dk(new Date(y, m, d)), a = gym.has(k), b = run.has(k); if (a) g++; if (b) r++;
-    cells += `<div class="cal-d${k === today ? " today" : ""}"><span>${d}</span><i>${a ? '<u class="g"></u>' : ""}${b ? '<u class="r"></u>' : ""}</i></div>`;
+    cells += `<div class="cal-d${k === today ? " today" : ""}"><span>${d}</span><i>${a ? '<u class="g"></u>' : ""}${b ? '<u class="r"></u>' : plan.has(k) ? '<u class="p"></u>' : ""}</i></div>`;
   }
   const streak = streakWeeks();
   const title = calM.toLocaleDateString("fr-FR", {month: "long", year: "numeric"});
