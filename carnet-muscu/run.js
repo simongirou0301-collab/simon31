@@ -350,11 +350,32 @@ function weeklyBars(){
   return {svg: `<svg class="chart" viewBox="0 0 ${W} ${H}" role="img" aria-label="Kilomètres par semaine">${g}</svg>`, thisWeek: weeks[weeks.length-1].km};
 }
 
+function goals(){ return Object.assign({km: 20, n: 3, dist: null, time: null}, runs.goals || {}); }
+function rings(){
+  const g = goals(), ws = weeksBack(1)[0].getTime();
+  const wr = runs.list.filter(r => runDate(r).getTime() >= ws);
+  const km = wr.reduce((a, r) => a + r.dist, 0) / 1000, n = wr.length;
+  const ring = (r, pct, color) => { const c = 2 * Math.PI * r, p = Math.max(0, Math.min(1, pct)); return `<circle cx="60" cy="60" r="${r}" fill="none" stroke="${color}" stroke-opacity=".18" stroke-width="12"/><circle cx="60" cy="60" r="${r}" fill="none" stroke="${color}" stroke-width="12" stroke-linecap="round" stroke-dasharray="${(c * p).toFixed(1)} ${c.toFixed(1)}" transform="rotate(-90 60 60)"/>`; };
+  let race = "";
+  if (g.dist && g.time) {
+    const best = runs.list.reduce((m, r) => { const v = r.best && r.best[g.dist]; return v && (!m || v < m) ? v : m; }, null);
+    const lab = {5000: "5 km", 10000: "10 km", 21097.5: "Semi"}[g.dist] || "";
+    const pct = best ? Math.min(1, g.time / best) : 0;
+    race = `<div class="goal-race"><div class="row spread"><b>${lab} en ${fmtDur(g.time)}</b><span class="muted">${best ? (best <= g.time ? "Objectif atteint 🎉" : "Il reste " + fmtDur(best - g.time)) : "Pas encore de record"}</span></div>
+      <div class="zb"><i style="width:${(pct * 100).toFixed(0)}%;background:var(--purple,var(--indigo))"></i></div>
+      <span class="muted">${best ? "Ton record : " + fmtDur(best) : ""}</span></div>`;
+  }
+  return `<div class="card"><h3>Objectifs de la semaine</h3>
+    <div class="goal-row"><svg viewBox="0 0 120 120" class="rings" role="img" aria-label="Anneaux d'objectifs">${ring(52, km / g.km, "var(--red,#ff375f)")}${ring(36, n / g.n, "var(--green,#30d158)")}</svg>
+      <div class="goal-leg"><div><i style="background:var(--red,#ff375f)"></i><b>${km.toFixed(1).replace(".", ",")}</b> / ${g.km} km</div><div><i style="background:var(--green,#30d158)"></i><b>${n}</b> / ${g.n} sorties</div></div></div>${race}</div>`;
+}
+
 function renderList(){
   const wk = weeklyBars();
   const last30 = runs.list.filter(r => Date.now() - Date.parse(r.start.replace("Z","")) < 30 * 864e5);
   const d30 = last30.reduce((a, r) => a + r.dist, 0), t30 = last30.reduce((a, r) => a + r.moving, 0);
   view.innerHTML = `${subnav()}
+    ${rings()}
     <div class="card">
       ${syncBar("Mes courses")}
       <div class="kpis">
@@ -374,10 +395,24 @@ function renderList(){
       </button></li>`).join("")}</ul>` : `<div class="card"><p class="muted">${syncing ? "Récupération de tes courses…" : "Aucune course trouvée sur les 4 derniers mois. Va courir avec ta Garmin : la course arrivera ici après sa synchro avec Intervals.icu."}</p></div>`}
     <div class="card">
       <h3>Réglages</h3>
+      <h3>Objectifs</h3>
+      <div class="goal-form"><label class="field">Km / semaine<input id="g-km" inputmode="decimal" value="${goals().km}"></label>
+      <label class="field">Sorties / semaine<input id="g-n" inputmode="numeric" value="${goals().n}"></label>
+      <label class="field">Course visée<select id="g-d"><option value="">Aucune</option>${[[5000,"5 km"],[10000,"10 km"],[21097.5,"Semi"]].map(([v,l]) => `<option value="${v}" ${goals().dist === v ? "selected" : ""}>${l}</option>`).join("")}</select></label>
+      <label class="field">Temps visé (mm:ss ou h:mm:ss)<input id="g-t" inputmode="numeric" placeholder="50:00" value="${goals().time ? fmtDur(goals().time) : ""}"></label></div>
+      <button class="btn" id="g-save" type="button">Enregistrer les objectifs</button>
       <label class="field">Fréquence cardiaque max (pour les zones)<input id="sv-fc" inputmode="numeric" value="${esc(runs.fcMax || "")}" placeholder="${fcMax()} (estimée)"></label>
       <div class="row"><button class="btn" id="sv-fc-save" type="button">Enregistrer</button><button class="btn" id="sv-logout" type="button">Déconnecter Garmin</button></div>
     </div>`;
   bindSubnav();
+  document.getElementById("g-save").addEventListener("click", () => {
+    const f = id => document.getElementById(id).value.trim();
+    const km = parseFloat(f("g-km").replace(",", ".")), n = parseInt(f("g-n"), 10), dist = parseFloat(f("g-d")) || null;
+    const parts = f("g-t").split(":").map(x => parseInt(x, 10)); let time = null;
+    if (parts.length >= 2 && parts.length <= 3 && parts.every(x => isFinite(x))) time = parts.reduce((a, x) => a * 60 + x, 0);
+    runs.goals = {km: km > 0 ? km : 20, n: n > 0 ? n : 3, dist: dist && time ? dist : null, time: dist && time ? time : null};
+    saveRuns(); render();
+  });
   document.getElementById("sv-fc-save").addEventListener("click", () => { const v = parseInt(document.getElementById("sv-fc").value, 10); runs.fcMax = v > 120 && v < 230 ? v : null; saveRuns(); render(); });
   document.getElementById("sv-logout").addEventListener("click", () => { auth = {athleteId: auth.athleteId}; saveAuth(); render(); });
   view.querySelectorAll("[data-run]").forEach(b => b.addEventListener("click", () => { current = b.dataset.run; window.scrollTo(0, 0); render(); }));

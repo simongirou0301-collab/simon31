@@ -49,3 +49,14 @@ ol.steps{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:4px;f
 .subnav button[aria-selected="true"]{background:var(--ink);color:var(--surface)}
 .legend{display:flex;gap:14px;flex-wrap:wrap;font-size:.75rem;color:var(--muted)}
 .legend i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:5px;vertical-align:-1px}
+
+.goal-row{display:flex;align-items:center;gap:18px}
+.rings{width:120px;height:120px;flex-shrink:0}
+.goal-leg{display:flex;flex-direction:column;gap:10px;font-size:.9rem}
+.goal-leg i{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:8px}
+.goal-leg b{font-family:var(--display);font-size:1.4rem}
+.goal-race{display:flex;flex-direction:column;gap:6px;border-top:1px solid var(--line);padding-top:10px}
+.goal-race .zb{height:10px;border-radius:5px;background:var(--bg);overflow:hidden}
+.goal-race .zb i{display:block;height:100%}
+.goal-form{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.goal-form select{font:500 16px var(--body);color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:10px;width:100%}
