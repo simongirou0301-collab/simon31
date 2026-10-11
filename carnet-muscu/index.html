@@ -113,7 +113,8 @@ footer{color:var(--muted);font-size:.78rem}
   <section id="today-view" hidden></section>
 
   <div id="gym-view" class="gym">
-  <div class="progress"><span id="count"></span><button class="btn" id="reset" type="button">Remettre les séries à zéro</button></div>
+  <div class="wg" id="gsum"></div>
+  <div class="progress"><span id="count" hidden></span><button class="btn" id="reset" type="button">Remettre les séries à zéro</button></div>
 
   <ul class="list" id="list"></ul>
   <div id="prog" hidden></div>
@@ -293,7 +294,11 @@ function render(){
       </div>`;
     list.appendChild(li);
   });
-  { const v = liveVol(); document.getElementById("count").textContent = `${ok} / ${tot} séries faites` + (v ? ` · ${nf(v)} kg soulevés` : ""); }
+  { const v = liveVol(), lv = lastVol(st.tab), L = 2 * Math.PI * 30, q = tot ? ok / tot : 0;
+    document.getElementById("count").textContent = `${ok} / ${tot} séries faites`;
+    document.getElementById("gsum").innerHTML =
+      wd("Séries", st.tab === "push" ? "Séance Push" : "Séance Pull", "dumb", st.tab === "push" ? "var(--pink)" : "var(--blue)", `<div class="wd-row"><svg viewBox="0 0 72 72" class="wd-mini"><circle cx="36" cy="36" r="30" fill="none" stroke="var(--line)" stroke-width="9"/><circle cx="36" cy="36" r="30" fill="none" stroke="${st.tab === "push" ? "var(--pink)" : "var(--blue)"}" stroke-width="9" stroke-linecap="round" stroke-dasharray="${(L * q).toFixed(1)} ${L.toFixed(1)}" transform="rotate(-90 36 36)"/></svg>${wbig(ok, "/ " + tot)}</div>`) +
+      wd("Volume", "Kg soulevés", "bolt", "var(--orange)", wbig(v ? nf(v) : "0", "kg") + `<div class="wd-s">${lv ? "Dernière : " + nf(lv) + " kg" : "Pas encore de séance"}</div>`); }
   if (editing) { const i = document.getElementById("kg-" + editing); if (i) i.focus(); }
 }
 

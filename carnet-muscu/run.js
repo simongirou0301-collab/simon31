@@ -402,15 +402,22 @@ function renderList(){
   const wk = weeklyBars();
   const last30 = runs.list.filter(r => Date.now() - Date.parse(r.start.replace("Z","")) < 30 * 864e5);
   const d30 = last30.reduce((a, r) => a + r.dist, 0), t30 = last30.reduce((a, r) => a + r.moving, 0);
+  const mondayMs = weeksBack(1)[0].getTime(), perDay = [0,0,0,0,0,0,0];
+  runs.list.forEach(x => { const i = Math.floor((runDate(x).getTime() - mondayMs) / 864e5); if (i >= 0 && i < 7) perDay[i] += x.dist / 1000; });
+  const mxd = Math.max(...perDay, 1), todayI = (new Date().getDay() + 6) % 7;
+  const bars = `<div class="wd-bars">${perDay.map((v, i) => `<div class="wd-b"><i style="height:${v ? Math.max(14, v / mxd * 100) : 4}%;background:${v ? "var(--green)" : "var(--line)"}"></i><span class="${i === todayI ? "on" : ""}">${"LMMJVSD"[i]}</span></div>`).join("")}</div>`;
+  const rw = (t, sub, body) => `<div class="wd"><div class="wd-h"><div><div class="wd-t">${t}</div><div class="wd-s">${sub}</div></div></div>${body}</div>`;
+  const big = (v, u) => `<div class="wd-n">${v}${u ? `<small>${u}</small>` : ""}</div>`;
   view.innerHTML = `${subnav()}
     ${rings()}
+    <div class="wg">
+      ${rw("Cette semaine", "Kilomètres", big(wk.thisWeek.toFixed(1).replace(".", ","), "km") + bars)}
+      ${rw("30 jours", "Kilomètres", big((d30/1000).toFixed(0), "km") + `<div class="wd-s">${last30.length} sortie${last30.length > 1 ? "s" : ""}</div>`)}
+      ${rw("Allure", "Moyenne 30 jours", big(last30.length ? fmtPace(t30 / 60 / (d30 / 1000)) : "–", "/km"))}
+      ${rw("Durée", "30 jours", big(last30.length ? (t30 / 3600).toFixed(1).replace(".", ",") : "–", "h"))}
+    </div>
     <div class="card">
       ${syncBar("Mes courses")}
-      <div class="kpis">
-        <div class="kpi"><b>${wk.thisWeek.toFixed(1).replace(".", ",")}</b><span>km cette semaine</span></div>
-        <div class="kpi"><b>${(d30/1000).toFixed(0)}</b><span>km sur 30 jours</span></div>
-        <div class="kpi"><b>${last30.length ? fmtPace(t30 / 60 / (d30 / 1000)) : "–"}</b><span>allure moy. 30 j</span></div>
-      </div>
       <div class="chead"><h3>Kilomètres par semaine</h3></div>
       ${wk.svg}
       ${syncErr ? `<p class="err">${esc(syncErr)}</p>` : ""}

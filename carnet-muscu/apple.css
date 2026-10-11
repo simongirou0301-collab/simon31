@@ -249,3 +249,13 @@ body[data-tab="today"]{--accent:var(--orange); --accent2:var(--pink); --accent-s
 
 .wd-map{position:relative}
 .wd-pill{position:absolute;left:10px;bottom:34px;background:rgba(28,28,30,.82);color:#fff;font:600 .75rem var(--body);padding:5px 10px;border-radius:12px}
+
+/* widgets : gym et course */
+.card,.ex,.runitem{border-radius:26px!important}
+.ex{padding:16px}
+.wd-row{display:flex;align-items:center;gap:12px}
+.wd-mini{width:56px;height:56px;flex-shrink:0}
+#gsum{margin-bottom:2px}
+#gsum .wd{min-height:0}
+#run-view .wg{display:grid}
+.progress{display:flex;justify-content:center}
