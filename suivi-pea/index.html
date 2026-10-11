@@ -379,6 +379,8 @@ function wireViews() {
     document.getElementById("lex-vide").hidden = n > 0;
   };
   document.querySelectorAll(".subbtn").forEach(b => b.onclick = () => { SUB[view] = b.dataset.sub; store.set("pea-sub", JSON.stringify(SUB)); render(); scrollTo(0, 0); });
+  const ak = document.getElementById("alerte-krach");
+  if (ak) ak.onclick = () => { view = "analyse"; SUB.analyse = "krach"; store.set("pea-view", view); store.set("pea-sub", JSON.stringify(SUB)); render(); scrollTo(0, 0); };
   document.querySelectorAll(".navbtn").forEach(b => b.onclick = () => { view = b.dataset.view; store.set("pea-view", view); render(); scrollTo(0, 0); });
 }
 
@@ -453,6 +455,7 @@ ${sub() === "classement" ? `  <section class="card">
     ${hasOwn() ? "" : `<p class="muted small" style="margin:8px 0 0">Entre tes montants dans l'onglet « Mon PEA » : ils restent uniquement sur ton appareil.</p>`}
   </section>
 
+${typeof alerteKrach === "function" ? alerteKrach() : ""}
 ${tabs}
 
   <section class="card">

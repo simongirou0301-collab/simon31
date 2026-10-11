@@ -105,3 +105,11 @@ details summary::-webkit-details-marker{display:none}
 .subnav{overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch}
 .subnav::-webkit-scrollbar{display:none}
 .subbtn{flex:1 0 auto;white-space:nowrap;padding:6px 10px}
+.krach .eyebrow{color:var(--down)}
+.thermo{display:flex;flex-direction:column;gap:8px;margin-top:12px}
+.thermorow{display:grid;grid-template-columns:84px 1fr 92px;gap:10px;align-items:center;font-size:.9rem}
+.thermorow .num{text-align:right;font-weight:600}
+.thermotrack{position:relative;height:10px;border-radius:5px;background:rgba(255,59,48,.14)}
+.thermofill{position:absolute;left:0;top:0;bottom:0;border-radius:5px;background:var(--down)}
+.seuil{position:absolute;left:50%;top:-4px;bottom:-4px;width:2px;border-radius:1px;background:var(--ink);opacity:.55}
+.alertekrach{display:flex;justify-content:space-between;align-items:center;gap:10px;width:100%;border:0;border-radius:14px;padding:12px 16px;background:var(--down);color:#fff;font:inherit;font-weight:600;text-align:left;cursor:pointer}

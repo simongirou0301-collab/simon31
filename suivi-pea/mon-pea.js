@@ -274,7 +274,7 @@ function baisses() {
 }
 
 function krachHtml(toujours) {
-  const touches = baisses().filter(b => b.dd <= -5);
+  const bs = baisses(), touches = bs.filter(b => b.dd <= -5);
   if (!touches.length && !toujours) return "";
   const k = COMPO?.krachs || [];
   const tableau = k.length ? `<div class="tablewrap"><table class="krachs">
@@ -285,14 +285,24 @@ function krachHtml(toujours) {
       <li><b>Ne vends pas.</b> Une perte n'est réelle que si tu vends. Tous les krachs de ce tableau ont fini par être effacés.</li>
       <li><b>Garde ton plan.</b> Chaque semaine, tes ${eur0(num("pea-hebdo", 0) || 300)} achètent plus de parts quand c'est bas : c'est là que se prépare la remontée.</li>
       <li><b>Regarde loin.</b> Avec un horizon de plus de 5 ans, une baisse de 10 à 20 % arrive presque chaque année ou deux.</li></ul>`;
-  if (!touches.length) return `<section class="card"><details open><summary><h2 style="display:inline">Si ça chute un jour</h2></summary>
-      <p style="margin:8px 0 0">Cette partie devient une alerte quand un de tes ETF recule de plus de 5 % par rapport à son plus haut récent. Voici ce qu'elle te rappellera :</p>${conseils}${tableau}</details></section>`;
-  return `<section class="card krach" role="alert">
+  // Thermomètre : baisse de chaque ETF depuis son plus haut des 30 dernières séances, seuil d'alerte à −5 %.
+  const thermo = `<div class="thermo">${bs.map(b => `<div class="thermorow"><span class="name">${esc(b.nom)}</span>
+      <span class="thermotrack"><span class="seuil"></span><span class="thermofill" style="width:${Math.min(-b.dd / 10 * 100, 100)}%"></span></span>
+      <span class="num ${b.dd <= -5 ? "down" : ""}">${b.dd > -0.05 ? "au plus haut" : fmtPct(b.dd, 1)}</span></div>`).join("")}</div>
+    <p class="muted small" style="margin:6px 0 0">Baisse depuis le plus haut des 30 dernières séances. Le trait marque le seuil d'alerte (−5 %).</p>`;
+  return `<section class="card krach" ${touches.length ? 'role="alert"' : ""}>
     <span class="eyebrow">Mode krach</span>
-    <h2>${touches.map(t => `${esc(t.nom)} ${fmtPct(t.dd, 1)}`).join(" · ")} depuis son plus haut récent</h2>
-    <p style="margin:6px 0 0">Ça fait peur, mais c'est normal en bourse. Voici de quoi garder la tête froide.</p>
+    <h2>${touches.length ? touches.map(t => `${esc(t.nom)} ${fmtPct(t.dd, 1)}`).join(" · ") + " depuis son plus haut récent" : "Pas de krach en vue"}</h2>
+    <p style="margin:6px 0 0">${touches.length ? "Ça fait peur, mais c'est normal en bourse. Voici de quoi garder la tête froide." : "Aucun de tes ETF ne recule de plus de 5 %. Si ça arrive, une alerte rouge apparaîtra aussi sur la page Séance."}</p>
+    ${thermo}
     ${conseils}${tableau}
   </section>`;
+}
+
+function alerteKrach() {
+  const touches = baisses().filter(b => b.dd <= -5);
+  if (!touches.length) return "";
+  return `<button class="alertekrach" id="alerte-krach"><span>⚠︎ Mode krach : ${touches.map(t => `${esc(t.nom)} ${fmtPct(t.dd, 1)}`).join(" · ")}</span><span aria-hidden="true">›</span></button>`;
 }
 
 function calendrierHtml() {
