@@ -12,6 +12,7 @@
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icons/icon-180.png">
 <link rel="icon" href="icons/icon-192.png">
+<link rel="stylesheet" href="run.css">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;800&family=Archivo:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap">
 <style>
 :root{
@@ -35,7 +36,7 @@ img{max-width:100%}
 .wrap{max-width:680px;margin:0 auto;padding-inline:16px;padding-block:16px 48px;display:flex;flex-direction:column;gap:18px}
 header h1{font-family:var(--display);font-weight:800;font-size:2.4rem;line-height:1;margin:0;text-transform:uppercase;letter-spacing:.01em}
 header p{margin:6px 0 0;color:var(--muted);font-size:.85rem}
-.tabs{display:grid;grid-template-columns:1fr 1fr;gap:8px;position:sticky;top:env(safe-area-inset-top,0px);background:var(--bg);padding-block:8px;z-index:2}
+.tabs{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;position:sticky;top:env(safe-area-inset-top,0px);background:var(--bg);padding-block:8px;z-index:2}
 .tab{font-family:var(--display);font-weight:800;font-size:1.25rem;text-transform:uppercase;letter-spacing:.04em;padding:10px 12px;border:2px solid var(--line);background:var(--surface);color:var(--ink);border-radius:10px;cursor:pointer;text-align:left;display:flex;flex-direction:column;gap:2px}
 .tab small{font-family:var(--body);font-weight:500;font-size:.75rem;letter-spacing:0;text-transform:none;color:var(--muted)}
 .tab[aria-selected="true"]{border-color:var(--plate);box-shadow:inset 0 0 0 1px var(--plate)}
@@ -79,6 +80,7 @@ button:focus-visible,input:focus-visible,label:focus-within{outline:3px solid va
 .finish-note{font-size:.8rem;color:var(--muted);text-align:center;margin:-8px 0 0}
 .confirm{display:flex;flex-direction:column;gap:8px;background:var(--surface);border:1px solid var(--plate);border-radius:10px;padding:12px}
 .confirm-row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.gym{display:flex;flex-direction:column;gap:18px}
 .lightbox{position:fixed;inset:0;background:var(--scrim);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:calc(16px + env(safe-area-inset-top,0px)) 16px calc(16px + env(safe-area-inset-bottom,0px));z-index:10}
 .lightbox img{max-width:100%;max-height:72vh;border-radius:10px;object-fit:contain;background:#fff}
 .lightbox p{color:#fff;font-family:var(--display);font-size:1.3rem;margin:0;text-align:center}
@@ -100,8 +102,12 @@ footer{color:var(--muted);font-size:.78rem}
   <div class="tabs" role="tablist">
     <button class="tab" role="tab" data-s="push">Push<small>Lundi · Jeudi</small></button>
     <button class="tab" role="tab" data-s="pull">Pull<small>Mardi · Vendredi</small></button>
+    <button class="tab" role="tab" data-s="run">Course<small>Garmin</small></button>
   </div>
 
+  <section id="run-view" hidden></section>
+
+  <div id="gym-view" class="gym">
   <div class="progress"><span id="count"></span><button class="btn" id="reset" type="button">Remettre les séries à zéro</button></div>
 
   <ul class="list" id="list"></ul>
@@ -112,8 +118,9 @@ footer{color:var(--muted);font-size:.78rem}
     <div class="confirm-row"><button class="save" type="button" id="confirm-yes">Valider</button><button class="btn" type="button" id="confirm-no">Retour</button></div>
   </div>
   <p class="finish-note" id="finish-note"></p>
+  </div>
 
-  <footer>Les poids sont le total sur la machine ou la barre, sauf mention « / côté » ou « / haltère ». Tes données restent sur ce téléphone.</footer>
+  <footer id="gym-foot">Les poids sont le total sur la machine ou la barre, sauf mention « / côté » ou « / haltère ». Tes données restent sur ce téléphone.</footer>
 </div>
 
 <div class="lightbox" id="lb" hidden>
@@ -208,6 +215,11 @@ const canAdj = L => !!(L && L.kg && /\d/.test(L.kg));
 
 function render(){
   document.querySelectorAll(".tab").forEach(t => t.setAttribute("aria-selected", t.dataset.s === st.tab));
+  const isRun = st.tab === "run";
+  document.getElementById("gym-view").hidden = isRun;
+  document.getElementById("gym-foot").hidden = isRun;
+  document.getElementById("run-view").hidden = !isRun;
+  if (isRun) { if (window.Run) Run.show(); return; }
   let tot = 0, ok = 0; list.innerHTML = "";
   EX[st.tab].forEach(e => {
     const L = st.loads[e.id] || {}; const d = st.done[e.id] || [];
@@ -343,5 +355,6 @@ render();
 loadCustomPhotos();
 if ("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js").catch(() => {});
 </script>
+<script src="run.js"></script>
 </body>
 </html>
