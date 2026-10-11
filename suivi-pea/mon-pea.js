@@ -220,7 +220,7 @@ function renderPea() {
     <p class="muted small" style="margin:6px 0 0">La technologie pèse ${techMoi.toFixed(0)} % chez toi${COMPO ? `, contre ${COMPO.secteurs.global["Technologie"].toFixed(0)} % dans le MSCI Monde seul : c'est l'effet de ton Nasdaq 100` : ""}.</p>
     ${COMPO ? `<p class="muted small" style="margin:6px 0 0">Sources : ${esc(COMPO.source)}. ${esc(COMPO.notes.europe_autres)}</p>` : ""}
   </section>
-  ` : krachHtml(true)}
+  ` : sub() === "indices" ? indicesHtml() : krachHtml(true)}
   ${navHtml()}`;
 
   wirePea();
@@ -576,4 +576,48 @@ function wireAchats() {
   };
   const c = document.getElementById("tx-clear");
   if (c) c.onclick = () => { if (confirm("Effacer les transactions de ce navigateur ?")) { try { localStorage.removeItem("pea-tx"); } catch {} renderPea(); } };
+}
+
+/* Mon PEA vs les grands indices : les mêmes sommes, aux mêmes dates, placées dans un ETF CAC 40 ou S&P 500. */
+
+function indicesHtml() {
+  const H = LATEST.historique, IDX = LATEST.indices || [];
+  const achats = txList().filter(t => t.etf && (t.type === "achat" || t.type === "vente"));
+  if (!H || !achats.length) return `<section class="card">
+    <h2>Mon PEA vs les grands indices</h2>
+    <p style="margin:6px 0 0">Importe tes transactions dans Mon PEA › Achats : la page calculera ce que tu aurais avec les mêmes sommes, aux mêmes dates, placées dans le CAC 40 ou le S&P 500.</p>
+  </section>`;
+  const prix = (id, d) => { const h = H[id] || []; let v = null; for (const p of h) { if (p[0] > d) break; v = p[1]; } return v ?? (h[0] || [])[1]; };
+  const debut = achats[0].d;
+  const dates = H.global.map(p => p[0]).filter(d => d >= debut);
+  const parts = Object.fromEntries(IDX.map(i => [i.id, 0]));
+  let investi = 0, k = 0;
+  const pts = dates.map(d => {
+    while (k < achats.length && achats[k].d <= d) {
+      const t = achats[k++], m = t.type === "achat" ? t.m + (t.f || 0) : -(t.m - (t.f || 0));
+      investi += m;
+      IDX.forEach(i => { parts[i.id] += m / prix(i.id, t.d); });
+    }
+    const moi = LATEST.etfs.reduce((s, e) => s + txPos(e.id, d).q * (prix(e.id, d) || 0), 0);
+    const r = {d, investi, moi};
+    IDX.forEach(i => { r[i.id] = parts[i.id] * prix(i.id, d); });
+    return r;
+  });
+  const fin = pts[pts.length - 1];
+  const pct = v => fin.investi ? (v / fin.investi - 1) * 100 : 0;
+  const series = [{id: "moi", nom: "Mon PEA", color: "var(--accent)"}, ...IDX.map((i, n) => ({id: i.id, nom: i.nom, color: n ? "var(--c-nasdaq)" : "var(--c-europe)", dash: true}))];
+  const chart = pts.length >= 2 ? svgLines(series.map(s => ({pts: pts.map(p => [new Date(p.d).getTime(), p.investi ? (p[s.id] / p.investi - 1) * 100 : 0]), color: s.color, dash: s.dash})),
+    {label: "Plus-value en % : mon PEA comparé au CAC 40 et au S&P 500", fmtY: v => (v > 0 ? "+" : "") + v.toFixed(1).replace(".", ",") + " %", fmtX: t => new Date(t).toLocaleDateString("fr-FR", {day: "numeric", month: "short"})}) : "";
+  const classement = series.map(s => ({...s, v: fin[s.id], p: pct(fin[s.id])})).sort((a, b) => b.p - a.p);
+  const rang = classement.findIndex(s => s.id === "moi");
+  const ecart = IDX.map(i => ({nom: i.nom, diff: fin.moi - fin[i.id]}));
+  return `<section class="card">
+    <h2>Mon PEA vs les grands indices</h2>
+    <p class="muted small" style="margin:4px 0 0">Depuis ton premier achat le ${esc(new Date(debut).toLocaleDateString("fr-FR"))} : les mêmes sommes, aux mêmes dates, placées dans un ETF CAC 40 ou S&P 500.</p>
+    ${chart}
+    <div class="legend">${series.map(s => `<i style="background:${s.color}"></i><span>${esc(s.nom)}</span>`).join("")}</div>
+    <div class="kpis">${classement.map(s => `<div class="kpi"><label>${s.id === "moi" ? "<b>Mon PEA</b>" : "Avec le " + esc(s.nom)}</label><div class="v num ${cls(s.p)}">${fmtPct(s.p)}</div><div class="muted small num">${fmtEurPlain(s.v)}</div></div>`).join("")}</div>
+    <p style="margin:10px 0 0">${rang === 0 ? "<b>Tu fais mieux que les deux indices.</b>" : rang === classement.length - 1 ? "Pour l'instant, les deux indices font mieux que toi." : `Tu fais mieux que le ${esc(classement[classement.length - 1].nom)}, mais moins bien que le ${esc(classement[0].nom)}.`} ${ecart.map(x => `Par rapport au ${esc(x.nom)} : <b class="num ${cls(x.diff)}">${fmtEur(x.diff)}</b>.`).join(" ")}</p>
+    <p class="muted small" style="margin:8px 0 0">Sur quelques semaines, l'écart dépend surtout de l'actualité du moment : c'est sur plusieurs années que la comparaison a du sens. Investi : ${fmtEurPlain(fin.investi)}. Cours en euros de LS Exchange. ${IDX.map(i => esc(i.etf) + " : " + esc(i.note)).join(" ")}</p>
+  </section>`;
 }
