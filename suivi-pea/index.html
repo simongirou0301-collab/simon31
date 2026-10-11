@@ -138,6 +138,20 @@ details summary{cursor:pointer;font-weight:600}
 .ref{position:absolute;top:-4px;bottom:-4px;width:0;border-left:2px solid var(--ink)}
 .refkey{display:inline-block;width:0;height:14px;border-left:2px solid var(--ink);margin-left:6px}
 @media (max-width:480px){.exporow,.cmprow{grid-template-columns:92px 1fr 64px}}
+.krach{background:var(--down-soft);border-color:var(--down)}
+.krach h2{color:var(--down)}
+.calm{margin:10px 0 0;padding-left:18px;display:flex;flex-direction:column;gap:6px}
+.tablewrap{overflow-x:auto;margin-top:12px}
+.krachs{border-collapse:collapse;width:100%;font-size:.85rem;min-width:420px}
+.krachs th{text-align:left;font-size:.72rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:600;padding:4px 8px 6px 0;border-bottom:1px solid var(--line)}
+.krachs td{padding:7px 8px 7px 0;border-bottom:1px solid var(--line);vertical-align:top}
+.cal{display:flex;flex-direction:column;margin-top:8px}
+.calrow{display:grid;grid-template-columns:92px 1fr;gap:12px;padding:12px 0;border-bottom:1px solid var(--line)}
+.calrow:last-child{border-bottom:0}
+.caldate{display:flex;flex-direction:column;font-size:.85rem}
+.chip.bank{background:var(--down-soft);color:var(--ink)}
+.recaplist{margin:10px 0 8px;padding-left:20px;display:flex;flex-direction:column;gap:6px}
+details summary h2{cursor:pointer}
 @media (max-width:480px){
   h1{font-size:1.55rem}.hero .big{font-size:1.9rem}
   .kpis{grid-template-columns:1fr 1fr}
@@ -313,6 +327,8 @@ function render() {
     ${hasOwn() ? "" : `<p class="muted small" style="margin:8px 0 0">Entre tes montants dans l'onglet « Mon PEA » : ils restent uniquement sur ton appareil.</p>`}
   </section>
 
+  ${typeof krachHtml === "function" ? krachHtml(false) : ""}
+
   <nav class="tabs" role="tablist">
     ${etfs.map(x => `<button class="tab" role="tab" data-tab="${x.id}" aria-selected="${x.id === current}">
       <span>${esc(x.short)}</span><span class="num ${x.id === current ? "" : cls(x.day)}">${fmtPct(x.day)}</span></button>`).join("")}
@@ -362,7 +378,7 @@ function render() {
     </div>
   </section>
 
-  ${(DATA.agenda || []).length ? `<section class="card"><h2>À surveiller</h2>${DATA.agenda.map(a => `<p style="margin:8px 0 0"><b class="num">${esc(a.date.split("-").reverse().slice(0, 2).join("/"))}</b> · ${esc(a.texte)}</p>`).join("")}</section>` : ""}
+  ${typeof recapHtml === "function" ? recapHtml() + calendrierHtml() : ""}
 
   <section class="card word">
     <span class="eyebrow">Le mot du jour</span>

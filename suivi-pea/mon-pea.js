@@ -207,7 +207,9 @@ function renderPea() {
     ${COMPO ? compareBars(secteurs, "MSCI Monde (ACWI) seul") : ""}
     <p class="muted small" style="margin:6px 0 0">La technologie pèse ${techMoi.toFixed(0)} % chez toi${COMPO ? `, contre ${COMPO.secteurs.global["Technologie"].toFixed(0)} % dans le MSCI Monde seul : c'est l'effet de ton Nasdaq 100` : ""}.</p>
     ${COMPO ? `<p class="muted small" style="margin:6px 0 0">Sources : ${esc(COMPO.source)}. ${esc(COMPO.notes.europe_autres)}</p>` : ""}
-  </section>`;
+  </section>
+
+  ${krachHtml(true)}`;
 
   wirePea();
 }
@@ -241,4 +243,78 @@ function wirePea() {
   };
 }
 
-fetch("composition.json", {cache: "no-cache"}).then(r => r.ok ? r.json() : null).then(c => { COMPO = c; if (view === "pea" && LATEST) renderPea(); }).catch(() => {});
+fetch("composition.json", {cache: "no-cache"}).then(r => r.ok ? r.json() : null).then(c => { COMPO = c; if (LATEST) render(); }).catch(() => {});
+
+/* Mode krach, calendrier des annonces, récap de la semaine. */
+
+function baisses() {
+  return (LATEST || DATA).etfs.map(e => {
+    const h = (DATA.etfs.find(x => x.id === e.id) || e).history || e.history;
+    const hi = Math.max(...h.map(p => p[1])), last = h[h.length - 1][1];
+    return {id: e.id, nom: e.short, dd: (last / hi - 1) * 100};
+  });
+}
+
+function krachHtml(toujours) {
+  const touches = baisses().filter(b => b.dd <= -5);
+  if (!touches.length && !toujours) return "";
+  const k = COMPO?.krachs || [];
+  const tableau = k.length ? `<div class="tablewrap"><table class="krachs">
+      <thead><tr><th>Indice</th><th>Crise</th><th>Chute</th><th>Retour au sommet</th></tr></thead>
+      <tbody>${k.map(x => `<tr><td>${esc(x.indice)}</td><td>${esc(x.nom)} <span class="muted small">${esc(x.periode)}</span></td><td class="num down">${x.baisse} %</td><td>${esc(x.recup)}</td></tr>`).join("")}</tbody></table></div>
+      <p class="muted small" style="margin:6px 0 0">${esc(COMPO.krachs_note)}</p>` : "";
+  const conseils = `<ul class="calm">
+      <li><b>Ne vends pas.</b> Une perte n'est réelle que si tu vends. Tous les krachs de ce tableau ont fini par être effacés.</li>
+      <li><b>Garde ton plan.</b> Chaque semaine, tes ${eur0(num("pea-hebdo", 0) || 300)} achètent plus de parts quand c'est bas : c'est là que se prépare la remontée.</li>
+      <li><b>Regarde loin.</b> Avec un horizon de plus de 5 ans, une baisse de 10 à 20 % arrive presque chaque année ou deux.</li></ul>`;
+  if (!touches.length) return `<section class="card"><details><summary><h2 style="display:inline">Si ça chute un jour</h2></summary>
+      <p style="margin:8px 0 0">Ce mode s'affiche tout seul en haut de « La séance » quand un de tes ETF recule de plus de 5 % par rapport à son plus haut récent. Voici ce qu'il te rappellera :</p>${conseils}${tableau}</details></section>`;
+  return `<section class="card krach" role="alert">
+    <span class="eyebrow">Mode krach</span>
+    <h2>${touches.map(t => `${esc(t.nom)} ${fmtPct(t.dd, 1)}`).join(" · ")} depuis son plus haut récent</h2>
+    <p style="margin:6px 0 0">Ça fait peur, mais c'est normal en bourse. Voici de quoi garder la tête froide.</p>
+    ${conseils}${tableau}
+  </section>`;
+}
+
+function calendrierHtml() {
+  const ag = (DATA.agenda || []).slice().sort((a, b) => a.date.localeCompare(b.date));
+  if (!ag.length) return "";
+  const today = new Date(); today.setHours(0, 0, 0, 0);
+  const ref = DATA === LATEST ? today : new Date(DATA.date + "T00:00:00");
+  const futurs = ag.filter(a => new Date(a.date + "T00:00:00") >= ref).slice(0, 10);
+  if (!futurs.length) return "";
+  const etfs = (LATEST || DATA).etfs;
+  const poidsEur = a => etfs.reduce((s, e) => s + e.holdings.filter(h => (a.tickers || []).includes(h.s)).reduce((t, h) => t + invested(e) * h.w / 100, 0), 0);
+  const jour = d => new Date(d + "T12:00:00").toLocaleDateString("fr-FR", {weekday: "short", day: "numeric", month: "short"});
+  return `<section class="card">
+    <h2>Calendrier des annonces</h2>
+    <p class="muted small" style="margin:4px 0 0">Les rendez-vous qui peuvent faire bouger tes ETF dans les prochaines semaines.</p>
+    <div class="cal">${futurs.map(a => {
+      const n = Math.round((new Date(a.date + "T00:00:00") - ref) / 864e5);
+      const eur = poidsEur(a);
+      return `<article class="calrow">
+        <div class="caldate"><b>${esc(jour(a.date))}</b><span class="muted small">${n === 0 ? "aujourd'hui" : n === 1 ? "demain" : "dans " + n + " j"}</span></div>
+        <div style="min-width:0">
+          <div class="chips"><span class="chip ${a.type === "banque" ? "bank" : ""}">${a.type === "banque" ? "Banque centrale" : "Résultats"}</span>${(a.tickers || []).map(t => `<span class="chip">${esc(t)}</span>`).join("")}</div>
+          <h3 style="margin-top:4px">${esc(a.titre)}</h3>
+          <p style="margin:2px 0 0">${esc(a.texte)}</p>
+          ${eur > 0.5 ? `<span class="muted small">Ton argent concerné : environ ${eur0(eur)}</span>` : ""}
+        </div></article>`;
+    }).join("")}</div>
+    <p class="muted small" style="margin:8px 0 0">Les résultats sont publiés après la clôture américaine (vers 22 h en France) : l'effet se voit sur la séance du lendemain.</p>
+  </section>`;
+}
+
+function recapHtml() {
+  const r = DATA.recap;
+  if (!r) return "";
+  const etfs = (LATEST || DATA).etfs;
+  return `<section class="card recap">
+    <span class="eyebrow">Récap de la semaine</span>
+    <h2>Semaine ${esc(r.semaine)}</h2>
+    <div class="chips" style="margin-top:8px">${etfs.map(e => `<span class="pill ${cls(r.etfs[e.id])} num">${esc(e.short)} ${fmtPct(r.etfs[e.id], 1)}</span>`).join("")}</div>
+    <ol class="recaplist">${r.lignes.map(l => `<li>${esc(l)}</li>`).join("")}</ol>
+    <span class="muted small">Sources : ${esc(r.source)}</span>
+  </section>`;
+}

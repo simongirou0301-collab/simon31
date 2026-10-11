@@ -1,17 +1,117 @@
 {
  "source": "iShares (ACWI et Nasdaq 100 au 08/10/2026), P&I ETF (MSCI Europe au 07/10/2026)",
  "secteurs": {
-  "global": {"Technologie": 33.39, "Finance": 15.83, "Industrie": 10.10, "Conso. cyclique": 8.29, "Santé": 8.27, "Communication": 7.90, "Conso. de base": 4.63, "Énergie": 4.11, "Matériaux": 3.44, "Services publics": 2.27, "Immobilier": 1.42, "Autres": 0.35},
-  "nasdaq": {"Technologie": 59.40, "Communication": 14.84, "Conso. cyclique": 10.21, "Conso. de base": 5.74, "Santé": 3.99, "Industrie": 3.13, "Services publics": 1.07, "Matériaux": 0.92, "Énergie": 0.45, "Finance": 0.20, "Autres": 0.05},
-  "europe": {"Finance": 26.05, "Industrie": 17.24, "Santé": 11.59, "Technologie": 10.29, "Conso. de base": 8.17, "Autres": 26.66}
+  "global": {
+   "Technologie": 33.39,
+   "Finance": 15.83,
+   "Industrie": 10.1,
+   "Conso. cyclique": 8.29,
+   "Santé": 8.27,
+   "Communication": 7.9,
+   "Conso. de base": 4.63,
+   "Énergie": 4.11,
+   "Matériaux": 3.44,
+   "Services publics": 2.27,
+   "Immobilier": 1.42,
+   "Autres": 0.35
+  },
+  "nasdaq": {
+   "Technologie": 59.4,
+   "Communication": 14.84,
+   "Conso. cyclique": 10.21,
+   "Conso. de base": 5.74,
+   "Santé": 3.99,
+   "Industrie": 3.13,
+   "Services publics": 1.07,
+   "Matériaux": 0.92,
+   "Énergie": 0.45,
+   "Finance": 0.2,
+   "Autres": 0.05
+  },
+  "europe": {
+   "Finance": 26.05,
+   "Industrie": 17.24,
+   "Santé": 11.59,
+   "Technologie": 10.29,
+   "Conso. de base": 8.17,
+   "Autres": 26.66
+  }
  },
  "pays": {
-  "global": {"États-Unis": 64.64, "Japon": 5.13, "Taïwan": 3.51, "Royaume-Uni": 2.93, "Canada": 2.87, "Corée du Sud": 2.48, "Chine": 2.29, "France": 1.87, "Suisse": 1.85, "Allemagne": 1.75, "Australie": 1.32, "Pays-Bas": 1.24, "Autres pays": 8.12},
-  "nasdaq": {"États-Unis": 100},
-  "europe": {"Royaume-Uni": 21.98, "Suisse": 14.76, "Allemagne": 13.20, "France": 12.95, "Pays-Bas": 9.45, "Autres pays d'Europe": 27.66}
+  "global": {
+   "États-Unis": 64.64,
+   "Japon": 5.13,
+   "Taïwan": 3.51,
+   "Royaume-Uni": 2.93,
+   "Canada": 2.87,
+   "Corée du Sud": 2.48,
+   "Chine": 2.29,
+   "France": 1.87,
+   "Suisse": 1.85,
+   "Allemagne": 1.75,
+   "Australie": 1.32,
+   "Pays-Bas": 1.24,
+   "Autres pays": 8.12
+  },
+  "nasdaq": {
+   "États-Unis": 100
+  },
+  "europe": {
+   "Royaume-Uni": 21.98,
+   "Suisse": 14.76,
+   "Allemagne": 13.2,
+   "France": 12.95,
+   "Pays-Bas": 9.45,
+   "Autres pays d'Europe": 27.66
+  }
  },
  "notes": {
   "nasdaq_pays": "Le Nasdaq 100 est compté à 100 % aux États-Unis : quelques membres sont étrangers (ASML, Arm, Shopify…), pour quelques % seulement.",
   "europe_autres": "Pour le MSCI Europe, la source ne détaille que les 5 premiers pays et secteurs."
- }
+ },
+ "krachs": [
+  {
+   "indice": "Monde",
+   "nom": "Bulle internet",
+   "periode": "2000-2003",
+   "baisse": -50,
+   "recup": "environ 6 ans"
+  },
+  {
+   "indice": "Monde",
+   "nom": "Crise financière",
+   "periode": "2007-2009",
+   "baisse": -55,
+   "recup": "environ 5 ans"
+  },
+  {
+   "indice": "Monde",
+   "nom": "Covid",
+   "periode": "fév.-mars 2020",
+   "baisse": -34,
+   "recup": "environ 5 mois"
+  },
+  {
+   "indice": "Monde",
+   "nom": "Inflation et hausse des taux",
+   "periode": "2022",
+   "baisse": -25,
+   "recup": "environ 2 ans"
+  },
+  {
+   "indice": "Nasdaq 100",
+   "nom": "Bulle internet",
+   "periode": "2000-2002",
+   "baisse": -83,
+   "recup": "environ 15 ans"
+  },
+  {
+   "indice": "Nasdaq 100",
+   "nom": "Inflation et hausse des taux",
+   "periode": "2022",
+   "baisse": -35,
+   "recup": "environ 1 an et demi"
+  }
+ ],
+ "krachs_note": "Ordres de grandeur en dollars, dividendes réinvestis. Les temps de récupération comptent du plus haut d'avant la chute jusqu'au retour à ce niveau, sans nouveaux versements."
 }
