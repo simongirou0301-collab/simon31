@@ -243,11 +243,26 @@ current = store.get("pea-tab") || "nasdaq";
 view = ["jour", "pourquoi", "agenda", "pea", "analyse"].includes(store.get("pea-view")) ? store.get("pea-view") : "jour";
 
 const EXEMPLE = {global: 7000, nasdaq: 2000, europe: 1000};
+/* Transactions importées : uniquement dans ce navigateur (clé pea-tx), jamais en ligne. */
+function txList() {
+  try { const t = JSON.parse(store.get("pea-tx") || "[]"); return Array.isArray(t) ? t : []; } catch { return []; }
+}
+// Parts détenues et coût (prix de revient moyen) d'un ETF à une date donnée.
+function txPos(id, jusqua) {
+  let q = 0, cout = 0, realise = 0;
+  txList().filter(t => t.etf === id && (!jusqua || t.d <= jusqua)).sort((a, b) => a.d.localeCompare(b.d)).forEach(t => {
+    if (t.type === "achat") { q += t.q; cout += t.m + (t.f || 0); }
+    else if (t.type === "vente" && q > 0) { const pru = cout / q, qv = Math.min(t.q, q); realise += t.m - (t.f || 0) - pru * qv; cout -= pru * qv; q -= qv; }
+  });
+  return {q, cout, pru: q ? cout / q : 0, realise};
+}
+const hasTx = () => txList().some(t => t.etf);
 function invested(e) {
+  if (hasTx() && e.eur && e.eur.close) return txPos(e.id, e.eur.date).q * e.eur.close;
   const s = parseFloat(store.get("pea-inv-" + e.id));
   return isFinite(s) && s >= 0 ? s : (EXEMPLE[e.id] ?? 1000);
 }
-const hasOwn = () => (LATEST || DATA).etfs.some(e => store.get("pea-inv-" + e.id) != null);
+const hasOwn = () => hasTx() || (LATEST || DATA).etfs.some(e => store.get("pea-inv-" + e.id) != null);
 
 function colorFor(c) {
   if (c == null) return css("--flat");
@@ -345,7 +360,7 @@ try { SUB = JSON.parse(localStorage.getItem("pea-sub") || "{}") || {}; } catch {
 const SUBS = {
   pourquoi: [["explications", "Explications"], ["classement", "Qui a pesé"], ["lexique", "Lexique"]],
   agenda: [["calendrier", "Calendrier"], ["recap", "Récap semaine"]],
-  pea: [["chiffres", "Chiffres"], ["projection", "Projection"], ["objectif", "Objectif"], ["comparer", "Comparer"], ["fiscalite", "Impôts"]],
+  pea: [["chiffres", "Chiffres"], ["achats", "Achats"], ["projection", "Projection"], ["objectif", "Objectif"], ["comparer", "Comparer"], ["fiscalite", "Impôts"]],
   analyse: [["doublons", "Doublons"], ["repartition", "Répartition"], ["krach", "Si ça chute"]]
 };
 function sub() {
@@ -447,7 +462,7 @@ ${tabs}
     </div>
     ${lineChart(courbe(e))}
     <div class="kpis">
-      <div class="kpi"><label for="inv-${e.id}">Mon argent dedans</label><input id="inv-${e.id}" class="num" inputmode="decimal" value="${inv.toFixed(2).replace(".", ",")}" aria-label="Montant investi dans ${esc(e.name)} en euros"></div>
+      <div class="kpi"><label for="inv-${e.id}">Mon argent dedans</label><input id="inv-${e.id}" class="num" inputmode="decimal" ${hasTx() ? "readonly" : ""} value="${inv.toFixed(2).replace(".", ",")}" aria-label="Montant investi dans ${esc(e.name)} en euros"></div>
       <div class="kpi"><label>Effet du jour</label><div class="v num ${cls(e.day)}">${fmtEur(inv * e.day / 100)}</div></div>
       <div class="kpi"><label>Hausse / baisse</label><div class="v num"><span class="up">${ups}↑</span> <span class="down">${downs}↓</span></div></div>
     </div>

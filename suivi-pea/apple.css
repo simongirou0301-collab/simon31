@@ -102,3 +102,6 @@ h3{font-family:var(--f-body);font-weight:600;font-size:1.02rem;letter-spacing:-.
 details summary{list-style:none}
 details summary::-webkit-details-marker{display:none}
 .foot{color:var(--muted)}
+.subnav{overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.subnav::-webkit-scrollbar{display:none}
+.subbtn{flex:1 0 auto;white-space:nowrap;padding:6px 10px}

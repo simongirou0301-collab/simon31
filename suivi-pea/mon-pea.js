@@ -10,12 +10,22 @@ const num = (k, def) => { const v = parseFloat(store.get(k)); return isFinite(v)
 const parseFr = s => parseFloat(String(s).replace(/\s/g, "").replace(",", "."));
 const eur0 = v => Math.round(v).toLocaleString("fr-FR") + " €";
 
+function txDepots() {
+  const t = txList(), dep = t.filter(x => x.type === "depot" || x.type === "retrait");
+  if (!dep.length) return null;
+  const s = type => t.filter(x => x.type === type).reduce((a, x) => a + x.m, 0);
+  const frais = t.reduce((a, x) => a + (x.f || 0), 0);
+  const verse = s("depot") - s("retrait");
+  return {verse, cash: Math.max(verse - s("achat") + s("vente") - frais, 0)};
+}
+
 function reglages() {
-  const own = hasOwn();
+  const own = hasOwn(), dep = txDepots();
   return {
     own,
-    verse: num("pea-verse", own ? 0 : 9800),
-    cash: num("pea-cash", 0),
+    verse: dep ? dep.verse : num("pea-verse", own ? 0 : 9800),
+    cash: dep ? dep.cash : num("pea-cash", 0),
+    depTx: !!dep,
     hebdo: num("pea-hebdo", 0),
     mensuel: num("pea-mensuel", 200),
     taux: num("pea-taux", 7)
@@ -132,11 +142,11 @@ function renderPea() {
 
   ${view === "pea" ? (sub() === "chiffres" ? `<section class="card">
     <h2>Mes chiffres</h2>
-    <p class="muted small" style="margin:4px 0 0">Recopie-les depuis Trade Republic. Ils sont enregistrés dans ce navigateur seulement.</p>
+    <p class="muted small" style="margin:4px 0 0">${hasTx() ? `Valeurs calculées depuis tes transactions (onglet Achats) au cours de clôture du ${esc(LATEST.label)}.${r.depTx ? "" : " Versements et espèces : à recopier depuis Trade Republic."}` : "Recopie-les depuis Trade Republic, ou importe tes transactions dans l'onglet Achats."} Tout reste dans ce navigateur seulement.</p>
     <div class="form">
-      ${etfs.map(e => `<label>Valeur ${esc(e.short)}<input id="pv-${e.id}" class="num" inputmode="decimal" value="${vals[e.id].toFixed(2).replace(".", ",")}"></label>`).join("")}
-      <label>Versements totaux<input id="pv-verse" class="num" inputmode="decimal" value="${r.verse.toFixed(2).replace(".", ",")}"></label>
-      <label>Espèces à investir<input id="pv-cash" class="num" inputmode="decimal" value="${r.cash.toFixed(2).replace(".", ",")}"></label>
+      ${etfs.map(e => `<label>Valeur ${esc(e.short)}<input id="pv-${e.id}" class="num" inputmode="decimal" ${hasTx() ? "readonly" : ""} value="${vals[e.id].toFixed(2).replace(".", ",")}"></label>`).join("")}
+      <label>Versements totaux<input id="pv-verse" class="num" inputmode="decimal" ${r.depTx ? "readonly" : ""} value="${r.verse.toFixed(2).replace(".", ",")}"></label>
+      <label>Espèces à investir<input id="pv-cash" class="num" inputmode="decimal" ${r.depTx ? "readonly" : ""} value="${r.cash.toFixed(2).replace(".", ",")}"></label>
       <label>Plan par semaine<input id="pv-hebdo" class="num" inputmode="decimal" value="${r.hebdo.toFixed(0)}"></label>
       <label>Ajout par mois ensuite<input id="pv-mensuel" class="num" inputmode="decimal" value="${r.mensuel.toFixed(0)}"></label>
     </div>
@@ -177,7 +187,7 @@ function renderPea() {
     <p class="muted small" style="margin:10px 0 0">${r.cash > 0 && r.hebdo > 0 ? `Tes espèces sont investies à ${eur0(r.hebdo)}/semaine, puis tu ajoutes ${eur0(r.mensuel)}/mois. ` : `Tu ajoutes ${eur0(r.mensuel)}/mois. `}La vraie bourse ne monte pas en ligne droite : certaines années feront −20 % ou pire. Les ${r.taux.toFixed(0)} % sont une moyenne, dividendes réinvestis compris.</p>
   </section>
 
-  ` : sub() === "objectif" ? objectifHtml(r, v0) : sub() === "comparer" ? comparerHtml(r, v0) : fiscaliteHtml(r, v0, gain)) : sub() === "doublons" ? `<section class="card">
+  ` : sub() === "achats" ? achatsHtml(r) : sub() === "objectif" ? objectifHtml(r, v0) : sub() === "comparer" ? comparerHtml(r, v0) : fiscaliteHtml(r, v0, gain)) : sub() === "doublons" ? `<section class="card">
     <h2>Les doublons entre mes ETF</h2>
     <p class="muted small" style="margin:4px 0 0">Combien tu possèdes vraiment de chaque entreprise, tous ETF confondus. ${doublons.length} des plus grosses entreprises sont dans plusieurs de tes ETF.</p>
     <div class="expo">${top.map(x => `
@@ -218,6 +228,8 @@ function renderPea() {
 
 function wirePea() {
   wireViews();
+  const on = document.querySelector('.subbtn[aria-pressed="true"]');
+  if (on) on.parentElement.scrollLeft = on.offsetLeft - (on.parentElement.clientWidth - on.offsetWidth) / 2;
   const save = (id, key) => {
     const el = document.getElementById(id);
     if (el) el.onchange = () => { const v = parseFr(el.value); if (isFinite(v) && v >= 0) store.set(key, String(v)); renderPea(); };
@@ -241,6 +253,7 @@ function wirePea() {
     renderPea();
     const m = document.getElementById("releve-msg"); if (m) m.textContent = "Relevé du " + new Date().toLocaleDateString("fr-FR") + " enregistré.";
   };
+  wireAchats();
   const ur = document.getElementById("undo-releve");
   if (ur) ur.onclick = () => {
     const list = releves().sort((a, b) => a.d.localeCompare(b.d)); list.pop();
@@ -395,7 +408,8 @@ function comparerHtml(r, v0) {
 
 function fiscaliteHtml(r, v0, gain) {
   const F = COMPO?.fiscalite || {plafond: 150000, ps: 18.6, ir: 12.8};
-  const ouv = store.get("pea-ouverture") || "";
+  const tx1 = txList().map(t => t.d).sort()[0] || "";
+  const ouv = store.get("pea-ouverture") || tx1;
   let bloc = `<p class="empty-inline">Entre la date d'ouverture de ton PEA (dans l'appli Trade Republic) pour voir le compte à rebours.</p>`;
   if (ouv) {
     const d0 = new Date(ouv + "T00:00:00"), d5 = new Date(d0); d5.setFullYear(d5.getFullYear() + 5);
@@ -411,6 +425,7 @@ function fiscaliteHtml(r, v0, gain) {
   return `<section class="card">
     <h2>Les 5 ans du PEA</h2>
     <div class="form" style="grid-template-columns:1fr"><label>Date d'ouverture du PEA<input id="pv-ouverture" type="date" value="${esc(ouv)}"></label></div>
+    ${!store.get("pea-ouverture") && tx1 ? `<p class="muted small" style="margin:6px 0 0">Par défaut, date de ta 1re transaction importée. Corrige-la si ton PEA a été ouvert avant.</p>` : ""}
     ${bloc}
   </section>
   <section class="card">
@@ -428,4 +443,137 @@ function fiscaliteHtml(r, v0, gain) {
     </tbody></table>
     <p class="muted small" style="margin:8px 0 0">Les impôts ne portent que sur les gains, jamais sur l'argent versé, et rien n'est dû tant que tu ne retires pas.${plus5 ? "" : " Tant que ton PEA a moins de 5 ans, tout retrait entraîne en principe sa clôture."} ${esc(F.source || "")}.</p>
   </section>`;
+}
+
+/* Onglet « Achats » : import des transactions, prix de revient et plus-value réelle.
+   Le fichier est lu dans le navigateur et gardé dans localStorage : rien n'est envoyé. */
+
+const TX_ETF = [["global", /global|acwi|gpea|FR0014017NX3/i], ["nasdaq", /nasdaq|pust|FR0011871110/i], ["europe", /europe|pceu|FR0013412038/i]];
+const TX_TYPE = [["achat", /achat|buy|plan|savings|épargne|epargne|kauf/i], ["vente", /vente|sell|verkauf/i], ["depot", /d[ée]p[oô]t|versement|deposit|virement|einzahlung/i], ["retrait", /retrait|withdraw|auszahlung/i]];
+
+function lireTransactions(texte) {
+  texte = texte.replace(/^﻿/, "").trim();
+  let lignes;
+  if (/^[\[{]/.test(texte)) {
+    const j = JSON.parse(texte);
+    lignes = (Array.isArray(j) ? j : j.transactions || []).map(o => ({d: o.date || o.d, etf: o.etf || o.isin || o.nom || "", type: o.type || "", q: o.quantite ?? o.q ?? "", m: o.montant ?? o.m ?? "", f: o.frais ?? o.f ?? ""}));
+  } else {
+    const rows = texte.split(/\r?\n/).filter(l => l.trim());
+    const sep = rows[0].includes(";") ? ";" : rows[0].includes("\t") ? "\t" : ",";
+    const head = rows[0].split(sep).map(h => h.trim().toLowerCase());
+    const col = re => head.findIndex(h => re.test(h));
+    const c = {d: col(/date/), etf: col(/etf|isin|titre|produit|nom/), type: col(/type|op/), q: col(/quantit|parts|qty|nombre/), m: col(/montant|amount|total/), f: col(/frais|fee/)};
+    if (c.d < 0 || c.type < 0 || c.m < 0) throw new Error("Colonnes attendues : date, etf, type, quantite, montant, frais.");
+    lignes = rows.slice(1).map(l => { const v = l.split(sep).map(x => x.trim().replace(/^"|"$/g, "")); return {d: v[c.d], etf: c.etf >= 0 ? v[c.etf] : "", type: v[c.type], q: c.q >= 0 ? v[c.q] : "", m: v[c.m], f: c.f >= 0 ? v[c.f] : ""}; });
+  }
+  const nb = x => { const v = parseFr(String(x ?? "").replace(/[€\s]/g, "")); return isFinite(v) ? Math.abs(v) : 0; };
+  const date = x => { const m = String(x).match(/(\d{4})-(\d{2})-(\d{2})/) || String(x).match(/(\d{2})[\/.](\d{2})[\/.](\d{4})/); return !m ? null : m[1].length === 4 ? `${m[1]}-${m[2]}-${m[3]}` : `${m[3]}-${m[2]}-${m[1]}`; };
+  const out = [], rejet = [];
+  lignes.forEach((l, i) => {
+    const type = (TX_TYPE.find(([, re]) => re.test(l.type)) || [])[0];
+    const etf = (TX_ETF.find(([, re]) => re.test(l.etf)) || [])[0] || null;
+    const d = date(l.d);
+    if (!d || !type || ((type === "achat" || type === "vente") && (!etf || !nb(l.q)))) { rejet.push(i + 2); return; }
+    out.push({d, etf: type === "achat" || type === "vente" ? etf : null, type, q: nb(l.q), m: nb(l.m), f: nb(l.f)});
+  });
+  if (!out.length) throw new Error("Aucune transaction reconnue dans ce fichier.");
+  return {tx: out.sort((a, b) => a.d.localeCompare(b.d)), rejet};
+}
+
+function achatsHtml(r) {
+  const tx = txList();
+  const aide = `<details style="margin-top:12px"><summary class="muted small">Format du fichier</summary>
+    <p class="muted small" style="margin:6px 0 0">Un fichier CSV (ou JSON) avec une ligne par opération : <b>date</b> ; <b>etf</b> (global, nasdaq, europe, ou le code ISIN) ; <b>type</b> (achat, vente, depot, retrait) ; <b>quantite</b> (nombre de parts) ; <b>montant</b> (en €, hors frais) ; <b>frais</b>. Les dépôts servent à calculer tes versements et tes espèces.</p>
+    <pre class="small" style="overflow-x:auto;margin:8px 0 0">date;etf;type;quantite;montant;frais
+2026-09-01;;depot;;3000;0
+2026-09-02;global;achat;400,5;2100;0
+2026-09-02;nasdaq;achat;5,41;600;0</pre></details>`;
+  const boutons = `<div class="row-actions">
+      <label class="btn" style="cursor:pointer">${tx.length ? "Remplacer par un nouveau fichier" : "Importer mon fichier"}<input type="file" id="tx-file" accept=".csv,.txt,.json,text/csv,application/json" hidden></label>
+      ${tx.length ? `<button class="btn ghost" id="tx-clear">Effacer mes transactions</button>` : ""}
+      <span class="muted small" id="tx-msg" aria-live="polite"></span>
+    </div>`;
+  if (!tx.length) return `<section class="card">
+    <h2>Mes achats</h2>
+    <p style="margin:6px 0 0">Importe l'historique de tes transactions pour voir ta vraie plus-value, ton prix de revient par ETF et une estimation exacte des impôts.</p>
+    <p class="muted small" style="margin:6px 0 0">Le fichier est lu sur ton appareil et gardé dans ce navigateur uniquement. Il n'est jamais envoyé ni publié.</p>
+    ${boutons}${aide}
+  </section>`;
+
+  const etfs = LATEST.etfs;
+  const lignes = etfs.map(e => {
+    const p = txPos(e.id), cours = e.eur ? e.eur.close : null;
+    const valeur = cours ? p.q * cours : null;
+    return {e, p, cours, valeur, pv: valeur != null ? valeur - p.cout : null};
+  }).filter(l => l.p.q > 0 || l.p.realise);
+  const cout = lignes.reduce((a, l) => a + l.p.cout, 0);
+  const valeur = lignes.reduce((a, l) => a + (l.valeur || 0), 0);
+  const pv = valeur - cout, realise = lignes.reduce((a, l) => a + l.p.realise, 0);
+
+  // Vraie courbe : parts détenues chaque jour × cours en euros de ce jour.
+  const dates = (etfs[0].eur?.history || []).map(h => h[0]);
+  const pts = dates.map(d => {
+    let v = 0, c = 0;
+    etfs.forEach(e => { const h = (e.eur?.history || []).find(x => x[0] === d); const p = txPos(e.id, d); if (h) v += p.q * h[1]; c += p.cout; });
+    return [new Date(d).getTime(), v, c];
+  }).filter(p => p[2] > 0);
+  const courbeVraie = pts.length >= 2 ? svgLines([
+    {pts: pts.map(p => [p[0], p[1]]), color: "var(--accent)", fill: true},
+    {pts: pts.map(p => [p[0], p[2]]), color: "var(--muted)", dash: true}
+  ], {label: "Valeur de mes ETF et argent investi", fmtY: eur0, fmtX: t => new Date(t).toLocaleDateString("fr-FR", {day: "numeric", month: "short"})}) : "";
+
+  const nAchats = tx.filter(t => t.type === "achat").length;
+  return `<section class="card">
+    <h2>Ma vraie plus-value</h2>
+    <p class="muted small" style="margin:4px 0 0">Parts achetées × cours en euros à la clôture du ${esc(LATEST.label)}.</p>
+    <div class="kpis">
+      <div class="kpi"><label>Investi (frais compris)</label><div class="v num">${fmtEurPlain(cout)}</div></div>
+      <div class="kpi"><label>Valeur</label><div class="v num">${fmtEurPlain(valeur)}</div></div>
+      <div class="kpi"><label>Plus-value</label><div class="v num ${cls(pv)}">${fmtEur(pv)} <span class="small">(${fmtPct(cout ? pv / cout * 100 : 0)})</span></div></div>
+    </div>
+    ${realise ? `<p style="margin:10px 0 0">Plus-value déjà encaissée sur des ventes : <b class="num ${cls(realise)}">${fmtEur(realise)}</b>.</p>` : ""}
+  </section>
+
+  <section class="card">
+    <h2>Par ETF</h2>
+    <table class="cmptable"><tbody>
+      ${lignes.map(l => `<tr><td><b>${esc(l.e.short)}</b><br><span class="muted small num">${l.p.q.toLocaleString("fr-FR", {maximumFractionDigits: 4})} parts · prix de revient ${l.p.pru.toLocaleString("fr-FR", {maximumFractionDigits: 4})} € · cours ${l.cours != null ? l.cours.toLocaleString("fr-FR", {maximumFractionDigits: 4}) + " €" : "?"}</span></td>
+        <td class="num">${l.valeur != null ? fmtEurPlain(l.valeur) : "?"}<br><span class="small ${cls(l.pv || 0)}">${l.pv != null ? `${fmtEur(l.pv)} (${fmtPct(l.p.cout ? l.pv / l.p.cout * 100 : 0)})` : ""}</span></td></tr>`).join("")}
+    </tbody></table>
+    <p class="muted small" style="margin:8px 0 0">Le prix de revient est la moyenne de tes prix d'achat, frais compris. Si le cours est au-dessus, tu es gagnant sur cet ETF.</p>
+  </section>
+
+  ${courbeVraie ? `<section class="card">
+    <h2>Ma vraie courbe</h2>
+    <p class="muted small" style="margin:4px 0 0">Ce que valaient réellement tes parts chaque jour, face à l'argent que tu avais investi.</p>
+    ${courbeVraie}
+    <div class="legend"><i style="background:var(--accent)"></i><span>Valeur de mes parts</span><i style="background:var(--muted)"></i><span>Investi</span></div>
+  </section>` : ""}
+
+  <section class="card">
+    <h2>Mes transactions</h2>
+    <p class="muted small" style="margin:4px 0 0">${tx.length} opérations dont ${nAchats} achats, du ${esc(new Date(tx[0].d).toLocaleDateString("fr-FR"))} au ${esc(new Date(tx[tx.length - 1].d).toLocaleDateString("fr-FR"))}. Gardées dans ce navigateur uniquement.</p>
+    <details style="margin-top:8px"><summary class="muted small">Voir la liste</summary>
+      <table class="cmptable"><tbody>${tx.slice().reverse().map(t => `<tr><td>${esc(new Date(t.d).toLocaleDateString("fr-FR"))} · ${esc({achat: "Achat", vente: "Vente", depot: "Dépôt", retrait: "Retrait"}[t.type])}${t.etf ? " " + esc(etfs.find(e => e.id === t.etf)?.short || t.etf) : ""}${t.q ? `<br><span class="muted small num">${t.q.toLocaleString("fr-FR", {maximumFractionDigits: 4})} parts à ${(t.m / t.q).toLocaleString("fr-FR", {maximumFractionDigits: 4})} €</span>` : ""}</td><td class="num">${fmtEurPlain(t.m)}${t.f ? `<br><span class="muted small">frais ${fmtEurPlain(t.f)}</span>` : ""}</td></tr>`).join("")}</tbody></table>
+    </details>
+    ${boutons}${aide}
+  </section>`;
+}
+
+function wireAchats() {
+  const f = document.getElementById("tx-file");
+  if (f) f.onchange = async () => {
+    const file = f.files[0]; if (!file) return;
+    try {
+      const {tx, rejet} = lireTransactions(await file.text());
+      store.set("pea-tx", JSON.stringify(tx));
+      renderPea();
+      const m = document.getElementById("tx-msg");
+      if (m) m.textContent = `${tx.length} opérations importées.` + (rejet.length ? ` Lignes ignorées : ${rejet.join(", ")}.` : "");
+    } catch (err) {
+      const m = document.getElementById("tx-msg"); if (m) m.textContent = "Import impossible : " + err.message;
+    }
+  };
+  const c = document.getElementById("tx-clear");
+  if (c) c.onclick = () => { if (confirm("Effacer les transactions de ce navigateur ?")) { try { localStorage.removeItem("pea-tx"); } catch {} renderPea(); } };
 }
