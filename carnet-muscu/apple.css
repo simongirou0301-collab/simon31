@@ -202,3 +202,13 @@ u.g{background:var(--pink)}u.r{background:var(--green)}
 .cal-streak{display:flex;align-items:center;gap:12px}
 .cal-streak b{font:800 2.2rem var(--display);color:var(--orange)}
 .cal-streak span{font-size:.85rem;color:var(--muted)}
+
+body[data-tab="today"]{--accent:var(--orange); --accent2:var(--pink); --accent-soft:color-mix(in srgb,var(--orange) 14%,transparent)}
+.tab[data-s="today"][aria-selected="true"]{color:var(--orange)}
+.tabs{grid-template-columns:repeat(4,1fr)}
+#today-view{display:flex;flex-direction:column;gap:14px}
+.td-card{gap:6px}
+.td-big{font:800 2.4rem var(--display);background:linear-gradient(90deg,var(--pink),var(--orange));-webkit-background-clip:text;background-clip:text;color:transparent;line-height:1.1}
+.td-go{margin-top:8px;font:700 1.05rem var(--body);color:#fff;background:linear-gradient(90deg,var(--pink),var(--orange));border:0;border-radius:14px;padding:14px;cursor:pointer}
+.td-go.alt{background:var(--green)}
+#today-view .kpi b{font-size:1.15rem}

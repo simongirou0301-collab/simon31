@@ -103,12 +103,14 @@ footer{color:var(--muted);font-size:.78rem}
   </header>
 
   <nav class="tabs" role="tablist">
+    <button class="tab" role="tab" data-s="today"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="2.2"/><path d="M12 3v2M12 19v2M3 12h2M19 12h2M5.6 5.6l1.4 1.4M17 17l1.4 1.4M5.6 18.4L7 17M17 7l1.4-1.4" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg><span>Aujourd'hui</span></button>
     <button class="tab" role="tab" data-s="push"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9v6M6 6v12M18 6v12M21 9v6M6 12h12" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg><span>Push</span></button>
     <button class="tab" role="tab" data-s="pull"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v11M7 9l5 5 5-5M5 20h14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Pull</span></button>
     <button class="tab" role="tab" data-s="run"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="14.5" cy="4.5" r="2" fill="currentColor"/><path d="M8 21l3-5 3 2v4M6 12l3-4 4 1 2 3 3 1M11 16l2-6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Course</span></button>
   </nav>
 
   <section id="run-view" hidden></section>
+  <section id="today-view" hidden></section>
 
   <div id="gym-view" class="gym">
   <div class="progress"><span id="count"></span><button class="btn" id="reset" type="button">Remettre les séries à zéro</button></div>
@@ -194,7 +196,7 @@ let st = {tab:null, done:{}, feel:{}, loads:null, reps:{}, log:[], prog:{}, ovr:
 try { const v = JSON.parse(localStorage.getItem(KEY)); if (v) st = Object.assign(st, v); } catch (e) {}
 if (!st.loads) st.loads = JSON.parse(JSON.stringify(DEFAULT_LOADS));
 for (const k in DEFAULT_LOADS) if (!st.loads[k]) st.loads[k] = {...DEFAULT_LOADS[k]};
-if (!st.tab) { const d = new Date().getDay(); st.tab = (d === 2 || d === 5) ? "pull" : "push"; }
+st.tab = "today";
 function applyProg(){
   const mk = id => { const b = DEFALL.find(e => e.id === id) || st.custom[id]; return b ? {...b, ...(st.ovr[id] || {})} : null; };
   ["push", "pull"].forEach(t => { EX[t] = (st.prog[t] || DEF[t].map(e => e.id)).map(mk).filter(Boolean); });
@@ -245,15 +247,17 @@ const canAdj = L => !!(L && L.kg && /\d/.test(L.kg));
 
 function render(){
   document.querySelectorAll(".tab").forEach(t => t.setAttribute("aria-selected", t.dataset.s === st.tab));
-  const isRun = st.tab === "run";
+  const isRun = st.tab === "run", isToday = st.tab === "today";
   document.body.dataset.tab = st.tab;
-  const T = {push:["Push","Lundi · Jeudi"], pull:["Pull","Mardi · Vendredi"], run:["Course","Garmin · Intervals.icu"]}[st.tab];
+  const T = {push:["Push","Lundi · Jeudi"], pull:["Pull","Mardi · Vendredi"], run:["Course","Garmin · Intervals.icu"], today:["Aujourd'hui","Ton résumé"]}[st.tab];
   document.getElementById("ttl").textContent = T[0]; document.getElementById("sub").textContent = T[1];
   const td = new Date().toLocaleDateString("fr-FR", {weekday:"long", day:"numeric", month:"long"});
   document.getElementById("today").textContent = td;
-  document.getElementById("gym-view").hidden = isRun;
-  document.getElementById("gym-foot").hidden = isRun;
+  document.getElementById("gym-view").hidden = isRun || isToday;
+  document.getElementById("gym-foot").hidden = isRun || isToday;
   document.getElementById("run-view").hidden = !isRun;
+  document.getElementById("today-view").hidden = !isToday;
+  if (isToday) { renderToday(); return; }
   if (isRun) { if (window.Run) Run.show(); return; }
   let tot = 0, ok = 0; list.innerHTML = "";
   EX[st.tab].forEach(e => {
@@ -385,6 +389,32 @@ document.getElementById("confirm-yes").addEventListener("click", () => {
   document.getElementById("finish-note").textContent = (ids.length ? "Séance terminée, charges mises à jour pour la prochaine fois." : "Séance terminée.") + volTxt;
 });
 
+/* ---------- aujourd'hui ---------- */
+function renderToday(){
+  const now = new Date(), wd = now.getDay(), tab = (wd === 1 || wd === 4) ? "push" : (wd === 2 || wd === 5) ? "pull" : null;
+  const mon = new Date(now.getFullYear(), now.getMonth(), now.getDate() - (wd + 6) % 7).getTime();
+  const sessions = st.log.filter(x => x.t >= mon).length;
+  const doneToday = st.log.filter(x => dk(new Date(x.t)) === dk(now));
+  let R = {}; try { R = JSON.parse(localStorage.getItem("carnet-runs-icu-v1")) || {}; } catch (e) {}
+  const runsW = (R.list || []).filter(r => new Date(r.start.replace("Z", "")).getTime() >= mon);
+  const kmW = runsW.reduce((a, r) => a + r.dist, 0) / 1000, G = Object.assign({km: 20, n: 3}, R.goals || {});
+  const ring = (r, p, c) => { const L = 2 * Math.PI * r, q = Math.max(0, Math.min(1, p)); return `<circle cx="60" cy="60" r="${r}" fill="none" stroke="${c}" stroke-opacity=".18" stroke-width="10"/><circle cx="60" cy="60" r="${r}" fill="none" stroke="${c}" stroke-width="10" stroke-linecap="round" stroke-dasharray="${(L * q).toFixed(1)} ${L.toFixed(1)}" transform="rotate(-90 60 60)"/>`; };
+  // forme
+  let form = null; const W_ = R.well || {};
+  Object.keys(W_).sort().forEach(k => { const w = W_[k]; if (w && w.ctl != null && w.atl != null) form = w.ctl - w.atl; });
+  const fz = form == null ? null : form > 25 ? "Transition" : form > 5 ? "Frais" : form > -10 ? "Équilibré" : form > -30 ? "Productif" : "Surmenage possible";
+  const last = st.log.length ? st.log[st.log.length - 1] : null;
+  let top;
+  if (doneToday.length) top = `<div class="td-big">Séance faite ✓</div><div class="muted">${doneToday.reduce((a, x) => a + (x.vol || 0), 0) ? nf(doneToday.reduce((a, x) => a + (x.vol || 0), 0)) + " kg soulevés aujourd'hui" : "Bien joué."}</div>`;
+  else if (tab) top = `<div class="td-big">${tab === "push" ? "Push" : "Pull"}</div><div class="muted">${EX[tab].length} exercices · ${EX[tab].reduce((a, e) => a + e.s, 0)} séries</div><button class="td-go" type="button" data-go="${tab}">Commencer la séance</button>`;
+  else top = `<div class="td-big">Pas de muscu</div><div class="muted">Jour de repos ou de course.</div><button class="td-go alt" type="button" data-go="run">Voir mes courses</button>`;
+  document.getElementById("today-view").innerHTML = `<div class="card td-card">${top}</div>
+    <div class="card"><h3>Cette semaine</h3><div class="goal-row"><svg viewBox="0 0 120 120" class="rings" role="img" aria-label="Anneaux de la semaine">${ring(52, sessions / 4, "var(--pink)")}${ring(38, kmW / G.km, "var(--green)")}${ring(24, runsW.length / G.n, "var(--blue)")}</svg>
+      <div class="goal-leg"><div><i style="background:var(--pink)"></i><b>${sessions}</b> / 4 séances de muscu</div><div><i style="background:var(--green)"></i><b>${kmW.toFixed(1).replace(".", ",")}</b> / ${G.km} km</div><div><i style="background:var(--blue)"></i><b>${runsW.length}</b> / ${G.n} sorties</div></div></div></div>
+    <div class="kpis"><div class="kpi"><b>${streakWeeks()}</b><span>semaines d'affilée</span></div><div class="kpi"><b>${fz || "–"}</b><span>forme</span></div><div class="kpi"><b>${last ? new Date(last.t).toLocaleDateString("fr-FR", {day:"numeric", month:"short"}) : "–"}</b><span>dernière muscu</span></div></div>`;
+}
+document.getElementById("today-view").addEventListener("click", ev => { const b = ev.target.closest("[data-go]"); if (b) { st.tab = b.dataset.go; save(); render(); window.scrollTo(0, 0); } });
+
 /* ---------- journal ---------- */
 const jr = document.getElementById("journal");
 let jrView = "seances";
@@ -409,6 +439,13 @@ function calData(){
   try { (JSON.parse(localStorage.getItem("carnet-runs-icu-v1")).list || []).forEach(r => run.add(dk(new Date(r.start.replace("Z", ""))))); } catch (e) {}
   return {gym, run};
 }
+function streakWeeks(){
+  const {gym, run} = calData(), any = new Set([...gym, ...run]); const mon = d => new Date(d.getFullYear(), d.getMonth(), d.getDate() - (d.getDay() + 6) % 7);
+  const weekHas = ws => { for (let i = 0; i < 7; i++) if (any.has(dk(new Date(ws.getFullYear(), ws.getMonth(), ws.getDate() + i)))) return true; return false; };
+  let ws = mon(new Date()), n = 0; if (!weekHas(ws)) ws = new Date(ws.getFullYear(), ws.getMonth(), ws.getDate() - 7);
+  while (weekHas(ws) && n < 520) { n++; ws = new Date(ws.getFullYear(), ws.getMonth(), ws.getDate() - 7); }
+  return n;
+}
 function calHtml(){
   const {gym, run} = calData(), y = calM.getFullYear(), m = calM.getMonth();
   const first = (new Date(y, m, 1).getDay() + 6) % 7, nd = new Date(y, m + 1, 0).getDate(), today = dk(new Date());
@@ -418,11 +455,7 @@ function calHtml(){
     const k = dk(new Date(y, m, d)), a = gym.has(k), b = run.has(k); if (a) g++; if (b) r++;
     cells += `<div class="cal-d${k === today ? " today" : ""}"><span>${d}</span><i>${a ? '<u class="g"></u>' : ""}${b ? '<u class="r"></u>' : ""}</i></div>`;
   }
-  // série de semaines consécutives avec au moins une activité
-  const any = new Set([...gym, ...run]); const mon = d => new Date(d.getFullYear(), d.getMonth(), d.getDate() - (d.getDay() + 6) % 7);
-  const weekHas = ws => { for (let i = 0; i < 7; i++) if (any.has(dk(new Date(ws.getFullYear(), ws.getMonth(), ws.getDate() + i)))) return true; return false; };
-  let ws = mon(new Date()), streak = 0; if (!weekHas(ws)) ws = new Date(ws.getFullYear(), ws.getMonth(), ws.getDate() - 7);
-  while (weekHas(ws) && streak < 520) { streak++; ws = new Date(ws.getFullYear(), ws.getMonth(), ws.getDate() - 7); }
+  const streak = streakWeeks();
   const title = calM.toLocaleDateString("fr-FR", {month: "long", year: "numeric"});
   return `<div class="jr-s"><div class="cal-h"><button type="button" data-cal="-1" aria-label="Mois précédent">‹</button><b>${title}</b><button type="button" data-cal="1" aria-label="Mois suivant">›</button></div>
     <div class="cal-g">${cells}</div>
