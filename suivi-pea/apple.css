@@ -1,0 +1,104 @@
+/* Style Apple (iOS) — chargé après les styles de la page, il les surcharge. */
+:root{
+  --bg:#F2F2F7; --card:#FFFFFF; --card2:#F2F2F7; --ink:#000000; --muted:#8A8A8E; --line:rgba(60,60,67,.18);
+  --accent:#007AFF; --accent-soft:rgba(0,122,255,.12);
+  --c-global:#007AFF; --c-nasdaq:#AF52DE; --c-europe:#FF9500;
+  --up:#34C759; --up-soft:rgba(52,199,89,.14); --down:#FF3B30; --down-soft:rgba(255,59,48,.12); --flat:#AEAEB2;
+  --seg:rgba(118,118,128,.12); --seg-on:#FFFFFF; --bar:rgba(249,249,249,.86);
+  --f-display:-apple-system, BlinkMacSystemFont, "SF Pro Display", system-ui, "Helvetica Neue", sans-serif;
+  --f-body:-apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, "Helvetica Neue", sans-serif;
+  --f-num:-apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, "Helvetica Neue", sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#000000; --card:#1C1C1E; --card2:#2C2C2E; --ink:#FFFFFF; --muted:#8D8D93; --line:rgba(84,84,88,.65);
+  --accent:#0A84FF; --accent-soft:rgba(10,132,255,.2);
+  --c-global:#0A84FF; --c-nasdaq:#BF5AF2; --c-europe:#FF9F0A;
+  --up:#30D158; --up-soft:rgba(48,209,88,.18); --down:#FF453A; --down-soft:rgba(255,69,58,.2); --flat:#636366;
+  --seg:rgba(118,118,128,.24); --seg-on:#636366; --bar:rgba(22,22,24,.86); color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#000000; --card:#1C1C1E; --card2:#2C2C2E; --ink:#FFFFFF; --muted:#8D8D93; --line:rgba(84,84,88,.65);
+  --accent:#0A84FF; --accent-soft:rgba(10,132,255,.2);
+  --c-global:#0A84FF; --c-nasdaq:#BF5AF2; --c-europe:#FF9F0A;
+  --up:#30D158; --up-soft:rgba(48,209,88,.18); --down:#FF453A; --down-soft:rgba(255,69,58,.2); --flat:#636366;
+  --seg:rgba(118,118,128,.24); --seg-on:#636366; --bar:rgba(22,22,24,.86); color-scheme:dark}
+
+body{font-family:var(--f-body);font-size:16px;letter-spacing:-.01em;-webkit-font-smoothing:antialiased;background:var(--bg)}
+button{-webkit-tap-highlight-color:transparent}
+button:active{opacity:.6}
+.num{font-family:var(--f-num);font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+.wrap{gap:16px;padding-top:12px}
+
+/* Grand titre */
+header{gap:2px}
+header .eyebrow{font-size:.78rem;font-weight:600;letter-spacing:.01em;text-transform:none;color:var(--muted)}
+h1{font-family:var(--f-display);font-weight:700;font-size:2.1rem;letter-spacing:-.025em;line-height:1.1}
+h2{font-family:var(--f-display);font-weight:700;font-size:1.3rem;letter-spacing:-.02em}
+h3{font-family:var(--f-body);font-weight:600;font-size:1.02rem;letter-spacing:-.01em}
+.eyebrow{font-size:.75rem;font-weight:600;letter-spacing:.02em;text-transform:uppercase;color:var(--muted)}
+.muted{color:var(--muted)}
+
+/* Cartes : listes groupées iOS */
+.card{background:var(--card);border:0;border-radius:16px;padding:16px;box-shadow:none}
+.card.note,.word{background:var(--accent-soft)}
+.krach{background:var(--down-soft)}
+
+/* Contrôles segmentés */
+.tabs,.subnav,.views{background:var(--seg);border:0;border-radius:10px;padding:2px;gap:0;box-shadow:none}
+.tabs{position:sticky;top:calc(env(safe-area-inset-top, 0px) + 6px);-webkit-backdrop-filter:saturate(180%) blur(20px);backdrop-filter:saturate(180%) blur(20px)}
+.tab,.subbtn{border-radius:8px;padding:6px 6px;color:var(--ink);font-weight:500;font-size:.88rem}
+.tab .num{font-size:.75rem;font-weight:600}
+.tab[aria-selected="true"],.subbtn[aria-pressed="true"]{background:var(--seg-on);color:var(--ink);box-shadow:0 3px 8px rgba(0,0,0,.12),0 3px 1px rgba(0,0,0,.04);font-weight:600}
+.tab[aria-selected="true"] .num{color:inherit}
+.tab[aria-selected="true"] .num.up,.tab .num.up{color:var(--up)}
+.subbtn{flex:1}
+.segbtn{border:0;background:var(--seg);color:var(--ink);border-radius:8px;font-weight:500}
+.segbtn[aria-pressed="true"]{background:var(--accent);color:#fff}
+.days{gap:8px}
+.day{border:0;background:var(--card);border-radius:999px;padding:6px 12px;font-weight:500}
+.day[aria-pressed="true"]{background:var(--accent);color:#fff}
+
+/* Barre d'onglets du bas, translucide */
+.bottomnav{background:var(--bar);-webkit-backdrop-filter:saturate(180%) blur(20px);backdrop-filter:saturate(180%) blur(20px);border-top:.5px solid var(--line);padding-top:6px}
+.navbtn{font-size:.66rem;font-weight:500;color:var(--muted);background:none!important;border-radius:0;gap:3px}
+.navbtn svg{width:25px;height:25px}
+.navbtn[aria-current="page"]{color:var(--accent)}
+.navbtn[aria-current="page"] path{stroke-width:2.2}
+
+/* Chiffres clés */
+.hero .big{font-family:var(--f-display);font-weight:700;font-size:2.6rem;letter-spacing:-.03em}
+.pill{font-weight:600;font-size:.82rem;padding:3px 10px}
+.kpi,.jalons div,.form label,.fichegrid div{background:var(--card2);border-radius:12px}
+.kpi .v{font-weight:700;font-size:1.15rem}
+.kpi label,.form label{color:var(--muted);font-weight:500}
+.kpi input,.form input{border:0;border-bottom:0;font-family:var(--f-num);font-weight:600;color:var(--accent)}
+.fichegrid .tot{background:var(--accent-soft)}
+.detail{background:var(--card2);border-radius:14px}
+
+/* Boutons */
+.btn{background:var(--accent);color:#fff;border-radius:12px;font-weight:600;padding:11px 16px}
+.btn.ghost{background:var(--accent-soft);color:var(--accent);border:0}
+.search{border:0;background:var(--seg);border-radius:10px}
+
+/* Pastilles et puces */
+.chip{font-family:var(--f-body);font-weight:600;font-size:.72rem;background:var(--seg);color:var(--muted);border-radius:6px}
+.chip.bank{background:var(--down-soft);color:var(--down)}
+.badge{font-family:var(--f-body);border-radius:6px}
+
+/* Carte des entreprises */
+.treemap{border-radius:14px}
+.tile{border:2px solid var(--card);border-radius:10px}
+.tile b{font-family:var(--f-body);font-weight:700;letter-spacing:-.01em}
+.legend i{border-radius:4px}
+
+/* Listes */
+.newsitem{border-left:0;padding:0 0 0 14px;position:relative}
+.newsitem::before{content:"";position:absolute;left:0;top:4px;bottom:4px;width:4px;border-radius:4px;background:var(--flat)}
+.newsitem.up::before{background:var(--up)}
+.newsitem.down::before{background:var(--down)}
+.calrow,.lexitem,.cmptable td,.krachs td{border-color:var(--line);border-bottom-width:.5px}
+.track2,.bigbar{background:var(--seg)}
+.fill,.fill2,.stack span{border-radius:4px}
+.empty-inline{border:0;background:var(--card2)}
+details summary{list-style:none}
+details summary::-webkit-details-marker{display:none}
+.foot{color:var(--muted)}

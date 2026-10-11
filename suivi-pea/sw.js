@@ -1,6 +1,6 @@
 // Réseau d'abord : les cours changent chaque soir ; le cache sert seulement hors connexion.
-const CACHE = "mon-pea-v7";
-const FILES = ["./", "index.html", "manifest.json", "data.json", "jours/index.json", "mon-pea.js", "composition.json", "icons/icon-180.png", "icons/icon-192.png", "icons/icon-512.png"];
+const CACHE = "mon-pea-v8";
+const FILES = ["./", "index.html", "manifest.json", "data.json", "jours/index.json", "mon-pea.js", "composition.json", "apple.css", "icons/icon-180.png", "icons/icon-192.png", "icons/icon-512.png"];
 self.addEventListener("install", e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(FILES)).then(() => self.skipWaiting()));
 });
