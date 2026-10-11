@@ -157,8 +157,23 @@ details summary h2{cursor:pointer}
 .navbtn{border:0;background:transparent;color:var(--muted);font:inherit;font-size:.72rem;font-weight:600;display:flex;flex-direction:column;align-items:center;gap:2px;padding:4px 2px;border-radius:10px;cursor:pointer;min-width:0}
 .navbtn[aria-current="page"]{color:var(--accent);background:var(--accent-soft)}
 .subnav{display:flex;gap:4px;background:var(--line);border-radius:12px;padding:4px;overflow-x:auto}
-.subbtn{flex:1;white-space:nowrap;border:0;background:transparent;color:var(--ink);font:inherit;font-weight:600;font-size:.85rem;padding:7px 10px;border-radius:9px;cursor:pointer}
+.subbtn{flex:1;white-space:nowrap;border:0;background:transparent;color:var(--ink);font:inherit;font-weight:600;font-size:.82rem;padding:7px 6px;border-radius:9px;cursor:pointer}
 .subbtn[aria-pressed="true"]{background:var(--card);color:var(--accent);box-shadow:0 1px 3px rgba(0,0,0,.12)}
+.search{width:100%;margin-top:10px;font:inherit;padding:9px 12px;border-radius:10px;border:1px solid var(--line);background:var(--bg);color:var(--ink)}
+.lex{margin:10px 0 0;display:flex;flex-direction:column}
+.lexitem{padding:10px 0;border-bottom:1px solid var(--line)}
+.lexitem.today dt{color:var(--accent)}
+.lex dt{font-weight:700;font-family:var(--f-display)}
+.lex dd{margin:2px 0 0}
+.fichegrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:8px}
+.fichegrid div{display:flex;flex-direction:column;background:var(--card);border-radius:10px;padding:8px 10px}
+.fichegrid .tot{background:var(--accent-soft)}
+.bigbar{position:relative;height:22px;border-radius:999px;background:var(--bg);overflow:hidden;margin-top:12px}
+.bigbar span{position:absolute;left:0;top:0;bottom:0;background:var(--up);border-radius:999px}
+.ticks{display:flex;justify-content:space-between;font-size:.72rem;color:var(--muted);margin-top:4px}
+.cmptable{width:100%;border-collapse:collapse;margin-top:10px;font-size:.88rem}
+.cmptable td{padding:8px 0;border-bottom:1px solid var(--line)}
+.cmptable td:last-child{text-align:right;white-space:nowrap;padding-left:12px}
 .navbtn:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
 @media (max-width:480px){
   h1{font-size:1.55rem}.hero .big{font-size:1.9rem}
@@ -201,7 +216,19 @@ const WORDS = [
   ["Résultats trimestriels", "Tous les 3 mois, les entreprises publient chiffre d'affaires et bénéfices. C'est le moment où les cours bougent le plus."],
   ["Valorisation", "Le prix que le marché paie pour les bénéfices d'une entreprise. Quand elle est jugée « tendue », même une bonne nouvelle peut faire baisser l'action."],
   ["Investissement programmé", "Acheter le même montant chaque semaine lisse ton prix d'achat : tu achètes plus de parts quand c'est bas, moins quand c'est haut."],
-  ["Concentration", "Dans le Nasdaq 100, les 10 premières entreprises pèsent près de la moitié de l'indice. Le MSCI Monde (ACWI) est beaucoup plus dispersé."]
+  ["Concentration", "Dans le Nasdaq 100, les 10 premières entreprises pèsent près de la moitié de l'indice. Le MSCI Monde (ACWI) est beaucoup plus dispersé."],
+  ["PEA", "Plan d'épargne en actions : une enveloppe fiscale française. Après 5 ans, tes gains ne paient plus l'impôt sur le revenu, seulement les prélèvements sociaux."],
+  ["Plafond de versements", "Sur un PEA classique, tu peux verser au maximum 150 000 €. Les gains, eux, peuvent dépasser ce montant sans limite."],
+  ["Prélèvements sociaux", "Taxe sur les gains (CSG, CRDS…) : 18,6 % depuis 2026. Sur un PEA de plus de 5 ans, c'est la seule taxe sur les gains."],
+  ["Plus-value latente", "Le gain que tu as sur le papier tant que tu n'as pas vendu. Il n'est ni taxé ni définitif."],
+  ["Volatilité", "L'ampleur des hausses et des baisses d'un placement. Le Nasdaq 100 est plus volatil que le MSCI Monde."],
+  ["Krach", "Une chute brutale et forte des marchés, souvent de plus de 20 %. Il y en a eu en 2000, 2008, 2020 et 2022."],
+  ["Capitalisation boursière", "Le prix de l'action multiplié par le nombre d'actions : la valeur totale d'une entreprise en bourse. Plus elle est grande, plus l'entreprise pèse dans un indice."],
+  ["Frais courants", "Ce que l'ETF prélève chaque année pour fonctionner, déjà déduit de son cours. Pour tes ETF, ils sont faibles."],
+  ["Réplication synthétique", "Pour être éligible au PEA, un ETF Monde achète des actions européennes et échange leur performance contre celle de l'indice (un « swap »). Tu reçois bien la performance de l'indice."],
+  ["Banque centrale", "La Fed (États-Unis) et la BCE (zone euro) fixent les taux d'intérêt. Une baisse des taux aide en général les actions."],
+  ["Inflation", "La hausse générale des prix. Si ton placement rapporte moins que l'inflation, ton pouvoir d'achat baisse."],
+  ["Intérêts composés", "Tes gains produisent eux-mêmes des gains. C'est pour cela que la courbe de projection accélère avec le temps."]
 ];
 
 let view = "jour";
@@ -288,6 +315,17 @@ function lineChart(hist) {
 
 function newsFor(sym) { return (DATA.news || []).filter(n => (n.tickers || []).includes(sym)); }
 
+function lexiqueHtml() {
+  const jour = WORDS[(new Date(DATA.date).getDate() + new Date(DATA.date).getMonth() * 31) % WORDS.length][0];
+  const liste = WORDS.slice().sort((a, b) => a[0].localeCompare(b[0], "fr"));
+  return `<section class="card">
+    <h2>Lexique</h2>
+    <input id="lex-q" class="search" type="search" placeholder="Chercher un mot (ex. dividende)" aria-label="Chercher dans le lexique">
+    <dl class="lex">${liste.map(([m, d]) => `<div class="lexitem${m === jour ? " today" : ""}" data-t="${esc((m + " " + d).toLowerCase())}"><dt>${esc(m)}${m === jour ? ` <span class="chip">mot du jour</span>` : ""}</dt><dd>${esc(d)}</dd></div>`).join("")}</dl>
+    <p class="muted small" id="lex-vide" hidden>Aucun mot trouvé.</p>
+  </section>`;
+}
+
 function headerHtml(title, eyebrow) {
   return `<header>
     <span class="eyebrow">${esc(eyebrow)}</span>
@@ -301,9 +339,9 @@ function navHtml() {
 let SUB = {};
 try { SUB = JSON.parse(localStorage.getItem("pea-sub") || "{}") || {}; } catch {}
 const SUBS = {
-  pourquoi: [["explications", "Explications"], ["classement", "Qui a pesé"]],
+  pourquoi: [["explications", "Explications"], ["classement", "Qui a pesé"], ["lexique", "Lexique"]],
   agenda: [["calendrier", "Calendrier"], ["recap", "Récap semaine"]],
-  pea: [["chiffres", "Mes chiffres"], ["projection", "Projection"]],
+  pea: [["chiffres", "Chiffres"], ["projection", "Projection"], ["objectif", "Objectif"], ["comparer", "Comparer"], ["fiscalite", "Impôts"]],
   analyse: [["doublons", "Doublons"], ["repartition", "Répartition"], ["krach", "Si ça chute"]]
 };
 function sub() {
@@ -315,6 +353,12 @@ function subNav() {
   return `<div class="subnav" role="group" aria-label="Sous-pages">${l.map(([id, nom]) => `<button class="subbtn" data-sub="${id}" aria-pressed="${sub() === id}">${nom}</button>`).join("")}</div>`;
 }
 function wireViews() {
+  const q = document.getElementById("lex-q");
+  if (q) q.oninput = () => {
+    const t = q.value.trim().toLowerCase(); let n = 0;
+    document.querySelectorAll(".lexitem").forEach(it => { const ok = !t || it.dataset.t.includes(t); it.hidden = !ok; n += ok; });
+    document.getElementById("lex-vide").hidden = n > 0;
+  };
   document.querySelectorAll(".subbtn").forEach(b => b.onclick = () => { SUB[view] = b.dataset.sub; store.set("pea-sub", JSON.stringify(SUB)); render(); scrollTo(0, 0); });
   document.querySelectorAll(".navbtn").forEach(b => b.onclick = () => { view = b.dataset.view; store.set("pea-view", view); render(); scrollTo(0, 0); });
 }
@@ -348,7 +392,7 @@ function render() {
   let page;
   if (view === "pourquoi") page = `${days}
 ${subNav()}
-${tabs}
+${sub() === "lexique" ? lexiqueHtml() : `${tabs}
 
 ${sub() === "classement" ? `  <section class="card">
     <h2>Qui a tiré l'ETF vers le haut ou le bas</h2>
@@ -374,7 +418,7 @@ ${sub() === "classement" ? `  <section class="card">
   <section class="card word">
     <span class="eyebrow">Le mot du jour</span>
     <h3>${esc(word[0])}</h3><p>${esc(word[1])}</p>
-  </section>`}`;
+  </section>`}`}`;
   else if (view === "agenda") page = `${subNav()}${typeof recapHtml === "function" ? (sub() === "recap" ? recapHtml() : calendrierHtml()) : ""}`;
   else page = `${days}
 
@@ -430,11 +474,21 @@ ${navHtml()}`;
 function detailHtml(h, inv) {
   const ns = newsFor(h.s);
   const eur = h.c == null ? null : inv * h.w / 100 * h.c / 100;
+  const fiche = typeof COMPO !== "undefined" && COMPO?.fiches?.[h.s];
+  const base = h.n.replace(/ [AC]$/, "");
+  const presence = (LATEST || DATA).etfs.map(e => {
+    const w = e.holdings.filter(x => x.n.replace(/ [AC]$/, "") === base).reduce((a, x) => a + x.w, 0);
+    return w ? {etf: e.short, w, eur: invested(e) * w / 100} : null;
+  }).filter(Boolean);
   return `<div class="detail" aria-live="polite">
+    <span class="eyebrow">Fiche entreprise</span>
     <div class="row"><h3>${esc(h.n)}</h3><span class="chip">${esc(h.s)}</span><span class="pill ${cls(h.c)} num">${fmtPct(h.c)}</span></div>
-    <div class="row small"><span>Poids : <b class="num">${h.w.toFixed(2).replace(".", ",")} %</b></span><span>${esc(h.sec)} · ${esc(h.pays)}</span>
-    <span>Ton argent dedans : <b class="num">${fmtEurPlain(inv * h.w / 100)}</b></span>
+    ${fiche ? `<p style="margin:0">${esc(fiche.d)}</p>` : ""}
+    <div class="row small"><span>${esc(h.sec)} · ${esc(h.pays)}</span>
+    ${fiche && fiche.an != null ? `<span>Sur 1 an : <b class="num ${cls(fiche.an)}">${fmtPct(fiche.an, 0)}</b></span>` : ""}
     ${eur != null ? `<span>Effet du jour : <b class="num ${cls(h.c)}">${fmtEur(eur)}</b></span>` : ""}</div>
+    <div class="fichegrid">${presence.map(p => `<div><span class="muted small">${esc(p.etf)}</span><b class="num">${p.w.toFixed(2).replace(".", ",")} %</b><span class="num small">${fmtEurPlain(p.eur)}</span></div>`).join("")}
+      <div class="tot"><span class="muted small">Total chez toi</span><b class="num">${fmtEurPlain(presence.reduce((a, p) => a + p.eur, 0))}</b><span class="small">${presence.length > 1 ? "dans " + presence.length + " ETF" : "dans 1 ETF"}</span></div></div>
     ${ns.length ? ns.map(n => `<p style="margin:0"><b>${esc(n.titre)}.</b> ${esc(n.texte)}</p>`).join("") : `<p class="muted small" style="margin:0">Pas d'annonce particulière trouvée : mouvement en ligne avec le marché.</p>`}
   </div>`;
 }

@@ -113,5 +113,225 @@
    "recup": "environ 1 an et demi"
   }
  ],
- "krachs_note": "Ordres de grandeur en dollars, dividendes réinvestis. Les temps de récupération comptent du plus haut d'avant la chute jusqu'au retour à ce niveau, sans nouveaux versements."
+ "krachs_note": "Ordres de grandeur en dollars, dividendes réinvestis. Les temps de récupération comptent du plus haut d'avant la chute jusqu'au retour à ce niveau, sans nouveaux versements.",
+ "fiches": {
+  "NVDA": {
+   "d": "Conçoit les puces graphiques (GPU) qui font tourner l'intelligence artificielle dans les centres de données.",
+   "an": 21.24
+  },
+  "AAPL": {
+   "d": "Fabrique l'iPhone, le Mac et l'Apple Watch, et vend des services (App Store, iCloud, Apple Music).",
+   "an": 30.45
+  },
+  "MSFT": {
+   "d": "Windows, Office, et surtout Azure, son cloud, partenaire d'OpenAI dans l'IA.",
+   "an": 1.95
+  },
+  "AMZN": {
+   "d": "Commerce en ligne et AWS, le premier fournisseur de cloud au monde.",
+   "an": 16.52
+  },
+  "GOOGL": {
+   "d": "Maison mère de Google (recherche, publicité), YouTube et Google Cloud.",
+   "an": 43.76
+  },
+  "GOOG": {
+   "d": "Maison mère de Google (recherche, publicité), YouTube et Google Cloud. Seconde classe d'actions.",
+   "an": 43.76
+  },
+  "META": {
+   "d": "Facebook, Instagram et WhatsApp ; vit de la publicité et investit massivement dans l'IA.",
+   "an": 0.12
+  },
+  "AVGO": {
+   "d": "Broadcom : puces pour les réseaux et l'IA sur mesure, plus des logiciels d'entreprise.",
+   "an": 4.64
+  },
+  "MU": {
+   "d": "Micron : mémoires (DRAM, HBM) indispensables aux serveurs d'IA.",
+   "an": 423.56
+  },
+  "TSLA": {
+   "d": "Voitures électriques, batteries de stockage et projets de conduite autonome.",
+   "an": -12.76
+  },
+  "AMD": {
+   "d": "Processeurs pour PC et serveurs, et puces d'IA concurrentes de Nvidia.",
+   "an": 158.15
+  },
+  "LLY": {
+   "d": "Eli Lilly : laboratoire pharmaceutique, leader des traitements contre le diabète et l'obésité.",
+   "an": 39.44
+  },
+  "JPM": {
+   "d": "JPMorgan Chase : la plus grande banque américaine.",
+   "an": 9.53
+  },
+  "BRK.B": {
+   "d": "Berkshire Hathaway : le conglomérat de Warren Buffett (assurance, rail, énergie, participations).",
+   "an": 3.16
+  },
+  "XOM": {
+   "d": "ExxonMobil : pétrole et gaz, de l'extraction à la raffinerie.",
+   "an": 48.17
+  },
+  "JNJ": {
+   "d": "Johnson & Johnson : médicaments et dispositifs médicaux.",
+   "an": 37.83
+  },
+  "TSM": {
+   "d": "TSMC : fabrique les puces les plus avancées du monde pour Apple, Nvidia et AMD.",
+   "an": 48.86
+  },
+  "ASML": {
+   "d": "Seul fabricant au monde des machines de lithographie EUV nécessaires aux puces de pointe.",
+   "an": 88.03
+  },
+  "SPCX": {
+   "d": "SpaceX : lanceurs spatiaux et internet par satellite Starlink, cotée depuis peu.",
+   "an": null
+  },
+  "INTC": {
+   "d": "Intel : processeurs pour PC et serveurs, et usines de fabrication de puces.",
+   "an": 179.72
+  },
+  "WMT": {
+   "d": "Walmart : le plus grand distributeur au monde (supermarchés, e-commerce).",
+   "an": 8.21
+  },
+  "PLTR": {
+   "d": "Palantir : logiciels d'analyse de données et d'IA pour les gouvernements et les entreprises.",
+   "an": 13.89
+  },
+  "CSCO": {
+   "d": "Cisco : équipements réseau et cybersécurité pour les entreprises.",
+   "an": 68.34
+  },
+  "COST": {
+   "d": "Costco : grandes surfaces vendues sur abonnement.",
+   "an": 3.51
+  },
+  "AMAT": {
+   "d": "Applied Materials : machines utilisées pour fabriquer les puces.",
+   "an": 133.11
+  },
+  "LRCX": {
+   "d": "Lam Research : équipements de gravure et de dépôt pour l'industrie des puces.",
+   "an": 123.69
+  },
+  "PANW": {
+   "d": "Palo Alto Networks : cybersécurité (pare-feu, protection du cloud).",
+   "an": 92.29
+  },
+  "NFLX": {
+   "d": "Netflix : streaming vidéo par abonnement, avec une offre financée par la publicité.",
+   "an": -42.1
+  },
+  "CRWD": {
+   "d": "CrowdStrike : protection des ordinateurs et serveurs contre les cyberattaques.",
+   "an": 115.74
+  },
+  "TXN": {
+   "d": "Texas Instruments : puces analogiques pour l'industrie et l'automobile.",
+   "an": 56.24
+  },
+  "KLAC": {
+   "d": "KLA : machines d'inspection et de contrôle qualité des puces.",
+   "an": 84.05
+  },
+  "MRVL": {
+   "d": "Marvell : puces pour centres de données et réseaux.",
+   "an": 197.6
+  },
+  "SMSN": {
+   "d": "Samsung Electronics : smartphones, écrans et premier fabricant mondial de mémoires.",
+   "an": 194.38
+  },
+  "SKH": {
+   "d": "SK hynix : mémoires, notamment la HBM utilisée par les puces d'IA de Nvidia.",
+   "an": 411.39
+  },
+  "HSBA": {
+   "d": "HSBC : grande banque britannique très présente en Asie.",
+   "an": 31.03
+  },
+  "ROG": {
+   "d": "Roche : laboratoire suisse, médicaments contre le cancer et diagnostics.",
+   "an": 22.83
+  },
+  "SHEL": {
+   "d": "Shell : pétrole, gaz et énergies, groupe britannique.",
+   "an": 37.25
+  },
+  "NOVN": {
+   "d": "Novartis : laboratoire pharmaceutique suisse.",
+   "an": 13.44
+  },
+  "AZN": {
+   "d": "AstraZeneca : laboratoire britannique, fort dans le cancer.",
+   "an": -4.29
+  },
+  "NESN": {
+   "d": "Nestlé : premier groupe alimentaire mondial (Nescafé, KitKat, Purina).",
+   "an": 1.44
+  },
+  "SIE": {
+   "d": "Siemens : automatisation industrielle, infrastructures et logiciels.",
+   "an": 10.95
+  },
+  "SAP": {
+   "d": "SAP : logiciels de gestion pour les entreprises, premier éditeur européen.",
+   "an": -19.28
+  },
+  "SAN": {
+   "d": "Santander : grande banque espagnole présente en Europe et en Amérique latine.",
+   "an": 37.18
+  },
+  "SU": {
+   "d": "Schneider Electric : gestion de l'énergie et automatisation, très lié aux centres de données.",
+   "an": 7.07
+  },
+  "ALV": {
+   "d": "Allianz : assureur allemand, l'un des plus grands au monde.",
+   "an": 12.37
+  },
+  "TTE": {
+   "d": "TotalEnergies : pétrole, gaz et électricité, groupe français.",
+   "an": 53.62
+  },
+  "RR": {
+   "d": "Rolls-Royce : moteurs d'avions et systèmes d'énergie.",
+   "an": 20.19
+  },
+  "BBVA": {
+   "d": "BBVA : banque espagnole, forte au Mexique.",
+   "an": 41.26
+  },
+  "UBSG": {
+   "d": "UBS : première banque suisse, spécialiste de la gestion de fortune.",
+   "an": 23.39
+  },
+  "IBE": {
+   "d": "Iberdrola : électricité, leader des énergies renouvelables.",
+   "an": 30.02
+  },
+  "SAF": {
+   "d": "Safran : moteurs d'avions (CFM avec GE) et équipements aéronautiques.",
+   "an": 4.08
+  }
+ },
+ "fiches_source": "Variation sur 1 an : StockAnalysis, au 9 octobre 2026, en monnaie locale.",
+ "fiscalite": {
+  "plafond": 150000,
+  "ps": 18.6,
+  "ir": 12.8,
+  "source": "Taux 2026 (hausse de la CSG au 1er janvier 2026)"
+ },
+ "comparaison": {
+  "livretA": 1.7,
+  "livretA_date": "1er août 2026",
+  "inflation_actuelle": 3.0,
+  "inflation_date": "septembre 2026 (Insee, provisoire)",
+  "inflation_long": 2.0
+ }
 }

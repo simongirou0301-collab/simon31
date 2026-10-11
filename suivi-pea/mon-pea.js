@@ -26,12 +26,12 @@ function releves() {
   try { const r = JSON.parse(store.get("pea-releves") || "[]"); return Array.isArray(r) ? r : []; } catch { return []; }
 }
 
-function simuler(v0, r) {
-  const rm = Math.pow(1 + r.taux / 100, 1 / 12) - 1;
+function simuler(v0, r, ans = horizon, taux = r.taux) {
+  const rm = Math.pow(1 + taux / 100, 1 / 12) - 1;
   const parMois = r.hebdo * 52 / 12;
   let inv = v0, cash = r.cash, verse = r.verse;
   const pts = [{an: 0, total: inv + cash, verse}];
-  for (let m = 1; m <= horizon * 12; m++) {
+  for (let m = 1; m <= ans * 12; m++) {
     inv *= 1 + rm;
     if (cash > 0.01 && parMois > 0) { const mv = Math.min(cash, parMois); cash -= mv; inv += mv; }
     else { inv += r.mensuel; verse += r.mensuel; }
@@ -159,7 +159,7 @@ function renderPea() {
     ${rel.length ? `<div class="legend"><i style="background:var(--accent)"></i><span>Valeur</span><i style="background:var(--muted)"></i><span>Versé</span><span>· ${rel.length} relevé${rel.length > 1 ? "s" : ""}</span></div>` : ""}
   </section>
 
-  ` : `<section class="card">
+  ` : sub() === "projection" ? `<section class="card">
     <div class="etfhead">
       <div><h2>Et dans ${horizon} ans ?</h2><div class="muted small">Sans jamais vendre, rendement moyen constant</div></div>
       <div class="seg" role="group" aria-label="Horizon">${[10, 20, 30].map(h => `<button class="segbtn" data-h="${h}" aria-pressed="${h === horizon}">${h} ans</button>`).join("")}</div>
@@ -177,7 +177,7 @@ function renderPea() {
     <p class="muted small" style="margin:10px 0 0">${r.cash > 0 && r.hebdo > 0 ? `Tes espèces sont investies à ${eur0(r.hebdo)}/semaine, puis tu ajoutes ${eur0(r.mensuel)}/mois. ` : `Tu ajoutes ${eur0(r.mensuel)}/mois. `}La vraie bourse ne monte pas en ligne droite : certaines années feront −20 % ou pire. Les ${r.taux.toFixed(0)} % sont une moyenne, dividendes réinvestis compris.</p>
   </section>
 
-  `) : sub() === "doublons" ? `<section class="card">
+  ` : sub() === "objectif" ? objectifHtml(r, v0) : sub() === "comparer" ? comparerHtml(r, v0) : fiscaliteHtml(r, v0, gain)) : sub() === "doublons" ? `<section class="card">
     <h2>Les doublons entre mes ETF</h2>
     <p class="muted small" style="margin:4px 0 0">Combien tu possèdes vraiment de chaque entreprise, tous ETF confondus. ${doublons.length} des plus grosses entreprises sont dans plusieurs de tes ETF.</p>
     <div class="expo">${top.map(x => `
@@ -223,6 +223,9 @@ function wirePea() {
     if (el) el.onchange = () => { const v = parseFr(el.value); if (isFinite(v) && v >= 0) store.set(key, String(v)); renderPea(); };
   };
   LATEST.etfs.forEach(e => save("pv-" + e.id, "pea-inv-" + e.id));
+  save("pv-cible", "pea-cible");
+  const ov = document.getElementById("pv-ouverture");
+  if (ov) ov.onchange = () => { if (ov.value) store.set("pea-ouverture", ov.value); renderPea(); };
   save("pv-verse", "pea-verse"); save("pv-cash", "pea-cash"); save("pv-hebdo", "pea-hebdo"); save("pv-mensuel", "pea-mensuel");
   const t = document.getElementById("pv-taux");
   if (t) t.oninput = () => { store.set("pea-taux", t.value); renderPea(); document.getElementById("pv-taux")?.focus(); };
@@ -318,5 +321,111 @@ function recapHtml() {
     <div class="chips" style="margin-top:8px">${etfs.map(e => `<span class="pill ${cls(r.etfs[e.id])} num">${esc(e.short)} ${fmtPct(r.etfs[e.id], 1)}</span>`).join("")}</div>
     <ol class="recaplist">${r.lignes.map(l => `<li>${esc(l)}</li>`).join("")}</ol>
     <span class="muted small">Sources : ${esc(r.source)}</span>
+  </section>`;
+}
+
+
+/* Objectif, comparateur, fiscalité. */
+
+function moisPour(r, v0, cible) {
+  const rm = Math.pow(1 + r.taux / 100, 1 / 12) - 1, parMois = r.hebdo * 52 / 12;
+  let inv = v0, cash = r.cash;
+  if (inv + cash >= cible) return 0;
+  for (let m = 1; m <= 600; m++) {
+    inv *= 1 + rm;
+    if (cash > 0.01 && parMois > 0) { const mv = Math.min(cash, parMois); cash -= mv; inv += mv; } else inv += r.mensuel;
+    if (inv + cash >= cible) return m;
+  }
+  return null;
+}
+
+function objectifHtml(r, v0) {
+  const cible = num("pea-cible", 50000);
+  const total = v0 + r.cash;
+  const pct = Math.min(total / cible * 100, 100);
+  const mois = moisPour(r, v0, cible);
+  const quand = mois == null ? null : new Date(new Date().getFullYear(), new Date().getMonth() + mois, 1);
+  const etapes = [0.25, 0.5, 0.75, 1].map(f => ({f, m: moisPour(r, v0, cible * f)}));
+  const fmtMois = m => m === 0 ? "atteint" : m == null ? "plus de 50 ans" : new Date(new Date().getFullYear(), new Date().getMonth() + m, 1).toLocaleDateString("fr-FR", {month: "long", year: "numeric"});
+  return `<section class="card">
+    <h2>Mon objectif</h2>
+    <div class="form" style="grid-template-columns:1fr"><label>Montant visé<input id="pv-cible" class="num" inputmode="decimal" value="${cible.toFixed(0)}"></label></div>
+    <div class="bigbar" role="progressbar" aria-valuenow="${pct.toFixed(0)}" aria-valuemin="0" aria-valuemax="100"><span style="width:${pct}%"></span></div>
+    <div class="ticks"><span>0 €</span><span>${eur0(cible / 2)}</span><span>${eur0(cible)}</span></div>
+    <div class="kpis">
+      <div class="kpi"><label>Aujourd'hui</label><div class="v num">${eur0(total)}</div></div>
+      <div class="kpi"><label>Avancement</label><div class="v num up">${pct.toFixed(0)} %</div></div>
+      <div class="kpi"><label>Date estimée</label><div class="v">${mois === 0 ? "Atteint !" : quand ? esc(quand.toLocaleDateString("fr-FR", {month: "short", year: "numeric"})) : "—"}</div></div>
+    </div>
+    <div class="jalons">${etapes.map(e => `<div><span class="muted small">${Math.round(e.f * 100)} % · ${eur0(cible * e.f)}</span><b>${esc(fmtMois(e.m))}</b></div>`).join("")}</div>
+    <p class="muted small" style="margin:10px 0 0">Estimation avec tes réglages de l'onglet Projection (${r.taux.toFixed(1).replace(".", ",")} %/an, ${r.hebdo ? eur0(r.hebdo) + "/semaine tant qu'il reste des espèces, puis " : ""}${eur0(r.mensuel)}/mois).</p>
+  </section>`;
+}
+
+function comparerHtml(r, v0) {
+  const C = COMPO?.comparaison || {livretA: 1.7, inflation_long: 2, inflation_actuelle: 3, livretA_date: "", inflation_date: ""};
+  const pea = simuler(v0, r), livret = simuler(v0, r, horizon, C.livretA);
+  const fin = pea[pea.length - 1], finL = livret[livret.length - 1];
+  const reel = v => v / Math.pow(1 + C.inflation_long / 100, horizon);
+  const ps = (COMPO?.fiscalite?.ps ?? 18.6) / 100;
+  const peaNet = fin.total - Math.max(0, fin.total - fin.verse) * ps;
+  const chart = svgLines([
+    {pts: pea.map(p => [p.an, p.total]), color: "var(--up)", fill: true},
+    {pts: livret.map(p => [p.an, p.total]), color: "var(--c-europe)"},
+    {pts: pea.map(p => [p.an, p.verse]), color: "var(--muted)", dash: true}
+  ], {label: "PEA comparé au Livret A", zero: true, fmtY: v => v >= 1e6 ? (v / 1e6).toFixed(1).replace(".", ",") + " M€" : Math.round(v / 1000) + " k€", fmtX: a => a === 0 ? "aujourd'hui" : "dans " + a + " ans"});
+  return `<section class="card">
+    <div class="etfhead">
+      <div><h2>PEA ou Livret A ?</h2><div class="muted small">Les mêmes versements, sur ${horizon} ans</div></div>
+      <div class="seg" role="group" aria-label="Horizon">${[10, 20, 30].map(h => `<button class="segbtn" data-h="${h}" aria-pressed="${h === horizon}">${h} ans</button>`).join("")}</div>
+    </div>
+    ${chart}
+    <div class="legend"><i style="background:var(--up)"></i><span>PEA à ${r.taux.toFixed(1).replace(".", ",")} %/an</span><i style="background:var(--c-europe)"></i><span>Livret A à ${String(C.livretA).replace(".", ",")} %</span><i style="background:var(--muted)"></i><span>Versé</span></div>
+    <table class="cmptable"><tbody>
+      <tr><td>PEA</td><td class="num"><b>${eur0(fin.total)}</b></td></tr>
+      <tr><td>PEA après prélèvements sociaux (${String(COMPO?.fiscalite?.ps ?? 18.6).replace(".", ",")} % sur les gains)</td><td class="num">${eur0(peaNet)}</td></tr>
+      <tr><td>Livret A (sans impôt)</td><td class="num">${eur0(finL.total)}</td></tr>
+      <tr><td>Argent versé, sous le matelas</td><td class="num">${eur0(fin.verse)}</td></tr>
+      <tr><td>PEA net en euros d'aujourd'hui (inflation ${String(C.inflation_long).replace(".", ",")} %/an)</td><td class="num">${eur0(reel(peaNet))}</td></tr>
+    </tbody></table>
+    <p style="margin:10px 0 0">Écart PEA net / Livret A : <b class="num up">${fmtEur(peaNet - finL.total, 0)}</b>. Le Livret A ne perd jamais, le PEA peut baisser fortement certaines années.</p>
+    <p class="muted small" style="margin:6px 0 0">Livret A à ${String(C.livretA).replace(".", ",")} % depuis le ${esc(C.livretA_date)}, supposé constant. Inflation récente : ${String(C.inflation_actuelle).replace(".", ",")} % (${esc(C.inflation_date)}) ; la projection retient ${String(C.inflation_long).replace(".", ",")} %/an en moyenne. Si l'inflation dépasse le taux du livret, l'argent qui y dort perd du pouvoir d'achat.</p>
+  </section>`;
+}
+
+function fiscaliteHtml(r, v0, gain) {
+  const F = COMPO?.fiscalite || {plafond: 150000, ps: 18.6, ir: 12.8};
+  const ouv = store.get("pea-ouverture") || "";
+  let bloc = `<p class="empty-inline">Entre la date d'ouverture de ton PEA (dans l'appli Trade Republic) pour voir le compte à rebours.</p>`;
+  if (ouv) {
+    const d0 = new Date(ouv + "T00:00:00"), d5 = new Date(d0); d5.setFullYear(d5.getFullYear() + 5);
+    const now = new Date(), tot = d5 - d0, fait = Math.min(Math.max(now - d0, 0), tot);
+    const jours = Math.ceil((d5 - now) / 864e5);
+    bloc = `<div class="bigbar"><span style="width:${fait / tot * 100}%;background:var(--accent)"></span></div>
+      <div class="ticks"><span>${esc(d0.toLocaleDateString("fr-FR"))}</span><span>5 ans : ${esc(d5.toLocaleDateString("fr-FR"))}</span></div>
+      <p style="margin:10px 0 0">${jours > 0 ? `Encore <b class="num">${jours.toLocaleString("fr-FR")} jours</b> (${(jours / 365.25).toFixed(1).replace(".", ",")} ans) avant l'exonération d'impôt sur le revenu.` : `<b class="up">Ton PEA a plus de 5 ans</b> : tes gains ne paient plus que les prélèvements sociaux, et tu peux retirer sans clôturer.`}</p>`;
+  }
+  const reste = Math.max(F.plafond - r.verse, 0);
+  const plus5 = ouv && new Date() >= (() => { const d = new Date(ouv + "T00:00:00"); d.setFullYear(d.getFullYear() + 5); return d; })();
+  const g = Math.max(gain, 0);
+  return `<section class="card">
+    <h2>Les 5 ans du PEA</h2>
+    <div class="form" style="grid-template-columns:1fr"><label>Date d'ouverture du PEA<input id="pv-ouverture" type="date" value="${esc(ouv)}"></label></div>
+    ${bloc}
+  </section>
+  <section class="card">
+    <h2>Plafond de versements</h2>
+    <div class="bigbar"><span style="width:${Math.min(r.verse / F.plafond * 100, 100)}%;background:var(--c-nasdaq)"></span></div>
+    <div class="ticks"><span>Versé : ${eur0(r.verse)}</span><span>${eur0(F.plafond)}</span></div>
+    <p style="margin:10px 0 0">Il te reste <b class="num">${eur0(reste)}</b> à verser${r.hebdo ? `, soit environ ${Math.floor(reste / r.hebdo)} semaines à ${eur0(r.hebdo)}` : ""}. Les gains peuvent dépasser le plafond sans limite.</p>
+  </section>
+  <section class="card">
+    <h2>Si tu retirais aujourd'hui</h2>
+    <table class="cmptable"><tbody>
+      <tr><td>Plus-value actuelle</td><td class="num">${eur0(g)}</td></tr>
+      <tr><td>Avant 5 ans : ${(F.ir + F.ps).toFixed(1).replace(".", ",")} % (${String(F.ir).replace(".", ",")} % d'impôt + ${String(F.ps).replace(".", ",")} % de prélèvements sociaux), et le PEA est clôturé</td><td class="num down">−${eur0(g * (F.ir + F.ps) / 100)}</td></tr>
+      <tr><td>Après 5 ans : ${String(F.ps).replace(".", ",")} % de prélèvements sociaux seulement</td><td class="num down">−${eur0(g * F.ps / 100)}</td></tr>
+    </tbody></table>
+    <p class="muted small" style="margin:8px 0 0">Les impôts ne portent que sur les gains, jamais sur l'argent versé, et rien n'est dû tant que tu ne retires pas.${plus5 ? "" : " Tant que ton PEA a moins de 5 ans, tout retrait entraîne en principe sa clôture."} ${esc(F.source || "")}.</p>
   </section>`;
 }
