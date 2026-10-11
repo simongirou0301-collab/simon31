@@ -114,6 +114,7 @@ footer{color:var(--muted);font-size:.78rem}
   <div class="progress"><span id="count"></span><button class="btn" id="reset" type="button">Remettre les séries à zéro</button></div>
 
   <ul class="list" id="list"></ul>
+  <div id="prog" hidden></div>
 
   <button class="finish" type="button" id="finish">Terminer la séance</button>
   <div class="confirm" id="confirm" hidden>
@@ -123,13 +124,14 @@ footer{color:var(--muted);font-size:.78rem}
   <p class="finish-note" id="finish-note"></p>
   <button class="btn jr-btn" type="button" id="jr-btn">Journal et courbes</button>
   <div class="journal" id="journal" hidden></div>
-  </div>
-
   <div class="backup" id="backup">
+    <button class="btn pg-open" type="button" id="pg-open">Modifier le programme</button>
     <button class="btn" type="button" id="bk-out">Sauvegarder mes données</button>
     <label class="btn">Restaurer<input class="vh" type="file" accept=".json,application/json" id="bk-in"></label>
     <p class="muted" id="bk-msg"></p>
   </div>
+  </div>
+
   <footer id="gym-foot">Les poids sont le total sur la machine ou la barre, sauf mention « / côté » ou « / haltère ». Tes données restent sur ce téléphone.</footer>
 </div>
 
@@ -181,16 +183,25 @@ const DEFAULT_LOADS = {
   "pull-4":{kg:"",unit:"conseillé 15-20 kg"}, "pull-5":{kg:"35 / 20",unit:"kg (lourd / léger)"},
   "pull-6":{kg:"",unit:"conseillé 10-12 kg / haltère"}, "pull-7":{kg:"15",unit:"kg"}
 };
-const ALL = [...EX.push, ...EX.pull];
-const byId = id => ALL.find(e => e.id === id);
+const DEF = JSON.parse(JSON.stringify(EX));
+const DEFALL = [...DEF.push, ...DEF.pull];
+let ALL = [...DEFALL];
+const byId = id => ALL.find(e => e.id === id) || (st.custom && st.custom[id]) || {id, n:"Exercice supprimé", r:"8", s:3, rest:90, note:""};
 
 /* ---------- stockage local ---------- */
 const KEY = "carnet-pp-app-v1";
-let st = {tab:null, done:{}, feel:{}, loads:null, reps:{}, log:[]};
+let st = {tab:null, done:{}, feel:{}, loads:null, reps:{}, log:[], prog:{}, ovr:{}, custom:{}};
 try { const v = JSON.parse(localStorage.getItem(KEY)); if (v) st = Object.assign(st, v); } catch (e) {}
 if (!st.loads) st.loads = JSON.parse(JSON.stringify(DEFAULT_LOADS));
 for (const k in DEFAULT_LOADS) if (!st.loads[k]) st.loads[k] = {...DEFAULT_LOADS[k]};
 if (!st.tab) { const d = new Date().getDay(); st.tab = (d === 2 || d === 5) ? "pull" : "push"; }
+function applyProg(){
+  const mk = id => { const b = DEFALL.find(e => e.id === id) || st.custom[id]; return b ? {...b, ...(st.ovr[id] || {})} : null; };
+  ["push", "pull"].forEach(t => { EX[t] = (st.prog[t] || DEF[t].map(e => e.id)).map(mk).filter(Boolean); });
+  const seen = new Set(); ALL = [];
+  [...DEFALL, ...Object.values(st.custom)].forEach(e => { if (!seen.has(e.id)) { seen.add(e.id); ALL.push(mk(e.id)); } });
+}
+applyProg();
 const save = () => { try { localStorage.setItem(KEY, JSON.stringify(st)); } catch (e) {} };
 save();
 if (navigator.storage && navigator.storage.persist) navigator.storage.persist().catch(() => {});
@@ -223,7 +234,8 @@ async function loadCustomPhotos(){
   }
   render();
 }
-const photoOf = id => photoUrls[id] || `photos/${id}.jpg`;
+const PH = "data:image/svg+xml," + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="#e5e5ea"/><path d="M22 40v20M30 32v36M70 32v36M78 40v20M30 50h40" stroke="#8e8e93" stroke-width="6" stroke-linecap="round" fill="none"/></svg>');
+const photoOf = id => photoUrls[id] || (st.custom[id] ? PH : `photos/${id}.jpg`);
 
 /* ---------- rendu ---------- */
 let editing = null;
@@ -418,6 +430,48 @@ function renderJournal(){
 }
 jr.addEventListener("click", ev => { const b = ev.target.closest("[data-jv]"); if (b) { jrView = b.dataset.jv; renderJournal(); } });
 document.getElementById("jr-btn").addEventListener("click", () => { jr.hidden = !jr.hidden; if (!jr.hidden) renderJournal(); });
+
+/* ---------- programme ---------- */
+let progEdit = false, pEdit = null;
+const progEl = document.getElementById("prog"), gymEl = document.getElementById("gym-view");
+const mmss = x => Math.floor(x / 60) + ":" + String(x % 60).padStart(2, "0");
+function renderProg(){
+  const ids = EX[st.tab];
+  const form = e => `<form class="pg-f" data-pgf="${e ? e.id : "new"}">
+    <label>Nom<input name="n" value="${esc(e ? e.n : "")}" required autocomplete="off"></label>
+    <div class="pg-g"><label>Séries<input name="s" type="number" inputmode="numeric" min="1" max="10" value="${e ? e.s : 3}"></label>
+    <label>Reps<input name="r" value="${esc(e ? e.r : "10")}" autocomplete="off"></label>
+    <label>Repos (s)<input name="rest" type="number" inputmode="numeric" min="0" max="600" step="15" value="${e ? (e.rest || 90) : 90}"></label></div>
+    <div class="pg-g2"><button class="save" type="submit">Enregistrer</button><button class="btn" type="button" data-pg="cancel">Annuler</button></div></form>`;
+  progEl.innerHTML = `<div class="pg-h"><b>Programme ${st.tab === "push" ? "Push" : "Pull"}</b><button class="btn" type="button" data-pg="done">Terminé</button></div>` +
+    ids.map((e, i) => pEdit === e.id ? form(e) : `<div class="pg-r"><div class="pg-t"><b>${esc(e.n)}</b><span>${e.s} × ${esc(e.r)} · repos ${mmss(e.rest || 90)}</span></div>
+      <div class="pg-b"><button type="button" data-pg="up" data-i="${i}" ${i ? "" : "disabled"} aria-label="Monter">↑</button><button type="button" data-pg="down" data-i="${i}" ${i < ids.length - 1 ? "" : "disabled"} aria-label="Descendre">↓</button><button type="button" data-pg="edit" data-id="${e.id}" aria-label="Modifier">✎</button><button type="button" data-pg="del" data-id="${e.id}" aria-label="Supprimer">✕</button></div></div>`).join("") +
+    (pEdit === "new" ? form(null) : `<button class="btn pg-add" type="button" data-pg="add">+ Ajouter un exercice</button>`) +
+    `<button class="btn pg-rst" type="button" data-pg="reset">Rétablir le programme d'origine</button>`;
+}
+function setProg(ids){ st.prog[st.tab] = ids; save(); applyProg(); renderProg(); }
+document.getElementById("pg-open").addEventListener("click", () => { progEdit = true; pEdit = null; gymEl.classList.add("pe"); progEl.hidden = false; renderProg(); window.scrollTo(0, 0); });
+progEl.addEventListener("click", ev => {
+  const b = ev.target.closest("[data-pg]"); if (!b) return;
+  const ids = EX[st.tab].map(e => e.id), a = b.dataset.pg, i = +b.dataset.i;
+  if (a === "done") { progEdit = false; pEdit = null; gymEl.classList.remove("pe"); progEl.hidden = true; render(); }
+  else if (a === "up" || a === "down") { const j = a === "up" ? i - 1 : i + 1; [ids[i], ids[j]] = [ids[j], ids[i]]; setProg(ids); }
+  else if (a === "edit") { pEdit = b.dataset.id; renderProg(); }
+  else if (a === "add") { pEdit = "new"; renderProg(); }
+  else if (a === "cancel") { pEdit = null; renderProg(); }
+  else if (a === "del") { if (confirm("Retirer cet exercice du programme ? Ton historique est conservé.")) setProg(ids.filter(x => x !== b.dataset.id)); }
+  else if (a === "reset") { if (confirm("Revenir au programme d'origine ?")) { st.prog = {}; st.ovr = {}; pEdit = null; save(); applyProg(); renderProg(); } }
+});
+progEl.addEventListener("submit", ev => {
+  ev.preventDefault(); const f = ev.target, id = f.dataset.pgf;
+  const v = {n: f.n.value.trim(), s: Math.max(1, Math.min(10, parseInt(f.s.value, 10) || 3)), r: f.r.value.trim() || "10", rest: Math.max(0, parseInt(f.rest.value, 10) || 90)};
+  if (!v.n) return;
+  if (id === "new") {
+    const nid = "c-" + Date.now().toString(36);
+    st.custom[nid] = {id: nid, note: "", ...v}; st.loads[nid] = {kg: "", unit: "kg"};
+    pEdit = null; setProg([...EX[st.tab].map(e => e.id), nid]);
+  } else { st.ovr[id] = v; pEdit = null; save(); applyProg(); renderProg(); }
+});
 
 /* ---------- sauvegarde ---------- */
 const b64 = blob => new Promise(r => { const f = new FileReader(); f.onload = () => r(f.result); f.readAsDataURL(blob); });
