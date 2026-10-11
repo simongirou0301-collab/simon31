@@ -1,6 +1,6 @@
-const CACHE = "carnet-v5";
+const CACHE = "carnet-v6";
 const FILES = [
-  "./", "index.html", "manifest.json", "run.js", "run.css",
+  "./", "index.html", "manifest.json", "run.js", "run.css", "apple.css",
   "icons/icon-180.png", "icons/icon-192.png", "icons/icon-512.png",
   "photos/pull-1.jpg",
   "photos/pull-2.jpg",
@@ -29,7 +29,7 @@ self.addEventListener("fetch", e => {
   const url = new URL(e.request.url);
   if (url.hostname.endsWith("intervals.icu")) return;
   if (url.origin !== location.origin && !url.hostname.endsWith("googleapis.com") && !url.hostname.endsWith("gstatic.com")) return;
-  const fresh = url.origin === location.origin && (e.request.mode === "navigate" || /\/(index\.html|run\.js|run\.css)$/.test(url.pathname));
+  const fresh = url.origin === location.origin && (e.request.mode === "navigate" || /\/(index\.html|run\.js|run\.css|apple\.css)$/.test(url.pathname));
   if (fresh) {
     const key = e.request.mode === "navigate" ? "index.html" : e.request;
     e.respondWith(fetch(e.request).then(r => { if (r.ok) { const c = r.clone(); caches.open(CACHE).then(ca => ca.put(key, c)); } return r; })

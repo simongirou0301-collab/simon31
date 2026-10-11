@@ -343,7 +343,7 @@ function weeklyBars(){
   niceTicks(0, max, 3).forEach(t => { const y = H - PB - t / max * (H - PT - PB); g += `<line class="grid" x1="${PL}" x2="${W-PR}" y1="${y.toFixed(1)}" y2="${y.toFixed(1)}"/><text x="${PL-4}" y="${(y+3).toFixed(1)}" text-anchor="end">${t}</text>`; });
   weeks.forEach((w, i) => {
     const h = w.km / max * (H - PT - PB), x = PL + i * bw + bw * .18, y = H - PB - h;
-    g += `<rect x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${(bw*.64).toFixed(1)}" height="${Math.max(h, 0).toFixed(1)}" rx="3" fill="${i === weeks.length-1 ? "#d9480f" : "var(--pace)"}" fill-opacity="${i === weeks.length-1 ? 1 : .55}"/>`;
+    g += `<rect x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${(bw*.64).toFixed(1)}" height="${Math.max(h, 0).toFixed(1)}" rx="3" fill="${i === weeks.length-1 ? "var(--orange)" : "var(--pace)"}" fill-opacity="${i === weeks.length-1 ? 1 : .55}"/>`;
     if (w.km > 0) g += `<text x="${(x + bw*.32).toFixed(1)}" y="${(y-3).toFixed(1)}" text-anchor="middle">${w.km.toFixed(0)}</text>`;
     g += `<text x="${(x + bw*.32).toFixed(1)}" y="${H-6}" text-anchor="middle">${w.start.getDate()}/${w.start.getMonth()+1}</text>`;
   });
@@ -537,7 +537,7 @@ function renderProg(){
       ${timeChart(weeks, [{ys: hrW, color: "var(--hr)"}], {label: "Fréquence cardiaque moyenne par semaine"})}
       <p class="muted">Si ton allure s'améliore pendant que tes BPM baissent ou restent stables, ton endurance progresse.</p></div>
     <div class="card"><div class="chead"><h3>Kilomètres par mois</h3></div>
-      ${timeChart(months, [{ys: kmM, color: "#d9480f", type: "bar"}], {min0: true, xfmt: monthName, label: "Kilomètres par mois"})}</div>
+      ${timeChart(months, [{ys: kmM, color: "var(--orange)", type: "bar"}], {min0: true, xfmt: monthName, label: "Kilomètres par mois"})}</div>
     <div class="card"><h3>Records</h3>
       <table class="splits"><tbody>
         <tr><th></th><th>Temps</th><th>Allure</th><th>Date</th></tr>
@@ -594,11 +594,11 @@ function renderSante(){
     ["steps", latest("steps"), v => Math.round(v).toLocaleString("fr-FR"), "pas"],
   ];
   const charts_ = [];
-  if (sleepH.some(v => v != null)) charts_.push(`<div class="card"><div class="chead"><h3>Sommeil · 30 jours</h3></div>${timeChart(days30, [{ys: sleepH, color: "#6b5bd2", type: "bar"}], {min0: true, fmt: v => v + "h", label: "Heures de sommeil"})}</div>`);
+  if (sleepH.some(v => v != null)) charts_.push(`<div class="card"><div class="chead"><h3>Sommeil · 30 jours</h3></div>${timeChart(days30, [{ys: sleepH, color: "var(--indigo)", type: "bar"}], {min0: true, fmt: v => v + "h", label: "Heures de sommeil"})}</div>`);
   const rhr = days30.map(d => get(d, "rhr")); if (rhr.some(v => v != null)) charts_.push(`<div class="card"><div class="chead"><h3>FC au repos · 30 jours</h3></div>${timeChart(days30, [{ys: rhr, color: "var(--hr)"}], {label: "Fréquence cardiaque au repos"})}<p class="muted">Une FC au repos qui monte de plusieurs battements peut signaler de la fatigue ou un début de maladie.</p></div>`);
   const hrv = days30.map(d => get(d, "hrv")); if (hrv.some(v => v != null)) charts_.push(`<div class="card"><div class="chead"><h3>VFC · 30 jours</h3></div>${timeChart(days30, [{ys: hrv, color: "var(--done)"}], {label: "Variabilité de la fréquence cardiaque"})}<p class="muted">Plus elle est haute par rapport à ta normale, mieux tu as récupéré.</p></div>`);
   const steps = days30.map(d => get(d, "steps")); if (steps.some(v => v != null)) charts_.push(`<div class="card"><div class="chead"><h3>Pas · 30 jours</h3></div>${timeChart(days30, [{ys: steps, color: "var(--pace)", type: "bar"}], {min0: true, fmt: v => v >= 1000 ? Math.round(v / 1000) + "k" : v, label: "Pas par jour"})}</div>`);
-  const vo2 = days90.map(d => get(d, "vo2")); if (vo2.some(v => v != null)) charts_.push(`<div class="card"><div class="chead"><h3>VO2 max · 90 jours</h3></div>${timeChart(days90, [{ys: vo2, color: "#d9480f"}], {label: "VO2 max"})}</div>`);
+  const vo2 = days90.map(d => get(d, "vo2")); if (vo2.some(v => v != null)) charts_.push(`<div class="card"><div class="chead"><h3>VO2 max · 90 jours</h3></div>${timeChart(days90, [{ys: vo2, color: "var(--orange)"}], {label: "VO2 max"})}</div>`);
   view.innerHTML = `${subnav()}
     <div class="card">${syncBar("Santé")}
       <div class="kpis">${tiles.map(([, v, f, l]) => `<div class="kpi"><b>${v != null ? esc(f(v)) : "–"}</b><span>${l}</span></div>`).join("")}</div>

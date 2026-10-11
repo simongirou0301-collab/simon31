@@ -4,7 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <title>Carnet Push Pull</title>
-<meta name="theme-color" content="#c8372d">
+<meta name="theme-color" content="#f2f2f7" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Carnet">
@@ -13,7 +14,7 @@
 <link rel="apple-touch-icon" href="icons/icon-180.png">
 <link rel="icon" href="icons/icon-192.png">
 <link rel="stylesheet" href="run.css">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;800&family=Archivo:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap">
+
 <style>
 :root{
   --bg:#eef0f2; --surface:#ffffff; --ink:#1b2129; --muted:#5d6874; --line:#d6dbe0;
@@ -91,19 +92,21 @@ footer{color:var(--muted);font-size:.78rem}
 @media (max-width:420px){.ex{grid-template-columns:64px 1fr auto}.thumb{width:64px;height:64px}}
 @media (prefers-reduced-motion:no-preference){.set,.ex{transition:background .15s,border-color .15s}}
 </style>
+<link rel="stylesheet" href="apple.css">
 </head>
 <body>
 <div class="wrap">
-  <header>
-    <h1>Carnet Push / Pull</h1>
-    <p>Touche une charge pour la modifier · Touche une photo pour l'agrandir</p>
+  <header class="large">
+    <p class="eyebrow" id="today"></p>
+    <h1 id="ttl">Push</h1>
+    <p class="sub" id="sub">Lundi · Jeudi</p>
   </header>
 
-  <div class="tabs" role="tablist">
-    <button class="tab" role="tab" data-s="push">Push<small>Lundi · Jeudi</small></button>
-    <button class="tab" role="tab" data-s="pull">Pull<small>Mardi · Vendredi</small></button>
-    <button class="tab" role="tab" data-s="run">Course<small>Garmin</small></button>
-  </div>
+  <nav class="tabs" role="tablist">
+    <button class="tab" role="tab" data-s="push"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9v6M6 6v12M18 6v12M21 9v6M6 12h12" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg><span>Push</span></button>
+    <button class="tab" role="tab" data-s="pull"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v11M7 9l5 5 5-5M5 20h14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Pull</span></button>
+    <button class="tab" role="tab" data-s="run"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="14.5" cy="4.5" r="2" fill="currentColor"/><path d="M8 21l3-5 3 2v4M6 12l3-4 4 1 2 3 3 1M11 16l2-6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Course</span></button>
+  </nav>
 
   <section id="run-view" hidden></section>
 
@@ -216,6 +219,11 @@ const canAdj = L => !!(L && L.kg && /\d/.test(L.kg));
 function render(){
   document.querySelectorAll(".tab").forEach(t => t.setAttribute("aria-selected", t.dataset.s === st.tab));
   const isRun = st.tab === "run";
+  document.body.dataset.tab = st.tab;
+  const T = {push:["Push","Lundi · Jeudi"], pull:["Pull","Mardi · Vendredi"], run:["Course","Garmin · Intervals.icu"]}[st.tab];
+  document.getElementById("ttl").textContent = T[0]; document.getElementById("sub").textContent = T[1];
+  const td = new Date().toLocaleDateString("fr-FR", {weekday:"long", day:"numeric", month:"long"});
+  document.getElementById("today").textContent = td;
   document.getElementById("gym-view").hidden = isRun;
   document.getElementById("gym-foot").hidden = isRun;
   document.getElementById("run-view").hidden = !isRun;
@@ -238,7 +246,7 @@ function render(){
         <button class="btn" type="button" data-cancel>Annuler</button></form>` : "";
     li.innerHTML = `<button class="thumb" type="button" data-photo="${e.id}" aria-label="Agrandir la photo"><img src="${photoOf(e.id)}" alt="${esc(e.n)}" loading="lazy"></button>
       <div class="info"><h2>${esc(e.n)}</h2><div class="scheme">${e.s} × ${esc(e.r)}</div><div class="note">${esc(e.note)}</div></div>
-      <button class="load" type="button" data-edit="${e.id}">${kg}<div class="edit">Modifier</div></button>
+      <button class="load" type="button" data-edit="${e.id}">${kg}</button>
       ${ed}
       <div class="foot"><div class="sets">${sets}</div></div>
       <div class="feel">
