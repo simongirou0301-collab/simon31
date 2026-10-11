@@ -223,20 +223,35 @@ function bindCursor(){
   });
 }
 
-function routeSvg(pts){
+function routeSvg(pts, opt){
+  opt = opt || {};
   pts = (pts || []).filter(p => p && p[0] != null && p[1] != null && (p[0] || p[1])); if (pts.length < 2) return "";
-  if (pts.length > 600) { const st = Math.ceil(pts.length / 600); pts = pts.filter((_, i) => i % st === 0); }
-  const c = Math.cos(pts[0][0] * Math.PI / 180);
-  const xy = pts.map(([la, lo]) => [lo * c, -la]);
-  const xs = xy.map(p => p[0]), ys = xy.map(p => p[1]);
-  const minX = Math.min(...xs), maxX = Math.max(...xs), minY = Math.min(...ys), maxY = Math.max(...ys);
-  const w = maxX - minX || 1e-6, h = maxY - minY || 1e-6, S = 300, pd = 14;
-  const k = (S - 2 * pd) / Math.max(w, h), VW = w * k + 2 * pd, VH = h * k + 2 * pd;
-  const d = xy.map((p, i) => `${i ? "L" : "M"}${((p[0]-minX)*k+pd).toFixed(1)},${((p[1]-minY)*k+pd).toFixed(1)}`).join("");
-  const s = xy[0], e = xy[xy.length-1];
-  return `<svg class="route" viewBox="0 0 ${VW.toFixed(0)} ${VH.toFixed(0)}" role="img" aria-label="Parcours"><path d="${d}"/>
-    <circle cx="${((s[0]-minX)*k+pd).toFixed(1)}" cy="${((s[1]-minY)*k+pd).toFixed(1)}" r="5" fill="var(--done)"/>
-    <circle cx="${((e[0]-minX)*k+pd).toFixed(1)}" cy="${((e[1]-minY)*k+pd).toFixed(1)}" r="5" fill="var(--ink)"/></svg>`;
+  if (pts.length > 600) { const stp = Math.ceil(pts.length / 600); pts = pts.filter((_, i) => i % stp === 0); }
+  const VW = 340, VH = opt.h || 260, pd = 28;
+  const proj = (la, lo, z) => { const n = 256 * Math.pow(2, z), sn = Math.sin(la * Math.PI / 180); return [(lo + 180) / 360 * n, (0.5 - Math.log((1 + sn) / (1 - sn)) / (4 * Math.PI)) * n]; };
+  const las = pts.map(p => p[0]), los = pts.map(p => p[1]);
+  const la0 = Math.min(...las), la1 = Math.max(...las), lo0 = Math.min(...los), lo1 = Math.max(...los);
+  let z = 17;
+  for (; z > 3; z--) { const a = proj(la1, lo0, z), b = proj(la0, lo1, z); if (b[0] - a[0] <= VW - 2 * pd && b[1] - a[1] <= VH - 2 * pd) break; }
+  const c = proj((la0 + la1) / 2, (lo0 + lo1) / 2, z), ox = c[0] - VW / 2, oy = c[1] - VH / 2;
+  const xy = pts.map(([la, lo]) => { const q = proj(la, lo, z); return [q[0] - ox, q[1] - oy]; });
+  const n = Math.pow(2, z); let tiles = "";
+  for (let tx = Math.floor(ox / 256); tx <= Math.floor((ox + VW) / 256); tx++) for (let ty = Math.floor(oy / 256); ty <= Math.floor((oy + VH) / 256); ty++) {
+    if (ty < 0 || ty >= n) continue;
+    tiles += `<image href="https://tile.openstreetmap.org/${z}/${((tx % n) + n) % n}/${ty}.png" x="${(tx * 256 - ox).toFixed(1)}" y="${(ty * 256 - oy).toFixed(1)}" width="256" height="256"/>`;
+  }
+  const d = xy.map((q, i) => `${i ? "L" : "M"}${q[0].toFixed(1)},${q[1].toFixed(1)}`).join("");
+  const s0 = xy[0], e = xy[xy.length - 1];
+  return `<svg class="route map" viewBox="0 0 ${VW} ${VH}" role="img" aria-label="Parcours"><defs><clipPath id="mc${z}"><rect width="${VW}" height="${VH}" rx="14"/></clipPath></defs>
+    <g clip-path="url(#mc${z})"><rect width="${VW}" height="${VH}" fill="#e8e6df"/><g class="tiles">${tiles}</g>
+    <path d="${d}" class="rcase"/><path d="${d}" class="rline"/>
+    <circle cx="${s0[0].toFixed(1)}" cy="${s0[1].toFixed(1)}" r="6" fill="#30d158" stroke="#fff" stroke-width="2.5"/>
+    <circle cx="${e[0].toFixed(1)}" cy="${e[1].toFixed(1)}" r="6" fill="#1c1c1e" stroke="#fff" stroke-width="2.5"/>
+    <text x="${VW - 6}" y="${VH - 6}" text-anchor="end" class="attr">© OpenStreetMap</text></g></svg>`;
+}
+async function lastRouteMap(h){
+  const r = runs.list[0]; if (!r || !connected()) return "";
+  try { const s = await getStreams(r.id); return s && s.latlng ? routeSvg(s.latlng, {h}) : ""; } catch (e) { return ""; }
 }
 
 /* ---------- Analyse d'une course ---------- */
@@ -486,7 +501,7 @@ async function renderDetail(id){
       <p class="muted">${names.map((n, i) => `Z${i+1} ${n}`).join(" · ")} · FC max ${fcMax()} bpm</p></div>`;
   }
   const rs = s.latlng ? routeSvg(s.latlng) : "";
-  if (rs) html += `<div class="card"><h3>Parcours</h3>${rs}<p class="muted">Point vert : départ · point foncé : arrivée.</p></div>`;
+  if (rs) html += `<div class="card"><h3>Parcours</h3>${rs}<p class="muted">Point vert : départ · point noir : arrivée.</p></div>`;
   document.getElementById("sv-detail").innerHTML = html || `<div class="card"><p class="muted">Pas de courbes pour cette activité.</p></div>`;
   bindCursor();
 }
@@ -660,7 +675,9 @@ function renderSante(){
 }
 
 window.Run = {
-  show(){ render(); sync(false); }
+  show(){ render(); sync(false); },
+  lastMap: lastRouteMap,
+  lastRun: () => runs.list[0] || null
 };
 if (!document.getElementById("run-view").hidden) Run.show();
 })();

@@ -1,4 +1,4 @@
-const CACHE = "carnet-v18";
+const CACHE = "carnet-v19";
 const FILES = [
   "./", "index.html", "manifest.json", "run.js", "run.css", "apple.css",
   "icons/icon-180.png", "icons/icon-192.png", "icons/icon-512.png",

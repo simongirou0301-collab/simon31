@@ -60,3 +60,10 @@ ol.steps{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:4px;f
 .goal-race .zb i{display:block;height:100%}
 .goal-form{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .goal-form select{font:500 16px var(--body);color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:10px;width:100%}
+
+.route.map{width:100%;height:auto;border-radius:14px;display:block}
+.route.map path{fill:none;stroke-linecap:round;stroke-linejoin:round}
+.route.map .rcase{stroke:#fff;stroke-width:7;stroke-opacity:.9}
+.route.map .rline{stroke:#ff6a00;stroke-width:4}
+.route.map .attr{font:9px sans-serif;fill:#444;paint-order:stroke;stroke:#fffc;stroke-width:3px}
+@media (prefers-color-scheme:dark){.route.map .tiles{filter:invert(1) hue-rotate(180deg) brightness(.95) contrast(.9)}}

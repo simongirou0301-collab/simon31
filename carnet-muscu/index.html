@@ -452,9 +452,20 @@ function renderToday(){
     ${wd("Forme", "Aujourd'hui", "trend", "var(--red)", `<div class="wd-big sm">${fz}</div><div class="wd-trio"><div><span>CTL</span><b>${ctl != null ? Math.round(ctl) : "–"}</b></div><div><span>ATL</span><b>${atl != null ? Math.round(atl) : "–"}</b></div><div><span>TSB</span><b>${form != null ? Math.round(form) : "–"}</b></div></div>`, "full")}
     ${wd("Volume", "Dernières séances", "bolt", "var(--orange)", wbig(lastV ? nf(lastV) : "–", lastV ? "kg" : "") + spark(vols, "var(--orange)"))}
     ${wd("Série", "Semaines d'affilée", "flame", "var(--orange)", wbig(streakWeeks(), "") + `<div class="wd-s">avec au moins une séance</div>`)}
+    ${wd("Dernière course", "Itinéraire", "run", "var(--green)", '<div id="td-map" class="wd-map"><div class="wd-s">Chargement de la carte…</div></div>', "full")}
     ${sl ? wd("Sommeil", "Dernière nuit", "moon", "var(--indigo)", wbig(sl, "")) : ""}
     ${well && well.rhr ? wd("Cœur au repos", "Garmin", "heart", "var(--red)", wbig(Math.round(well.rhr), "bpm") + (well.hrv ? `<div class="wd-s">HRV ${Math.round(well.hrv)} ms</div>` : "")) : ""}
   </div>`;
+  fillMap();
+}
+async function fillMap(){
+  const el = document.getElementById("td-map"); if (!el) return;
+  const R = window.Run; if (!R || !R.lastRun) { el.closest(".wd").remove(); return; }
+  const r = R.lastRun(); if (!r) { el.innerHTML = '<div class="wd-s">Aucune course pour le moment.</div>'; return; }
+  const svg = await R.lastMap(200);
+  if (!document.body.contains(el)) return;
+  const km = (r.dist / 1000).toFixed(2).replace(".", ",");
+  el.innerHTML = svg ? `${svg}<div class="wd-s" style="margin-top:6px">${esc(r.name)} · ${km} km</div>` : `<div class="wd-s">Pas de tracé GPS pour ${esc(r.name)}.</div>`;
 }
 document.getElementById("today-view").addEventListener("click", ev => { const b = ev.target.closest("[data-go]"); if (b) { st.tab = b.dataset.go; save(); render(); window.scrollTo(0, 0); } });
 
