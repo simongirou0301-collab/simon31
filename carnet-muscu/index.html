@@ -122,7 +122,7 @@ footer{color:var(--muted);font-size:.78rem}
     <div class="confirm-row"><button class="save" type="button" id="confirm-yes">Valider</button><button class="btn" type="button" id="confirm-no">Retour</button></div>
   </div>
   <p class="finish-note" id="finish-note"></p>
-  <button class="btn jr-btn" type="button" id="jr-btn">Journal et courbes</button>
+  <button class="btn jr-btn" type="button" id="jr-btn">Journal, courbes et calendrier</button>
   <div class="journal" id="journal" hidden></div>
   <div class="backup" id="backup">
     <button class="btn pg-open" type="button" id="pg-open">Modifier le programme</button>
@@ -401,8 +401,36 @@ function curve(pts){
     pts.map((p, i) => `<circle cx="${X(i).toFixed(1)}" cy="${Y(p.y).toFixed(1)}" r="${i === best ? 5 : 3.5}" fill="${i === best ? "var(--orange)" : "var(--pink)"}"/>`).join("") +
     `<text x="${P}" y="${H-4}">${pts[0].l}</text><text x="${W-P}" y="${H-4}" text-anchor="end">${pts[pts.length-1].l}</text></svg>`;
 }
+let calM = new Date(); calM = new Date(calM.getFullYear(), calM.getMonth(), 1);
+const dk = d => `${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`;
+function calData(){
+  const gym = new Set(), run = new Set();
+  st.log.forEach(s => gym.add(dk(new Date(s.t))));
+  try { (JSON.parse(localStorage.getItem("carnet-runs-icu-v1")).list || []).forEach(r => run.add(dk(new Date(r.start.replace("Z", ""))))); } catch (e) {}
+  return {gym, run};
+}
+function calHtml(){
+  const {gym, run} = calData(), y = calM.getFullYear(), m = calM.getMonth();
+  const first = (new Date(y, m, 1).getDay() + 6) % 7, nd = new Date(y, m + 1, 0).getDate(), today = dk(new Date());
+  let cells = ["L","M","M","J","V","S","D"].map(x => `<div class="cal-w">${x}</div>`).join("") + '<div></div>'.repeat(first);
+  let g = 0, r = 0;
+  for (let d = 1; d <= nd; d++) {
+    const k = dk(new Date(y, m, d)), a = gym.has(k), b = run.has(k); if (a) g++; if (b) r++;
+    cells += `<div class="cal-d${k === today ? " today" : ""}"><span>${d}</span><i>${a ? '<u class="g"></u>' : ""}${b ? '<u class="r"></u>' : ""}</i></div>`;
+  }
+  // série de semaines consécutives avec au moins une activité
+  const any = new Set([...gym, ...run]); const mon = d => new Date(d.getFullYear(), d.getMonth(), d.getDate() - (d.getDay() + 6) % 7);
+  const weekHas = ws => { for (let i = 0; i < 7; i++) if (any.has(dk(new Date(ws.getFullYear(), ws.getMonth(), ws.getDate() + i)))) return true; return false; };
+  let ws = mon(new Date()), streak = 0; if (!weekHas(ws)) ws = new Date(ws.getFullYear(), ws.getMonth(), ws.getDate() - 7);
+  while (weekHas(ws) && streak < 520) { streak++; ws = new Date(ws.getFullYear(), ws.getMonth(), ws.getDate() - 7); }
+  const title = calM.toLocaleDateString("fr-FR", {month: "long", year: "numeric"});
+  return `<div class="jr-s"><div class="cal-h"><button type="button" data-cal="-1" aria-label="Mois précédent">‹</button><b>${title}</b><button type="button" data-cal="1" aria-label="Mois suivant">›</button></div>
+    <div class="cal-g">${cells}</div>
+    <div class="cal-leg"><span><u class="g"></u> Muscu · ${g}</span><span><u class="r"></u> Course · ${r}</span></div></div>
+    <div class="jr-s"><div class="cal-streak"><b>${streak}</b><span>semaine${streak > 1 ? "s" : ""} d'affilée avec au moins une séance</span></div></div>`;
+}
 function renderJournal(){
-  const seg = `<div class="jr-seg"><button type="button" data-jv="seances" aria-selected="${jrView === "seances"}">Séances</button><button type="button" data-jv="courbes" aria-selected="${jrView === "courbes"}">Courbes</button></div>`;
+  const seg = `<div class="jr-seg"><button type="button" data-jv="seances" aria-selected="${jrView === "seances"}">Séances</button><button type="button" data-jv="courbes" aria-selected="${jrView === "courbes"}">Courbes</button><button type="button" data-jv="cal" aria-selected="${jrView === "cal"}">Calendrier</button></div>`;
   let body = "";
   if (jrView === "seances") {
     const L = st.log.slice().reverse();
@@ -412,6 +440,8 @@ function renderJournal(){
       return `<div class="jr-s"><div class="jr-h"><b>${s.tab === "push" ? "Push" : "Pull"}</b><span>${d} · ${sets} séries${s.vol ? " · " + nf(s.vol) + " kg" : ""}</span></div>` +
         s.ex.map(x => `<div class="jr-e"><span class="n">${esc(byId(x.id).n)}</span><span class="v">${esc(x.kg || "—")} · ${x.reps.join("/")}</span></div>`).join("") + `</div>`;
     }).join("") : `<p class="muted">Aucune séance enregistrée pour l'instant.</p>`;
+  } else if (jrView === "cal") {
+    body = calHtml();
   } else {
     const out = [];
     ALL.forEach(e => {
@@ -428,7 +458,8 @@ function renderJournal(){
   }
   jr.innerHTML = seg + body;
 }
-jr.addEventListener("click", ev => { const b = ev.target.closest("[data-jv]"); if (b) { jrView = b.dataset.jv; renderJournal(); } });
+jr.addEventListener("click", ev => {
+  const c = ev.target.closest("[data-cal]"); if (c) { calM = new Date(calM.getFullYear(), calM.getMonth() + +c.dataset.cal, 1); renderJournal(); return; } const b = ev.target.closest("[data-jv]"); if (b) { jrView = b.dataset.jv; renderJournal(); } });
 document.getElementById("jr-btn").addEventListener("click", () => { jr.hidden = !jr.hidden; if (!jr.hidden) renderJournal(); });
 
 /* ---------- programme ---------- */
