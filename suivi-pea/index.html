@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <title>Mon PEA au quotidien</title>
 <link rel="manifest" href="manifest.json">
 <link rel="icon" href="icons/icon-192.png">
@@ -34,6 +34,8 @@
   --c-global:#7C93FF; --c-nasdaq:#B58CFF; --c-europe:#F2B544;
   --up:#33C98E; --up-soft:#11352A; --down:#FF6B76; --down-soft:#3E1A22; --flat:#5D6782; color-scheme:dark}
 *{box-sizing:border-box}
+html,body{touch-action:pan-x pan-y;-webkit-text-size-adjust:100%}
+input,select,textarea{font-size:16px!important}
 body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.5}
 .wrap{max-width:760px;margin:0 auto;padding:20px 16px 48px;display:flex;flex-direction:column;gap:18px}
 h1,h2,h3{font-family:var(--f-display);margin:0;text-wrap:balance}
@@ -562,6 +564,7 @@ async function loadDay(id) {
     showMessage("Chargement impossible", "Les données n'ont pas pu être lues. Recharge la page dans un instant.");
   }
 })();
+["gesturestart", "gesturechange"].forEach(t => document.addEventListener(t, e => e.preventDefault(), {passive: false}));
 if ("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js").catch(() => {});
 </script>
 <script src="mon-pea.js"></script>
