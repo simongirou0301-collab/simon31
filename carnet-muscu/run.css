@@ -64,6 +64,6 @@ ol.steps{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:4px;f
 .route.map{width:100%;height:auto;border-radius:14px;display:block}
 .route.map path{fill:none;stroke-linecap:round;stroke-linejoin:round}
 .route.map .rcase{stroke:#fff;stroke-width:7;stroke-opacity:.9}
-.route.map .rline{stroke:#ff6a00;stroke-width:4}
+.route.map .rline{stroke:#0a84ff;stroke-width:4.5}
 .route.map .attr{font:9px sans-serif;fill:#444;paint-order:stroke;stroke:#fffc;stroke-width:3px}
-@media (prefers-color-scheme:dark){.route.map .tiles{filter:invert(1) hue-rotate(180deg) brightness(.95) contrast(.9)}}
+@media (prefers-color-scheme:dark){.route.map .attr{fill:#ddd;stroke:#0008}}

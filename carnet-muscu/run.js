@@ -223,6 +223,22 @@ function bindCursor(){
   });
 }
 
+const tileHref = (z, x, y) => `https://basemaps.cartocdn.com/${matchMedia("(prefers-color-scheme: dark)").matches ? "dark_all" : "rastertiles/voyager"}/${z}/${x}/${y}@2x.png`;
+function tilesFor(ox, oy, VW, VH, z){
+  const n = Math.pow(2, z); let t = "";
+  for (let tx = Math.floor(ox / 256); tx <= Math.floor((ox + VW) / 256); tx++) for (let ty = Math.floor(oy / 256); ty <= Math.floor((oy + VH) / 256); ty++) {
+    if (ty < 0 || ty >= n) continue;
+    t += `<image href="${tileHref(z, ((tx % n) + n) % n, ty)}" x="${(tx * 256 - ox).toFixed(1)}" y="${(ty * 256 - oy).toFixed(1)}" width="256.5" height="256.5"/>`;
+  }
+  return t;
+}
+function baseMapSvg(lat, lon, z, h){
+  const VW = 340, VH = h || 200, n = 256 * Math.pow(2, z), sn = Math.sin(lat * Math.PI / 180);
+  const cx = (lon + 180) / 360 * n, cy = (0.5 - Math.log((1 + sn) / (1 - sn)) / (4 * Math.PI)) * n, ox = cx - VW / 2, oy = cy - VH / 2;
+  return `<svg class="route map" viewBox="0 0 ${VW} ${VH}" role="img" aria-label="Carte"><defs><clipPath id="mb"><rect width="${VW}" height="${VH}" rx="14"/></clipPath></defs><g clip-path="url(#mb)"><rect width="${VW}" height="${VH}" fill="#e8e6df"/><g class="tiles">${tilesFor(ox, oy, VW, VH, z)}</g>
+    <circle cx="${VW / 2}" cy="${VH / 2}" r="14" fill="#0a84ff" fill-opacity=".2"/><circle cx="${VW / 2}" cy="${VH / 2}" r="7" fill="#0a84ff" stroke="#fff" stroke-width="3"/>
+    <text x="${VW - 6}" y="${VH - 6}" text-anchor="end" class="attr">© OpenStreetMap © CARTO</text></g></svg>`;
+}
 function routeSvg(pts, opt){
   opt = opt || {};
   pts = (pts || []).filter(p => p && p[0] != null && p[1] != null && (p[0] || p[1])); if (pts.length < 2) return "";
@@ -235,11 +251,7 @@ function routeSvg(pts, opt){
   for (; z > 3; z--) { const a = proj(la1, lo0, z), b = proj(la0, lo1, z); if (b[0] - a[0] <= VW - 2 * pd && b[1] - a[1] <= VH - 2 * pd) break; }
   const c = proj((la0 + la1) / 2, (lo0 + lo1) / 2, z), ox = c[0] - VW / 2, oy = c[1] - VH / 2;
   const xy = pts.map(([la, lo]) => { const q = proj(la, lo, z); return [q[0] - ox, q[1] - oy]; });
-  const n = Math.pow(2, z); let tiles = "";
-  for (let tx = Math.floor(ox / 256); tx <= Math.floor((ox + VW) / 256); tx++) for (let ty = Math.floor(oy / 256); ty <= Math.floor((oy + VH) / 256); ty++) {
-    if (ty < 0 || ty >= n) continue;
-    tiles += `<image href="https://tile.openstreetmap.org/${z}/${((tx % n) + n) % n}/${ty}.png" x="${(tx * 256 - ox).toFixed(1)}" y="${(ty * 256 - oy).toFixed(1)}" width="256" height="256"/>`;
-  }
+  const tiles = tilesFor(ox, oy, VW, VH, z);
   const d = xy.map((q, i) => `${i ? "L" : "M"}${q[0].toFixed(1)},${q[1].toFixed(1)}`).join("");
   const s0 = xy[0], e = xy[xy.length - 1];
   return `<svg class="route map" viewBox="0 0 ${VW} ${VH}" role="img" aria-label="Parcours"><defs><clipPath id="mc${z}"><rect width="${VW}" height="${VH}" rx="14"/></clipPath></defs>
@@ -247,7 +259,7 @@ function routeSvg(pts, opt){
     <path d="${d}" class="rcase"/><path d="${d}" class="rline"/>
     <circle cx="${s0[0].toFixed(1)}" cy="${s0[1].toFixed(1)}" r="6" fill="#30d158" stroke="#fff" stroke-width="2.5"/>
     <circle cx="${e[0].toFixed(1)}" cy="${e[1].toFixed(1)}" r="6" fill="#1c1c1e" stroke="#fff" stroke-width="2.5"/>
-    <text x="${VW - 6}" y="${VH - 6}" text-anchor="end" class="attr">© OpenStreetMap</text></g></svg>`;
+    <text x="${VW - 6}" y="${VH - 6}" text-anchor="end" class="attr">© OpenStreetMap © CARTO</text></g></svg>`;
 }
 async function lastRouteMap(h){
   const r = runs.list[0]; if (!r || !connected()) return "";
@@ -677,6 +689,8 @@ function renderSante(){
 window.Run = {
   show(){ render(); sync(false); },
   lastMap: lastRouteMap,
+  baseMap: baseMapSvg,
+  monthCount: () => runs.list.filter(r => { const d = new Date(r.start.replace("Z", "")), n = new Date(); return d.getFullYear() === n.getFullYear() && d.getMonth() === n.getMonth(); }).length,
   lastRun: () => runs.list[0] || null
 };
 if (!document.getElementById("run-view").hidden) Run.show();

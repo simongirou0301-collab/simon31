@@ -246,3 +246,6 @@ body[data-tab="today"]{--accent:var(--orange); --accent2:var(--pink); --accent-s
 .wd-trio b{font:800 1.5rem var(--display)}
 .wd-sp{width:100%;height:46px;margin-top:auto}
 .wd .td-go{margin-top:6px;align-self:stretch}
+
+.wd-map{position:relative}
+.wd-pill{position:absolute;left:10px;bottom:34px;background:rgba(28,28,30,.82);color:#fff;font:600 .75rem var(--body);padding:5px 10px;border-radius:12px}

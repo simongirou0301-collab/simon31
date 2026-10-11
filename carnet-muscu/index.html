@@ -452,20 +452,27 @@ function renderToday(){
     ${wd("Forme", "Aujourd'hui", "trend", "var(--red)", `<div class="wd-big sm">${fz}</div><div class="wd-trio"><div><span>CTL</span><b>${ctl != null ? Math.round(ctl) : "–"}</b></div><div><span>ATL</span><b>${atl != null ? Math.round(atl) : "–"}</b></div><div><span>TSB</span><b>${form != null ? Math.round(form) : "–"}</b></div></div>`, "full")}
     ${wd("Volume", "Dernières séances", "bolt", "var(--orange)", wbig(lastV ? nf(lastV) : "–", lastV ? "kg" : "") + spark(vols, "var(--orange)"))}
     ${wd("Série", "Semaines d'affilée", "flame", "var(--orange)", wbig(streakWeeks(), "") + `<div class="wd-s">avec au moins une séance</div>`)}
-    ${wd("Dernière course", "Itinéraire", "run", "var(--green)", '<div id="td-map" class="wd-map"><div class="wd-s">Chargement de la carte…</div></div>', "full")}
+    ${wd("Carte", "Dernière course", "run", "var(--green)", '<div id="td-map" class="wd-map"><div class="wd-s">Chargement de la carte…</div></div>', "full")}
     ${sl ? wd("Sommeil", "Dernière nuit", "moon", "var(--indigo)", wbig(sl, "")) : ""}
     ${well && well.rhr ? wd("Cœur au repos", "Garmin", "heart", "var(--red)", wbig(Math.round(well.rhr), "bpm") + (well.hrv ? `<div class="wd-s">HRV ${Math.round(well.hrv)} ms</div>` : "")) : ""}
   </div>`;
   fillMap();
 }
+const getPos = () => new Promise(res => {
+  let c = null; try { c = JSON.parse(localStorage.getItem("carnet-pos")); } catch (e) {}
+  if (c) res(c);
+  if (!navigator.geolocation) { if (!c) res(null); return; }
+  navigator.geolocation.getCurrentPosition(p => { const v = {lat: p.coords.latitude, lon: p.coords.longitude}; try { localStorage.setItem("carnet-pos", JSON.stringify(v)); } catch (e) {} if (!c) res(v); }, () => { if (!c) res(null); }, {timeout: 5000, maximumAge: 6e5});
+});
 async function fillMap(){
   const el = document.getElementById("td-map"); if (!el) return;
-  const R = window.Run; if (!R || !R.lastRun) { el.closest(".wd").remove(); return; }
-  const r = R.lastRun(); if (!r) { el.innerHTML = '<div class="wd-s">Aucune course pour le moment.</div>'; return; }
-  const svg = await R.lastMap(200);
+  const R = window.Run; if (!R) { el.closest(".wd").remove(); return; }
+  const r = R.lastRun();
+  let svg = r ? await R.lastMap(210) : "", cap = "";
+  if (svg) { const k = R.monthCount(); cap = `<span class="wd-pill">${k} activité${k > 1 ? "s" : ""}</span><div class="wd-s" style="margin-top:6px">${esc(r.name)} · ${(r.dist / 1000).toFixed(2).replace(".", ",")} km</div>`; }
+  else { const pos = (await getPos()) || {lat: 48.8566, lon: 2.3522}; svg = R.baseMap(pos.lat, pos.lon, 14, 210); cap = `<div class="wd-s" style="margin-top:6px">${r ? "Pas de tracé GPS pour ta dernière course." : "Ta première course apparaîtra ici."}</div>`; }
   if (!document.body.contains(el)) return;
-  const km = (r.dist / 1000).toFixed(2).replace(".", ",");
-  el.innerHTML = svg ? `${svg}<div class="wd-s" style="margin-top:6px">${esc(r.name)} · ${km} km</div>` : `<div class="wd-s">Pas de tracé GPS pour ${esc(r.name)}.</div>`;
+  el.innerHTML = svg + cap;
 }
 document.getElementById("today-view").addEventListener("click", ev => { const b = ev.target.closest("[data-go]"); if (b) { st.tab = b.dataset.go; save(); render(); window.scrollTo(0, 0); } });
 
