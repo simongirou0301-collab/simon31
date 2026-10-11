@@ -125,6 +125,11 @@ footer{color:var(--muted);font-size:.78rem}
   <div class="journal" id="journal" hidden></div>
   </div>
 
+  <div class="backup" id="backup">
+    <button class="btn" type="button" id="bk-out">Sauvegarder mes données</button>
+    <label class="btn">Restaurer<input class="vh" type="file" accept=".json,application/json" id="bk-in"></label>
+    <p class="muted" id="bk-msg"></p>
+  </div>
   <footer id="gym-foot">Les poids sont le total sur la machine ou la barre, sauf mention « / côté » ou « / haltère ». Tes données restent sur ce téléphone.</footer>
 </div>
 
@@ -413,6 +418,33 @@ function renderJournal(){
 }
 jr.addEventListener("click", ev => { const b = ev.target.closest("[data-jv]"); if (b) { jrView = b.dataset.jv; renderJournal(); } });
 document.getElementById("jr-btn").addEventListener("click", () => { jr.hidden = !jr.hidden; if (!jr.hidden) renderJournal(); });
+
+/* ---------- sauvegarde ---------- */
+const b64 = blob => new Promise(r => { const f = new FileReader(); f.onload = () => r(f.result); f.readAsDataURL(blob); });
+const bkMsg = t => document.getElementById("bk-msg").textContent = t;
+document.getElementById("bk-out").addEventListener("click", async () => {
+  try {
+    const photos = {};
+    for (const e of ALL) { const bl = await idbDo("readonly", x => x.get(e.id)); if (bl) photos[e.id] = await b64(bl); }
+    const data = JSON.stringify({app: "carnet-pp", v: 1, date: new Date().toISOString(), state: st, photos});
+    const name = "carnet-sauvegarde-" + new Date().toISOString().slice(0, 10) + ".json";
+    const file = new File([data], name, {type: "application/json"});
+    if (navigator.canShare && navigator.canShare({files: [file]})) { await navigator.share({files: [file], title: name}); }
+    else { const a = document.createElement("a"); a.href = URL.createObjectURL(file); a.download = name; document.body.appendChild(a); a.click(); a.remove(); }
+    bkMsg("Sauvegarde prête. Garde le fichier dans Fichiers ou iCloud.");
+  } catch (e) { if (e && e.name !== "AbortError") bkMsg("Échec de la sauvegarde."); }
+});
+document.getElementById("bk-in").addEventListener("change", async ev => {
+  const f = ev.target.files[0]; if (!f) return;
+  try {
+    const d = JSON.parse(await f.text());
+    if (d.app !== "carnet-pp" || !d.state) throw 0;
+    if (!confirm("Remplacer tes données actuelles par cette sauvegarde ?")) { ev.target.value = ""; return; }
+    for (const id in (d.photos || {})) { const bl = await (await fetch(d.photos[id])).blob(); await idbDo("readwrite", x => x.put(bl, id)); }
+    localStorage.setItem(KEY, JSON.stringify(d.state));
+    location.reload();
+  } catch (e) { bkMsg("Fichier invalide."); ev.target.value = ""; }
+});
 
 /* ---------- photos ---------- */
 const lb = document.getElementById("lb"); let lbId = null;

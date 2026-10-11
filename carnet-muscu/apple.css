@@ -164,3 +164,7 @@ footer{font-size:.75rem;text-align:center}
 .jr-rec{display:flex;justify-content:space-between;font-size:.8rem;color:var(--muted)}
 .jr-rec b{color:var(--ink);font-family:var(--mono)}
 .jr-rec .up{color:var(--green)}.jr-rec .down{color:var(--red)}
+
+.backup{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.backup .btn{text-align:center;cursor:pointer}
+.backup .muted{grid-column:1/-1;text-align:center;margin:0}
