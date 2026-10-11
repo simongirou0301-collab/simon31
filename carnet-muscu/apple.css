@@ -157,3 +157,10 @@ footer{font-size:.75rem;text-align:center}
 .jr-h span{font-size:.78rem;color:var(--muted)}
 .jr-e{display:flex;justify-content:space-between;gap:10px;font-size:.85rem}
 .jr-e .v{font-family:var(--mono);color:var(--muted);white-space:nowrap}
+
+.jr-seg{display:grid;grid-template-columns:1fr 1fr;gap:3px;background:rgba(120,120,128,.16);border-radius:10px;padding:2px}
+.jr-seg button{font:600 .85rem var(--body);border:0;background:none;color:var(--ink);border-radius:8px;padding:7px;cursor:pointer}
+.jr-seg button[aria-selected="true"]{background:var(--surface);box-shadow:0 1px 3px rgba(0,0,0,.15)}
+.jr-rec{display:flex;justify-content:space-between;font-size:.8rem;color:var(--muted)}
+.jr-rec b{color:var(--ink);font-family:var(--mono)}
+.jr-rec .up{color:var(--green)}.jr-rec .down{color:var(--red)}

@@ -121,7 +121,7 @@ footer{color:var(--muted);font-size:.78rem}
     <div class="confirm-row"><button class="save" type="button" id="confirm-yes">Valider</button><button class="btn" type="button" id="confirm-no">Retour</button></div>
   </div>
   <p class="finish-note" id="finish-note"></p>
-  <button class="btn jr-btn" type="button" id="jr-btn">Journal des séances</button>
+  <button class="btn jr-btn" type="button" id="jr-btn">Journal et courbes</button>
   <div class="journal" id="journal" hidden></div>
   </div>
 
@@ -359,15 +359,48 @@ document.getElementById("confirm-yes").addEventListener("click", () => {
 
 /* ---------- journal ---------- */
 const jr = document.getElementById("journal");
-function renderJournal(){
-  const L = st.log.slice().reverse();
-  jr.innerHTML = L.length ? L.map(s => {
-    const d = new Date(s.t).toLocaleDateString("fr-FR", {weekday:"short", day:"numeric", month:"short"});
-    const sets = s.ex.reduce((a, x) => a + x.reps.length, 0);
-    return `<div class="jr-s"><div class="jr-h"><b>${s.tab === "push" ? "Push" : "Pull"}</b><span>${d} · ${sets} séries</span></div>` +
-      s.ex.map(x => `<div class="jr-e"><span class="n">${esc(byId(x.id).n)}</span><span class="v">${esc(x.kg || "—")} · ${x.reps.join("/")}</span></div>`).join("") + `</div>`;
-  }).join("") : `<p class="muted">Aucune séance enregistrée pour l'instant.</p>`;
+let jrView = "seances";
+const kgNum = k => { const m = /\d+(?:[.,]\d+)?/.exec(k || ""); return m ? parseFloat(m[0].replace(",", ".")) : null; };
+function curve(pts){
+  const W = 320, H = 110, P = 22;
+  const ys = pts.map(p => p.y), lo = Math.min(...ys), hi = Math.max(...ys), sp = (hi - lo) || 1;
+  const X = i => pts.length === 1 ? W / 2 : P + i * (W - 2 * P) / (pts.length - 1);
+  const Y = v => H - P - (v - lo) / sp * (H - 2 * P);
+  const d = pts.map((p, i) => (i ? "L" : "M") + X(i).toFixed(1) + " " + Y(p.y).toFixed(1)).join(" ");
+  const best = ys.indexOf(hi);
+  return `<svg class="chart" viewBox="0 0 ${W} ${H}"><line class="grid" x1="${P}" x2="${W-P}" y1="${Y(hi)}" y2="${Y(hi)}"/>` +
+    (pts.length > 1 ? `<path d="${d}" fill="none" stroke="var(--pink)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>` : "") +
+    pts.map((p, i) => `<circle cx="${X(i).toFixed(1)}" cy="${Y(p.y).toFixed(1)}" r="${i === best ? 5 : 3.5}" fill="${i === best ? "var(--orange)" : "var(--pink)"}"/>`).join("") +
+    `<text x="${P}" y="${H-4}">${pts[0].l}</text><text x="${W-P}" y="${H-4}" text-anchor="end">${pts[pts.length-1].l}</text></svg>`;
 }
+function renderJournal(){
+  const seg = `<div class="jr-seg"><button type="button" data-jv="seances" aria-selected="${jrView === "seances"}">Séances</button><button type="button" data-jv="courbes" aria-selected="${jrView === "courbes"}">Courbes</button></div>`;
+  let body = "";
+  if (jrView === "seances") {
+    const L = st.log.slice().reverse();
+    body = L.length ? L.map(s => {
+      const d = new Date(s.t).toLocaleDateString("fr-FR", {weekday:"short", day:"numeric", month:"short"});
+      const sets = s.ex.reduce((a, x) => a + x.reps.length, 0);
+      return `<div class="jr-s"><div class="jr-h"><b>${s.tab === "push" ? "Push" : "Pull"}</b><span>${d} · ${sets} séries</span></div>` +
+        s.ex.map(x => `<div class="jr-e"><span class="n">${esc(byId(x.id).n)}</span><span class="v">${esc(x.kg || "—")} · ${x.reps.join("/")}</span></div>`).join("") + `</div>`;
+    }).join("") : `<p class="muted">Aucune séance enregistrée pour l'instant.</p>`;
+  } else {
+    const out = [];
+    ALL.forEach(e => {
+      const pts = [];
+      st.log.forEach(s => s.ex.forEach(x => { if (x.id === e.id && kgNum(x.kg) != null) pts.push({y: kgNum(x.kg), l: new Date(s.t).toLocaleDateString("fr-FR", {day:"numeric", month:"short"}), reps: x.reps}); }));
+      if (!pts.length) return;
+      const rec = Math.max(...pts.map(p => p.y));
+      const first = pts[0].y, last = pts[pts.length - 1].y, dlt = last - first;
+      const maxReps = Math.max(...pts.filter(p => p.y === rec).flatMap(p => p.reps));
+      out.push(`<div class="jr-s"><div class="jr-h"><b>${esc(e.n)}</b><span>${pts.length} séance${pts.length > 1 ? "s" : ""}</span></div>${curve(pts)}` +
+        `<div class="jr-rec"><span>Record <b>${fmt(rec)}</b> × ${maxReps}</span>${pts.length > 1 ? `<span class="${dlt >= 0 ? "up" : "down"}">${dlt >= 0 ? "+" : ""}${fmt(dlt)} depuis le début</span>` : ""}</div></div>`);
+    });
+    body = out.length ? out.join("") : `<p class="muted">Les courbes apparaîtront après ta première séance terminée.</p>`;
+  }
+  jr.innerHTML = seg + body;
+}
+jr.addEventListener("click", ev => { const b = ev.target.closest("[data-jv]"); if (b) { jrView = b.dataset.jv; renderJournal(); } });
 document.getElementById("jr-btn").addEventListener("click", () => { jr.hidden = !jr.hidden; if (!jr.hidden) renderJournal(); });
 
 /* ---------- photos ---------- */
