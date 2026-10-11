@@ -525,7 +525,7 @@ function achatsHtml(r) {
   const nAchats = tx.filter(t => t.type === "achat").length;
   return `<section class="card">
     <h2>Ma vraie plus-value</h2>
-    <p class="muted small" style="margin:4px 0 0">Parts achetées × cours en euros à la clôture du ${esc(LATEST.label)}.</p>
+    <p class="muted small" style="margin:4px 0 0">Parts achetées × dernier cours LS Exchange du ${esc(LATEST.label)}.</p>
     <div class="kpis">
       <div class="kpi"><label>Investi (frais compris)</label><div class="v num">${fmtEurPlain(cout)}</div></div>
       <div class="kpi"><label>Valeur</label><div class="v num">${fmtEurPlain(valeur)}</div></div>

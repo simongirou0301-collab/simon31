@@ -9,8 +9,8 @@
    "short": "Monde",
    "name": "PEA Global (MSCI ACWI)",
    "proxy": "ACWI",
-   "proxyNote": "Variation et courbe : cours réel en euros (GPEA, clôture Euronext Paris). Détail par entreprise : via l'ETF ACWI (même indice, coté en dollars).",
-   "day": 0.54,
+   "proxyNote": "Variation et courbe : cours réel en euros sur LS Exchange, la bourse utilisée par Trade Republic. Détail par entreprise : via l'ETF ACWI (même indice, coté en dollars).",
+   "day": 0.81,
    "history": [
     [
      "2026-08-28",
@@ -300,131 +300,132 @@
    "eur": {
     "isin": "FR0014017NX3",
     "ticker": "GPEA",
-    "source": "Euronext Paris (clôture 17h35), via Boursorama et justETF",
-    "close": 5.196,
-    "prev": 5.168,
-    "day": 0.54,
+    "lsId": 4996087,
+    "source": "LS Exchange (dernier cours de la journée, comme Trade Republic)",
+    "close": 5.2055,
+    "prev": 5.1635,
+    "day": 0.81,
     "date": "2026-10-09",
     "history": [
      [
       "2026-08-31",
-      5.01
+      5.015
      ],
      [
       "2026-09-01",
-      4.99
+      4.989
      ],
      [
       "2026-09-02",
-      4.99
+      4.99325
      ],
      [
       "2026-09-03",
-      5.03
+      5.0395
      ],
      [
       "2026-09-04",
-      5.03
+      5.0395
      ],
      [
       "2026-09-07",
-      5.04
+      5.0455
      ],
      [
       "2026-09-08",
-      5.01
+      5.0195
      ],
      [
       "2026-09-09",
-      4.98
+      4.9965
      ],
      [
       "2026-09-10",
-      4.96
+      4.9605
      ],
      [
       "2026-09-11",
-      4.99
+      4.99825
      ],
      [
       "2026-09-14",
-      4.99
+      4.991
      ],
      [
       "2026-09-15",
-      4.96
+      4.96775
      ],
      [
       "2026-09-16",
-      4.95
+      4.96225
      ],
      [
       "2026-09-17",
-      5.02
-     ],
-     [
-      "2026-09-18",
       5.03
      ],
      [
+      "2026-09-18",
+      5.0325
+     ],
+     [
       "2026-09-21",
-      5.09
+      5.1065
      ],
      [
       "2026-09-22",
-      5.11
+      5.118
      ],
      [
       "2026-09-23",
-      5.09
+      5.0975
      ],
      [
       "2026-09-24",
-      5.09
+      5.0905
      ],
      [
       "2026-09-25",
-      5.1
+      5.1145
      ],
      [
       "2026-09-28",
-      5.08
+      5.0875
      ],
      [
       "2026-09-29",
-      5.08
+      5.0965
      ],
      [
       "2026-09-30",
-      5.07
+      5.0705
      ],
      [
       "2026-10-01",
-      5.1
+      5.11
      ],
      [
       "2026-10-02",
-      5.12
+      5.1525
      ],
      [
       "2026-10-05",
-      5.19
+      5.2025
      ],
      [
       "2026-10-06",
-      5.2
+      5.2065
      ],
      [
       "2026-10-07",
-      5.2
+      5.2005
      ],
      [
       "2026-10-08",
-      5.168
+      5.1635
      ],
      [
       "2026-10-09",
-      5.196
+      5.2055
      ]
     ]
    }
@@ -434,8 +435,8 @@
    "short": "Nasdaq 100",
    "name": "PEA Nasdaq 100",
    "proxy": "QQQ",
-   "proxyNote": "Variation et courbe : cours réel en euros (PUST, clôture Euronext Paris). Détail par entreprise : via l'ETF QQQ (même indice, coté en dollars).",
-   "day": -0.56,
+   "proxyNote": "Variation et courbe : cours réel en euros sur LS Exchange, la bourse utilisée par Trade Republic. Détail par entreprise : via l'ETF QQQ (même indice, coté en dollars).",
+   "day": 0.45,
    "history": [
     [
      "2026-08-28",
@@ -765,63 +766,64 @@
    "eur": {
     "isin": "FR0011871110",
     "ticker": "PUST",
-    "source": "Euronext Paris (clôture 17h35), via Boursorama et justETF",
-    "close": 110.44,
-    "prev": 111.06,
-    "day": -0.56,
+    "lsId": 1371888,
+    "source": "LS Exchange (dernier cours de la journée, comme Trade Republic)",
+    "close": 110.7,
+    "prev": 110.2,
+    "day": 0.45,
     "date": "2026-10-09",
     "history": [
      [
       "2026-08-31",
-      101.73
+      101.79
      ],
      [
       "2026-09-01",
-      100.59
+      100.7
      ],
      [
       "2026-09-02",
-      100.84
+      100.78
      ],
      [
       "2026-09-03",
-      101.79
+      101.7
      ],
      [
       "2026-09-04",
-      102.05
+      101.89
      ],
      [
       "2026-09-07",
-      102.05
+      102.12
      ],
      [
       "2026-09-08",
-      101.79
+      101.83
      ],
      [
       "2026-09-09",
-      101.35
+      101.56
      ],
      [
       "2026-09-10",
-      100.43
+      100.52
      ],
      [
       "2026-09-11",
-      101.46
+      101.65
      ],
      [
       "2026-09-14",
-      101.29
+      101.37
      ],
      [
       "2026-09-15",
-      100.59
+      100.74
      ],
      [
       "2026-09-16",
-      100.66
+      101.29
      ],
      [
       "2026-09-17",
@@ -829,67 +831,67 @@
      ],
      [
       "2026-09-18",
-      103.77
+      103.61
      ],
      [
       "2026-09-21",
-      106.61
+      106.52
      ],
      [
       "2026-09-22",
-      107.77
+      107.58
      ],
      [
       "2026-09-23",
-      107.23
+      107.4
      ],
      [
       "2026-09-24",
-      107.52
+      107.4
      ],
      [
       "2026-09-25",
-      107.71
+      107.85
      ],
      [
       "2026-09-28",
-      106.89
+      106.88
      ],
      [
       "2026-09-29",
-      107.34
+      107.54
      ],
      [
       "2026-09-30",
-      107.41
+      107.93
      ],
      [
       "2026-10-01",
-      108.63
+      108.87
      ],
      [
       "2026-10-02",
-      109.59
+      109.76
      ],
      [
       "2026-10-05",
-      111.23
+      111.22
      ],
      [
       "2026-10-06",
-      111.29
+      111.39
      ],
      [
       "2026-10-07",
-      111.68
+      111.66
      ],
      [
       "2026-10-08",
-      111.06
+      110.2
      ],
      [
       "2026-10-09",
-      110.44
+      110.7
      ]
     ]
    }
@@ -899,8 +901,8 @@
    "short": "Europe",
    "name": "PEA MSCI Europe",
    "proxy": "IEUR",
-   "proxyNote": "Variation et courbe : cours réel en euros (PCEU, clôture Euronext Paris). Détail par entreprise : via l'ETF IEUR (actions européennes, coté en dollars).",
-   "day": 0.98,
+   "proxyNote": "Variation et courbe : cours réel en euros sur LS Exchange, la bourse utilisée par Trade Republic. Détail par entreprise : via l'ETF IEUR (actions européennes, coté en dollars).",
+   "day": 0.74,
    "history": [
     [
      "2026-08-28",
@@ -1174,131 +1176,132 @@
    "eur": {
     "isin": "FR0013412038",
     "ticker": "PCEU",
-    "source": "Euronext Paris (clôture 17h35), via Boursorama et justETF",
-    "close": 39.06,
-    "prev": 38.68,
-    "day": 0.98,
+    "lsId": 1371936,
+    "source": "LS Exchange (dernier cours de la journée, comme Trade Republic)",
+    "close": 39.15,
+    "prev": 38.8625,
+    "day": 0.74,
     "date": "2026-10-09",
     "history": [
      [
       "2026-08-31",
-      40.14
+      40.06
      ],
      [
       "2026-09-01",
-      39.92
+      39.785
      ],
      [
       "2026-09-02",
-      39.86
+      39.9
      ],
      [
       "2026-09-03",
-      40.05
+      40.035
      ],
      [
       "2026-09-04",
-      40.09
+      40.12
      ],
      [
       "2026-09-07",
-      40.09
+      39.995
      ],
      [
       "2026-09-08",
-      40.07
+      39.87
      ],
      [
       "2026-09-09",
-      39.49
+      39.445
      ],
      [
       "2026-09-10",
-      39.22
+      39.115
      ],
      [
       "2026-09-11",
-      39.41
+      39.44
      ],
      [
       "2026-09-14",
-      39.25
-     ],
-     [
-      "2026-09-15",
-      39.12
-     ],
-     [
-      "2026-09-16",
-      39.29
-     ],
-     [
-      "2026-09-17",
-      39.63
-     ],
-     [
-      "2026-09-18",
-      39.19
-     ],
-     [
-      "2026-09-21",
-      39.59
-     ],
-     [
-      "2026-09-22",
-      39.64
-     ],
-     [
-      "2026-09-23",
-      39.48
-     ],
-     [
-      "2026-09-24",
-      39.3
-     ],
-     [
-      "2026-09-25",
-      39.43
-     ],
-     [
-      "2026-09-28",
-      39.41
-     ],
-     [
-      "2026-09-29",
-      39.38
-     ],
-     [
-      "2026-09-30",
-      39.17
-     ],
-     [
-      "2026-10-01",
-      38.69
-     ],
-     [
-      "2026-10-02",
-      39.0
-     ],
-     [
-      "2026-10-05",
-      39.14
-     ],
-     [
-      "2026-10-06",
       39.32
      ],
      [
+      "2026-09-15",
+      39.155
+     ],
+     [
+      "2026-09-16",
+      39.25
+     ],
+     [
+      "2026-09-17",
+      39.565
+     ],
+     [
+      "2026-09-18",
+      39.18
+     ],
+     [
+      "2026-09-21",
+      39.7
+     ],
+     [
+      "2026-09-22",
+      39.81
+     ],
+     [
+      "2026-09-23",
+      39.425
+     ],
+     [
+      "2026-09-24",
+      39.5075
+     ],
+     [
+      "2026-09-25",
+      39.695
+     ],
+     [
+      "2026-09-28",
+      39.66
+     ],
+     [
+      "2026-09-29",
+      39.485
+     ],
+     [
+      "2026-09-30",
+      39.07
+     ],
+     [
+      "2026-10-01",
+      38.735
+     ],
+     [
+      "2026-10-02",
+      39.1075
+     ],
+     [
+      "2026-10-05",
+      39.245
+     ],
+     [
+      "2026-10-06",
+      39.185
+     ],
+     [
       "2026-10-07",
-      38.96
+      38.995
      ],
      [
       "2026-10-08",
-      38.68
+      38.8625
      ],
      [
       "2026-10-09",
-      39.06
+      39.15
      ]
     ]
    }
@@ -1573,17 +1576,17 @@
   "du": "2026-10-05",
   "au": "2026-10-09",
   "etfs": {
-   "global": 1.48,
-   "nasdaq": 0.78,
-   "europe": 0.15
+   "global": 1.03,
+   "nasdaq": 0.86,
+   "europe": 0.11
   },
   "lignes": [
-   "Bonne semaine pour le Monde (+1,5 %), Nasdaq 100 +0,8 %, Europe +0,2 % (cours en euros, vendredi à vendredi).",
+   "Bonne semaine pour le Monde (+1,0 %), Nasdaq 100 +0,9 %, Europe +0,1 % (cours en euros sur LS Exchange, vendredi à vendredi).",
    "Lundi et mardi, le Nasdaq 100 monte jusqu'à son plus haut du mois.",
    "Jeudi, le pétrole grimpe de 3 % à 91 $ et les taux longs restent proches de 5,3 % : la tech est vendue (Nasdaq −1,25 %), l'énergie et les valeurs défensives montent.",
    "Vendredi, rebond (Nasdaq +0,6 %), sauf pour les télécoms : SpaceX rachète des fréquences mobiles, T-Mobile perd 13 % et Deutsche Telekom 8 %.",
    "À suivre : Apple fragilisé par l'iPhone 18 Pro, puis les résultats d'ASML (14/10) et de TSMC (15/10)."
   ],
-  "source": "Tapeboard, Reuters, CNBC, StockAnalysis, Euronext Paris"
+  "source": "Tapeboard, Reuters, CNBC, StockAnalysis, LS Exchange"
  }
 }

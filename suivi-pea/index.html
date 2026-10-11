@@ -478,7 +478,7 @@ ${tabs}
 
   <footer class="foot">
     <details><summary>D'où viennent les chiffres ?</summary>
-      <p>Cours de clôture du ${esc(DATA.label)}. ${esc(e.proxyNote)} Trade Republic affiche le cours de LS Exchange, qui cote jusqu'à 23 h : sa variation peut différer un peu de la clôture de Paris (17 h 35). Compositions au ${esc(e.holdingsDate.split("-").reverse().join("/"))}, seules les plus grosses positions sont affichées. Les montants « Mon argent dedans » sont enregistrés uniquement dans ton navigateur, jamais en ligne.</p>
+      <p>Cours de clôture du ${esc(DATA.label)}. ${esc(e.proxyNote)} Les cours en euros viennent de LS Exchange, comme dans Trade Republic (dernier cours à 23 h). Le week-end, Trade Republic peut afficher un prix un peu différent, car LS cote aussi le samedi et le dimanche. Compositions au ${esc(e.holdingsDate.split("-").reverse().join("/"))}, seules les plus grosses positions sont affichées. Les montants « Mon argent dedans » sont enregistrés uniquement dans ton navigateur, jamais en ligne.</p>
     </details>
     <span>Mis à jour chaque soir de semaine après la clôture américaine. Dernière mise à jour : ${new Date(DATA.updatedAt).toLocaleString("fr-FR", {dateStyle: "medium", timeStyle: "short"})}.</span>
   </footer>`;
