@@ -470,7 +470,7 @@ async function fillMap(){
   const r = R.lastRun();
   let svg = r ? await R.lastMap(210) : "", cap = "";
   if (svg) { const k = R.monthCount(); cap = `<span class="wd-pill">${k} activité${k > 1 ? "s" : ""}</span><div class="wd-s" style="margin-top:6px">${esc(r.name)} · ${(r.dist / 1000).toFixed(2).replace(".", ",")} km</div>`; }
-  else { const pos = (await getPos()) || {lat: 48.8566, lon: 2.3522}; svg = R.baseMap(pos.lat, pos.lon, 14, 210); cap = `<div class="wd-s" style="margin-top:6px">${r ? "Pas de tracé GPS pour ta dernière course." : "Ta première course apparaîtra ici."}</div>`; }
+  else { const pos = (await getPos()) || {lat: 48.8566, lon: 2.3522}; svg = R.baseMap(pos.lat, pos.lon, 12, 210); cap = `<div class="wd-s" style="margin-top:6px">${r ? "Pas de tracé GPS pour ta dernière course." : "Ta première course apparaîtra ici."}</div>`; }
   if (!document.body.contains(el)) return;
   el.innerHTML = svg + cap;
 }

@@ -249,6 +249,7 @@ function routeSvg(pts, opt){
   const la0 = Math.min(...las), la1 = Math.max(...las), lo0 = Math.min(...los), lo1 = Math.max(...los);
   let z = 17;
   for (; z > 3; z--) { const a = proj(la1, lo0, z), b = proj(la0, lo1, z); if (b[0] - a[0] <= VW - 2 * pd && b[1] - a[1] <= VH - 2 * pd) break; }
+  if (opt.out) z = Math.max(3, z - opt.out);
   const c = proj((la0 + la1) / 2, (lo0 + lo1) / 2, z), ox = c[0] - VW / 2, oy = c[1] - VH / 2;
   const xy = pts.map(([la, lo]) => { const q = proj(la, lo, z); return [q[0] - ox, q[1] - oy]; });
   const tiles = tilesFor(ox, oy, VW, VH, z);
@@ -263,7 +264,7 @@ function routeSvg(pts, opt){
 }
 async function lastRouteMap(h){
   const r = runs.list[0]; if (!r || !connected()) return "";
-  try { const s = await getStreams(r.id); return s && s.latlng ? routeSvg(s.latlng, {h}) : ""; } catch (e) { return ""; }
+  try { const s = await getStreams(r.id); return s && s.latlng ? routeSvg(s.latlng, {h, out: 2}) : ""; } catch (e) { return ""; }
 }
 
 /* ---------- Analyse d'une course ---------- */
