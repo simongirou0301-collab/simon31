@@ -390,28 +390,71 @@ document.getElementById("confirm-yes").addEventListener("click", () => {
 });
 
 /* ---------- aujourd'hui ---------- */
+const IC = {
+  dumb:'<path d="M3 9v6M6 6v12M18 6v12M21 9v6M6 12h12" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>',
+  run:'<circle cx="14.5" cy="4.5" r="2" fill="currentColor"/><path d="M8 21l3-5 3 2v4M6 12l3-4 4 1 2 3 3 1M11 16l2-6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>',
+  bolt:'<path d="M13 3L5 14h6l-1 7 8-11h-6z" fill="currentColor"/>',
+  flame:'<path d="M12 3c1 4 5 5 5 10a5 5 0 01-10 0c0-2 1-3 2-4 0 2 1 3 2 3 0-4-1-6 1-9z" fill="currentColor"/>',
+  moon:'<path d="M20 14.5A8 8 0 019.5 4 8 8 0 1020 14.5z" fill="currentColor"/>',
+  heart:'<path d="M12 20s-8-5-8-11a4.5 4.5 0 018-2.5A4.5 4.5 0 0120 9c0 6-8 11-8 11z" fill="currentColor"/>',
+  trend:'<path d="M3 17l6-6 4 4 8-8M15 7h6v6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>',
+  ring:'<circle cx="12" cy="12" r="8" fill="none" stroke="currentColor" stroke-width="3"/>',
+  cal:'<rect x="4" y="5" width="16" height="15" rx="3" fill="none" stroke="currentColor" stroke-width="2.2"/><path d="M4 10h16M9 3v4M15 3v4" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>'
+};
+function wd(title, sub, icon, color, body, cls){
+  return `<div class="wd ${cls || ""}"><div class="wd-h"><div><div class="wd-t">${title}</div><div class="wd-s">${sub}</div></div>${icon ? `<span class="wd-i" style="background:color-mix(in srgb,${color} 22%,transparent);color:${color}"><svg viewBox="0 0 24 24">${IC[icon]}</svg></span>` : ""}</div>${body}</div>`;
+}
+const wbig = (v, u) => `<div class="wd-n">${v}${u ? `<small>${u}</small>` : ""}</div>`;
+function bars7(vals, color, today){
+  const mx = Math.max(...vals, 1);
+  return `<div class="wd-bars">${vals.map((v, i) => `<div class="wd-b"><i style="height:${v ? Math.max(14, v / mx * 100) : 4}%;background:${v ? color : "var(--line)"}"></i><span class="${i === today ? "on" : ""}">${"LMMJVSD"[i]}</span></div>`).join("")}</div>`;
+}
+function spark(vals, color){
+  if (vals.length < 2) return `<div class="wd-s" style="margin-top:14px">Pas encore assez de séances.</div>`;
+  const W = 140, H = 46, mx = Math.max(...vals), mn = Math.min(...vals), sp = (mx - mn) || 1;
+  const pts = vals.map((v, i) => [i * W / (vals.length - 1), H - 4 - (v - mn) / sp * (H - 10)]);
+  const d = pts.map((q, i) => (i ? "L" : "M") + q[0].toFixed(1) + " " + q[1].toFixed(1)).join(" ");
+  return `<svg viewBox="0 0 ${W} ${H}" class="wd-sp"><path d="${d} L${W} ${H} L0 ${H}Z" fill="${color}" fill-opacity=".18"/><path d="${d}" fill="none" stroke="${color}" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+}
 function renderToday(){
-  const now = new Date(), wd = now.getDay(), tab = (wd === 1 || wd === 4) ? "push" : (wd === 2 || wd === 5) ? "pull" : null;
-  const mon = new Date(now.getFullYear(), now.getMonth(), now.getDate() - (wd + 6) % 7).getTime();
+  const now = new Date(), wd0 = now.getDay(), tab = (wd0 === 1 || wd0 === 4) ? "push" : (wd0 === 2 || wd0 === 5) ? "pull" : null;
+  const dayIdx = (wd0 + 6) % 7, monD = new Date(now.getFullYear(), now.getMonth(), now.getDate() - dayIdx), mon = monD.getTime();
   const sessions = st.log.filter(x => x.t >= mon).length;
   const doneToday = st.log.filter(x => dk(new Date(x.t)) === dk(now));
   let R = {}; try { R = JSON.parse(localStorage.getItem("carnet-runs-icu-v1")) || {}; } catch (e) {}
   const runsW = (R.list || []).filter(r => new Date(r.start.replace("Z", "")).getTime() >= mon);
   const kmW = runsW.reduce((a, r) => a + r.dist, 0) / 1000, G = Object.assign({km: 20, n: 3}, R.goals || {});
-  const ring = (r, p, c) => { const L = 2 * Math.PI * r, q = Math.max(0, Math.min(1, p)); return `<circle cx="60" cy="60" r="${r}" fill="none" stroke="${c}" stroke-opacity=".18" stroke-width="10"/><circle cx="60" cy="60" r="${r}" fill="none" stroke="${c}" stroke-width="10" stroke-linecap="round" stroke-dasharray="${(L * q).toFixed(1)} ${L.toFixed(1)}" transform="rotate(-90 60 60)"/>`; };
-  // forme
-  let form = null; const W_ = R.well || {};
-  Object.keys(W_).sort().forEach(k => { const w = W_[k]; if (w && w.ctl != null && w.atl != null) form = w.ctl - w.atl; });
-  const fz = form == null ? null : form > 25 ? "Transition" : form > 5 ? "Frais" : form > -10 ? "Équilibré" : form > -30 ? "Productif" : "Surmenage possible";
-  const last = st.log.length ? st.log[st.log.length - 1] : null;
+  const dayOf = t => Math.floor((t - mon) / 864e5);
+  const gymDays = [0,0,0,0,0,0,0], runDays = [0,0,0,0,0,0,0];
+  st.log.forEach(x => { const i = dayOf(x.t); if (i >= 0 && i < 7) gymDays[i]++; });
+  (R.list || []).forEach(r => { const i = dayOf(new Date(r.start.replace("Z", "")).getTime()); if (i >= 0 && i < 7) runDays[i] += r.dist / 1000; });
+  const ring = (r, p, c) => { const L = 2 * Math.PI * r, q = Math.max(0, Math.min(1, p)); return `<circle cx="60" cy="60" r="${r}" fill="none" stroke="${c}" stroke-opacity=".2" stroke-width="10"/><circle cx="60" cy="60" r="${r}" fill="none" stroke="${c}" stroke-width="10" stroke-linecap="round" stroke-dasharray="${(L * q).toFixed(1)} ${L.toFixed(1)}" transform="rotate(-90 60 60)"/>`; };
+  let form = null, ctl = null, atl = null, well = null; const W_ = R.well || {};
+  Object.keys(W_).sort().forEach(k => { const w = W_[k]; if (w && w.ctl != null && w.atl != null) { ctl = w.ctl; atl = w.atl; form = w.ctl - w.atl; } if (w && (w.sleep || w.rhr || w.hrv)) well = w; });
+  const fz = form == null ? "–" : form > 25 ? "Transition" : form > 5 ? "Frais" : form > -10 ? "Équilibré" : form > -30 ? "Productif" : "Surmenage";
+  const vols = st.log.filter(x => x.vol).slice(-8).map(x => x.vol), lastV = vols.length ? vols[vols.length - 1] : 0;
+  // widget principal
   let top;
-  if (doneToday.length) top = `<div class="td-big">Séance faite ✓</div><div class="muted">${doneToday.reduce((a, x) => a + (x.vol || 0), 0) ? nf(doneToday.reduce((a, x) => a + (x.vol || 0), 0)) + " kg soulevés aujourd'hui" : "Bien joué."}</div>`;
-  else if (tab) top = `<div class="td-big">${tab === "push" ? "Push" : "Pull"}</div><div class="muted">${EX[tab].length} exercices · ${EX[tab].reduce((a, e) => a + e.s, 0)} séries</div><button class="td-go" type="button" data-go="${tab}">Commencer la séance</button>`;
-  else top = `<div class="td-big">Pas de muscu</div><div class="muted">Jour de repos ou de course.</div><button class="td-go alt" type="button" data-go="run">Voir mes courses</button>`;
-  document.getElementById("today-view").innerHTML = `<div class="card td-card">${top}</div>
-    <div class="card"><h3>Cette semaine</h3><div class="goal-row"><svg viewBox="0 0 120 120" class="rings" role="img" aria-label="Anneaux de la semaine">${ring(52, sessions / 4, "var(--pink)")}${ring(38, kmW / G.km, "var(--green)")}${ring(24, runsW.length / G.n, "var(--blue)")}</svg>
-      <div class="goal-leg"><div><i style="background:var(--pink)"></i><b>${sessions}</b> / 4 séances de muscu</div><div><i style="background:var(--green)"></i><b>${kmW.toFixed(1).replace(".", ",")}</b> / ${G.km} km</div><div><i style="background:var(--blue)"></i><b>${runsW.length}</b> / ${G.n} sorties</div></div></div></div>
-    <div class="kpis"><div class="kpi"><b>${streakWeeks()}</b><span>semaines d'affilée</span></div><div class="kpi"><b>${fz || "–"}</b><span>forme</span></div><div class="kpi"><b>${last ? new Date(last.t).toLocaleDateString("fr-FR", {day:"numeric", month:"short"}) : "–"}</b><span>dernière muscu</span></div></div>`;
+  if (doneToday.length) { const v = doneToday.reduce((a, x) => a + (x.vol || 0), 0); top = wd("Séance du jour", "Terminée", "dumb", "var(--green)", `<div class="wd-big">Bien joué ✓</div><div class="wd-s">${v ? nf(v) + " kg soulevés aujourd'hui" : "Séance enregistrée"}</div>`, "full"); }
+  else if (tab) top = wd("Séance du jour", now.toLocaleDateString("fr-FR", {weekday: "long"}), "dumb", "var(--pink)", `<div class="wd-big">${tab === "push" ? "Push" : "Pull"}</div><div class="wd-s">${EX[tab].length} exercices · ${EX[tab].reduce((a, e) => a + e.s, 0)} séries</div><button class="td-go" type="button" data-go="${tab}">Commencer</button>`, "full");
+  else top = wd("Séance du jour", now.toLocaleDateString("fr-FR", {weekday: "long"}), "run", "var(--green)", `<div class="wd-big">Repos ou course</div><div class="wd-s">Pas de muscu prévue aujourd'hui.</div><button class="td-go alt" type="button" data-go="run">Voir mes courses</button>`, "full");
+  // calendrier
+  const {gym, run} = calData(), y = now.getFullYear(), m = now.getMonth(), nd = new Date(y, m + 1, 0).getDate(), first = (new Date(y, m, 1).getDay() + 6) % 7;
+  let cal = '<div class="wd-cal">' + "LMMJVSD".split("").map(x => `<span>${x}</span>`).join("") + "<b></b>".repeat(first);
+  for (let d = 1; d <= nd; d++) { const k = dk(new Date(y, m, d)), g = gym.has(k), r = run.has(k); cal += `<b class="${g && r ? "both" : g ? "g" : r ? "r" : ""}${d === now.getDate() ? " now" : ""}"></b>`; }
+  cal += "</div>";
+  const sl = well && well.sleep ? `${Math.floor(well.sleep / 3600)}<small>h</small> ${String(Math.floor(well.sleep % 3600 / 60)).padStart(2, "0")}<small>m</small>` : null;
+  document.getElementById("today-view").innerHTML = `<div class="wg">${top}
+    ${wd("Muscu", "Cette semaine", "dumb", "var(--pink)", wbig(sessions, "/ 4") + bars7(gymDays, "var(--pink)", dayIdx))}
+    ${wd("Course", "Cette semaine", "run", "var(--green)", wbig(kmW.toFixed(1).replace(".", ","), "km") + `<div class="wd-prog"><i style="width:${Math.min(100, kmW / G.km * 100)}%;background:var(--green)"></i></div><div class="wd-s">objectif ${G.km} km</div>`)}
+    ${wd("Anneaux", "Semaine", "ring", "var(--orange)", `<svg viewBox="0 0 120 120" class="wd-ring">${ring(52, sessions / 4, "var(--pink)")}${ring(38, kmW / G.km, "var(--green)")}${ring(24, runsW.length / G.n, "var(--blue)")}</svg>`)}
+    ${wd(now.toLocaleDateString("fr-FR", {month: "long"}), "Régularité", "cal", "var(--blue)", cal)}
+    ${wd("Forme", "Aujourd'hui", "trend", "var(--red)", `<div class="wd-big sm">${fz}</div><div class="wd-trio"><div><span>CTL</span><b>${ctl != null ? Math.round(ctl) : "–"}</b></div><div><span>ATL</span><b>${atl != null ? Math.round(atl) : "–"}</b></div><div><span>TSB</span><b>${form != null ? Math.round(form) : "–"}</b></div></div>`, "full")}
+    ${wd("Volume", "Dernières séances", "bolt", "var(--orange)", wbig(lastV ? nf(lastV) : "–", lastV ? "kg" : "") + spark(vols, "var(--orange)"))}
+    ${wd("Série", "Semaines d'affilée", "flame", "var(--orange)", wbig(streakWeeks(), "") + `<div class="wd-s">avec au moins une séance</div>`)}
+    ${sl ? wd("Sommeil", "Dernière nuit", "moon", "var(--indigo)", wbig(sl, "")) : ""}
+    ${well && well.rhr ? wd("Cœur au repos", "Garmin", "heart", "var(--red)", wbig(Math.round(well.rhr), "bpm") + (well.hrv ? `<div class="wd-s">HRV ${Math.round(well.hrv)} ms</div>` : "")) : ""}
+  </div>`;
 }
 document.getElementById("today-view").addEventListener("click", ev => { const b = ev.target.closest("[data-go]"); if (b) { st.tab = b.dataset.go; save(); render(); window.scrollTo(0, 0); } });
 
