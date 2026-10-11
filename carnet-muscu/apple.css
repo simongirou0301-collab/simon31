@@ -145,3 +145,15 @@ footer{font-size:.75rem;text-align:center}
 @keyframes pulse{50%{transform:scale(1.02)}}
 @media (prefers-reduced-motion:reduce){.timer.over{animation:none}}
 .scheme .rest{color:var(--muted);font-weight:500}
+
+/* reps + journal */
+.reps{display:flex;align-items:center;gap:6px;margin-left:auto}
+.reps span{font-size:.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.reps input{width:40px;height:34px;text-align:center;font:600 .9rem var(--mono);color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:0}
+.jr-btn{width:100%}
+.journal{display:flex;flex-direction:column;gap:10px}
+.jr-s{background:var(--surface);border-radius:16px;padding:12px 14px;display:flex;flex-direction:column;gap:6px}
+.jr-h{display:flex;justify-content:space-between;align-items:baseline}
+.jr-h span{font-size:.78rem;color:var(--muted)}
+.jr-e{display:flex;justify-content:space-between;gap:10px;font-size:.85rem}
+.jr-e .v{font-family:var(--mono);color:var(--muted);white-space:nowrap}

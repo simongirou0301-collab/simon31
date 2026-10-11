@@ -121,6 +121,8 @@ footer{color:var(--muted);font-size:.78rem}
     <div class="confirm-row"><button class="save" type="button" id="confirm-yes">Valider</button><button class="btn" type="button" id="confirm-no">Retour</button></div>
   </div>
   <p class="finish-note" id="finish-note"></p>
+  <button class="btn jr-btn" type="button" id="jr-btn">Journal des séances</button>
+  <div class="journal" id="journal" hidden></div>
   </div>
 
   <footer id="gym-foot">Les poids sont le total sur la machine ou la barre, sauf mention « / côté » ou « / haltère ». Tes données restent sur ce téléphone.</footer>
@@ -179,7 +181,7 @@ const byId = id => ALL.find(e => e.id === id);
 
 /* ---------- stockage local ---------- */
 const KEY = "carnet-pp-app-v1";
-let st = {tab:null, done:{}, feel:{}, loads:null};
+let st = {tab:null, done:{}, feel:{}, loads:null, reps:{}, log:[]};
 try { const v = JSON.parse(localStorage.getItem(KEY)); if (v) st = Object.assign(st, v); } catch (e) {}
 if (!st.loads) st.loads = JSON.parse(JSON.stringify(DEFAULT_LOADS));
 for (const k in DEFAULT_LOADS) if (!st.loads[k]) st.loads[k] = {...DEFAULT_LOADS[k]};
@@ -247,6 +249,8 @@ function render(){
       : `<div class="kg empty">—</div><div class="unit">${esc(L.unit || "à définir")}</div>`;
     let sets = ""; for (let k = 0; k < e.s; k++) sets += `<button class="set" type="button" aria-pressed="${!!d[k]}" aria-label="Série ${k+1}" data-id="${e.id}" data-k="${k}">${k+1}</button>`;
     const f = st.feel[e.id];
+    const rp = st.reps[e.id] || [];
+    let repsRow = ""; if (nd) { repsRow = `<div class="reps"><span>Reps</span>`; for (let k = 0; k < e.s; k++) if (d[k]) repsRow += `<input type="number" inputmode="numeric" min="0" max="99" value="${rp[k] ?? ""}" aria-label="Reps série ${k+1}" data-rid="${e.id}" data-rk="${k}">`; repsRow += `</div>`; }
     const ed = editing === e.id ? `<form class="editor" data-form="${e.id}">
         <label>Charge<input id="kg-${e.id}" name="kg" value="${esc(L.kg || "")}" inputmode="decimal" autocomplete="off"></label>
         <label>Unité / précision<input class="wide" id="unit-${e.id}" name="unit" value="${esc(L.kg ? (L.unit || "kg") : "kg")}" autocomplete="off"></label>
@@ -256,7 +260,7 @@ function render(){
       <div class="info"><h2>${esc(e.n)}</h2><div class="scheme">${e.s} × ${esc(e.r)} <span class="rest">· repos ${Math.floor((e.rest||90)/60)}:${String((e.rest||90)%60).padStart(2,"0")}</span></div><div class="note">${esc(e.note)}</div></div>
       <button class="load" type="button" data-edit="${e.id}">${kg}</button>
       ${ed}
-      <div class="foot"><div class="sets">${sets}</div></div>
+      <div class="foot"><div class="sets">${sets}</div>${repsRow}</div>
       <div class="feel">
         <div class="feel-q">Comment se sont passées tes séries ?</div>
         <div class="feel-btns">
@@ -274,13 +278,13 @@ function render(){
 
 /* ---------- interactions ---------- */
 document.querySelectorAll(".tab").forEach(t => t.addEventListener("click", () => { st.tab = t.dataset.s; editing = null; save(); render(); window.scrollTo(0, 0); }));
-document.getElementById("reset").addEventListener("click", () => { EX[st.tab].forEach(e => { delete st.done[e.id]; delete st.feel[e.id]; }); save(); render(); });
+document.getElementById("reset").addEventListener("click", () => { EX[st.tab].forEach(e => { delete st.done[e.id]; delete st.feel[e.id]; delete st.reps[e.id]; }); save(); render(); });
 
 list.addEventListener("click", ev => {
   const s = ev.target.closest(".set");
   if (s) {
     const a = st.done[s.dataset.id] || []; a[+s.dataset.k] = !a[+s.dataset.k]; st.done[s.dataset.id] = a;
-    if (a[+s.dataset.k]) startTimer(s.dataset.id, +s.dataset.k);
+    if (a[+s.dataset.k]) { const r = st.reps[s.dataset.id] = st.reps[s.dataset.id] || []; if (r[+s.dataset.k] == null) r[+s.dataset.k] = targetReps(s.dataset.id); startTimer(s.dataset.id, +s.dataset.k); }
     save(); render(); return;
   }
   const ed = ev.target.closest("[data-edit]");
@@ -291,6 +295,12 @@ list.addEventListener("click", ev => {
   const fb = ev.target.closest("[data-feel]");
   if (fb) { const id = fb.dataset.fid; if (st.feel[id] === fb.dataset.feel) delete st.feel[id]; else st.feel[id] = fb.dataset.feel; save(); render(); }
 });
+list.addEventListener("change", ev => {
+  const i = ev.target.closest("[data-rid]"); if (!i) return;
+  const r = st.reps[i.dataset.rid] = st.reps[i.dataset.rid] || [];
+  r[+i.dataset.rk] = i.value === "" ? null : Math.max(0, Math.min(99, parseInt(i.value, 10) || 0)); save();
+});
+const targetReps = id => { const m = /\d+/.exec(byId(id).r); return m ? +m[0] : 8; };
 list.addEventListener("submit", ev => {
   ev.preventDefault();
   const f = ev.target, id = f.dataset.form;
@@ -328,6 +338,13 @@ finishBtn.addEventListener("click", () => {
 document.getElementById("confirm-no").addEventListener("click", () => { confirmBox.hidden = true; finishBtn.hidden = false; });
 document.getElementById("confirm-yes").addEventListener("click", () => {
   const ids = pendingIds();
+  const entry = {t: Date.now(), tab: st.tab, ex: []};
+  EX[st.tab].forEach(e => {
+    const d = st.done[e.id] || []; if (!d.some(Boolean)) return;
+    const L = st.loads[e.id] || {}, rp = st.reps[e.id] || [];
+    entry.ex.push({id: e.id, kg: L.kg || "", unit: L.unit || "", feel: st.feel[e.id] || null, reps: d.map((x, k) => x ? (rp[k] ?? targetReps(e.id)) : null).filter(x => x != null)});
+  });
+  if (entry.ex.length) st.log.push(entry);
   const today = new Date().toLocaleDateString("fr-FR", {day:"numeric", month:"short"});
   const label = {up:"facile", same:"moyen", down:"dur"};
   ids.forEach(id => {
@@ -335,10 +352,23 @@ document.getElementById("confirm-yes").addEventListener("click", () => {
     const txt = f === "same" ? `moyen (${today}) · charge gardée à ${L.kg}` : `${label[f]} (${today}) · ${L.kg} → ${kg}`;
     st.loads[id] = {...L, kg, ressenti: txt};
   });
-  EX[st.tab].forEach(e => { delete st.done[e.id]; delete st.feel[e.id]; });
+  EX[st.tab].forEach(e => { delete st.done[e.id]; delete st.feel[e.id]; delete st.reps[e.id]; });
   save(); confirmBox.hidden = true; finishBtn.hidden = false; render();
   document.getElementById("finish-note").textContent = ids.length ? "Séance terminée, charges mises à jour pour la prochaine fois." : "Séance terminée.";
 });
+
+/* ---------- journal ---------- */
+const jr = document.getElementById("journal");
+function renderJournal(){
+  const L = st.log.slice().reverse();
+  jr.innerHTML = L.length ? L.map(s => {
+    const d = new Date(s.t).toLocaleDateString("fr-FR", {weekday:"short", day:"numeric", month:"short"});
+    const sets = s.ex.reduce((a, x) => a + x.reps.length, 0);
+    return `<div class="jr-s"><div class="jr-h"><b>${s.tab === "push" ? "Push" : "Pull"}</b><span>${d} · ${sets} séries</span></div>` +
+      s.ex.map(x => `<div class="jr-e"><span class="n">${esc(byId(x.id).n)}</span><span class="v">${esc(x.kg || "—")} · ${x.reps.join("/")}</span></div>`).join("") + `</div>`;
+  }).join("") : `<p class="muted">Aucune séance enregistrée pour l'instant.</p>`;
+}
+document.getElementById("jr-btn").addEventListener("click", () => { jr.hidden = !jr.hidden; if (!jr.hidden) renderJournal(); });
 
 /* ---------- photos ---------- */
 const lb = document.getElementById("lb"); let lbId = null;
