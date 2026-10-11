@@ -17,6 +17,7 @@
 :root{
   --bg:#F3F5F9; --card:#FFFFFF; --ink:#101A2E; --muted:#5B6680; --line:#E2E6EF;
   --accent:#3B5BFF; --accent-soft:#E7ECFF;
+  --c-global:#3B5BFF; --c-nasdaq:#8B4FE0; --c-europe:#D9900F;
   --up:#0B9A6A; --up-soft:#DDF4EA; --down:#DC3B48; --down-soft:#FBE3E5; --flat:#A6AEC0;
   --f-display:"Bricolage Grotesque", "Figtree", system-ui, sans-serif;
   --f-body:"Figtree", system-ui, -apple-system, "Segoe UI", sans-serif;
@@ -25,10 +26,12 @@
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
   --bg:#0B1120; --card:#141C2E; --ink:#E8ECF6; --muted:#9AA5BD; --line:#24304A;
   --accent:#7C93FF; --accent-soft:#1E2950;
+  --c-global:#7C93FF; --c-nasdaq:#B58CFF; --c-europe:#F2B544;
   --up:#33C98E; --up-soft:#11352A; --down:#FF6B76; --down-soft:#3E1A22; --flat:#5D6782; color-scheme:dark}}
 :root[data-theme="dark"]{
   --bg:#0B1120; --card:#141C2E; --ink:#E8ECF6; --muted:#9AA5BD; --line:#24304A;
   --accent:#7C93FF; --accent-soft:#1E2950;
+  --c-global:#7C93FF; --c-nasdaq:#B58CFF; --c-europe:#F2B544;
   --up:#33C98E; --up-soft:#11352A; --down:#FF6B76; --down-soft:#3E1A22; --flat:#5D6782; color-scheme:dark}
 *{box-sizing:border-box}
 body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.5}
@@ -104,6 +107,37 @@ header{display:flex;flex-direction:column;gap:6px}
 details summary{cursor:pointer;font-weight:600}
 .foot{font-size:.78rem;color:var(--muted);display:flex;flex-direction:column;gap:6px}
 .empty{padding:40px 16px;text-align:center}
+
+.views{display:flex;gap:4px;background:var(--line);border-radius:12px;padding:4px;align-self:flex-start;margin-top:4px}
+.viewbtn{border:0;background:transparent;color:var(--ink);font:inherit;font-weight:600;font-size:.9rem;padding:6px 14px;border-radius:9px;cursor:pointer}
+.viewbtn[aria-pressed="true"]{background:var(--card);box-shadow:0 1px 3px rgba(0,0,0,.12)}
+.note{background:var(--accent-soft);border:0}
+.form{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;margin-top:12px}
+.form label{display:flex;flex-direction:column;gap:3px;font-size:.78rem;color:var(--muted);background:var(--bg);border-radius:10px;padding:8px 10px}
+.form input{font:inherit;font-family:var(--f-num);font-size:1rem;font-weight:700;color:var(--ink);background:transparent;border:0;border-bottom:1px dashed var(--muted);padding:0;width:100%}
+.btn{border:0;background:var(--accent);color:#fff;font:inherit;font-weight:600;padding:9px 14px;border-radius:10px;cursor:pointer}
+.btn.ghost{background:transparent;color:var(--accent);border:1px solid var(--accent)}
+.row-actions{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:12px}
+.empty-inline{margin:12px 0 0;padding:16px;border:1px dashed var(--line);border-radius:12px;color:var(--muted)}
+.seg{display:flex;gap:4px}
+.segbtn{border:1px solid var(--line);background:var(--card);color:var(--ink);font:inherit;font-size:.82rem;padding:5px 10px;border-radius:9px;cursor:pointer}
+.segbtn[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+.slider{margin-top:12px;display:flex;flex-direction:column;gap:4px}
+.slider input{width:100%;accent-color:var(--accent)}
+.jalons{display:grid;grid-template-columns:repeat(auto-fit,minmax(90px,1fr));gap:8px;margin-top:10px}
+.jalons div{display:flex;flex-direction:column;background:var(--bg);border-radius:10px;padding:8px 10px}
+.expo,.cmp{display:flex;flex-direction:column;gap:7px;margin-top:12px}
+.exporow,.cmprow{display:grid;grid-template-columns:120px 1fr 74px;gap:8px;align-items:center;font-size:.85rem}
+.exporow .name,.cmprow .name{font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.exporow .num,.cmprow .num{text-align:right;font-size:.8rem}
+.stack{display:flex;height:14px;border-radius:4px;overflow:hidden}
+.stack span{display:block;height:100%}
+.badge{font-family:var(--f-num);font-size:.68rem;background:var(--down-soft);color:var(--down);border-radius:5px;padding:0 4px}
+.track2{position:relative;height:14px;background:var(--bg);border-radius:4px}
+.fill2{position:absolute;left:0;top:0;height:100%;background:var(--accent);border-radius:4px}
+.ref{position:absolute;top:-4px;bottom:-4px;width:0;border-left:2px solid var(--ink)}
+.refkey{display:inline-block;width:0;height:14px;border-left:2px solid var(--ink);margin-left:6px}
+@media (max-width:480px){.exporow,.cmprow{grid-template-columns:92px 1fr 64px}}
 @media (max-width:480px){
   h1{font-size:1.55rem}.hero .big{font-size:1.9rem}
   .kpis{grid-template-columns:1fr 1fr}
@@ -148,19 +182,21 @@ const WORDS = [
   ["Concentration", "Dans le Nasdaq 100, les 10 premières entreprises pèsent près de la moitié de l'indice. Le MSCI Monde (ACWI) est beaucoup plus dispersé."]
 ];
 
+let view = "jour";
 let LATEST = null, DATA = null, current = "nasdaq", selected = null, dayList = [];
 const store = {
   get(k) { try { return localStorage.getItem(k); } catch { return null; } },
   set(k, v) { try { localStorage.setItem(k, v); } catch {} }
 };
 current = store.get("pea-tab") || "nasdaq";
+view = store.get("pea-view") === "pea" ? "pea" : "jour";
 
-const DEFAULT_INV = 1000;
+const EXEMPLE = {global: 7000, nasdaq: 2000, europe: 1000};
 function invested(e) {
   const s = parseFloat(store.get("pea-inv-" + e.id));
-  return isFinite(s) && s >= 0 ? s : DEFAULT_INV;
+  return isFinite(s) && s >= 0 ? s : (EXEMPLE[e.id] ?? 1000);
 }
-const hasOwn = () => DATA.etfs.some(e => store.get("pea-inv-" + e.id) != null);
+const hasOwn = () => (LATEST || DATA).etfs.some(e => store.get("pea-inv-" + e.id) != null);
 
 function colorFor(c) {
   if (c == null) return css("--flat");
@@ -230,7 +266,19 @@ function lineChart(hist) {
 
 function newsFor(sym) { return (DATA.news || []).filter(n => (n.tickers || []).includes(sym)); }
 
+function headerHtml(title, eyebrow) {
+  return `<header>
+    <span class="eyebrow">${esc(eyebrow)}</span>
+    <h1>${esc(title)}</h1>
+    <div class="views" role="group" aria-label="Vue"><button class="viewbtn" data-view="jour" aria-pressed="${view === "jour"}">La séance</button><button class="viewbtn" data-view="pea" aria-pressed="${view === "pea"}">Mon PEA</button></div>
+  </header>`;
+}
+function wireViews() {
+  document.querySelectorAll(".viewbtn").forEach(b => b.onclick = () => { view = b.dataset.view; store.set("pea-view", view); render(); scrollTo(0, 0); });
+}
+
 function render() {
+  if (view === "pea" && typeof renderPea === "function") return renderPea();
   const app = document.getElementById("app");
   const etfs = DATA.etfs;
   if (!etfs.find(e => e.id === current)) current = etfs[0].id;
@@ -249,23 +297,20 @@ function render() {
   const sel = selected && hold.find(h => h.s === selected);
 
   app.innerHTML = `
-  <header>
-    <span class="eyebrow">Mon PEA · séance du ${esc(DATA.label)}</span>
-    <h1>Ce qui a fait bouger mon argent</h1>
-  </header>
+  ${headerHtml("Ce qui a fait bouger mon argent", "Mon PEA · séance du " + DATA.label)}
 
   ${dayList.length > 1 ? `<div class="days" role="group" aria-label="Choisir une séance">${dayList.map(d => `<button class="day" data-day="${esc(d.id)}" aria-pressed="${d.id === DATA.date}">${esc(d.short)}</button>`).join("")}</div>` : ""}
 
   <section class="card">
     <div class="hero">
       <div>
-        <div class="eyebrow">${hasOwn() ? "Mon PEA ce jour-là (estimation)" : "Pour 1 000 € dans chaque ETF"}</div>
+        <div class="eyebrow">${hasOwn() ? "Mon PEA ce jour-là (estimation)" : "Exemple : 10 000 € en 70/20/10"}</div>
         <div class="big num ${cls(totalImpact)}">${fmtEur(totalImpact)}</div>
       </div>
       <span class="pill ${cls(totalImpact)} num">${fmtPct(totalInv ? totalImpact / totalInv * 100 : 0)}</span>
     </div>
     <p class="resume" style="margin-top:12px">${esc(DATA.resume)}</p>
-    ${hasOwn() ? "" : `<p class="muted small" style="margin:8px 0 0">Entre tes montants dans « Mon argent dedans » sous chaque ETF : ils restent uniquement sur ton appareil.</p>`}
+    ${hasOwn() ? "" : `<p class="muted small" style="margin:8px 0 0">Entre tes montants dans l'onglet « Mon PEA » : ils restent uniquement sur ton appareil.</p>`}
   </section>
 
   <nav class="tabs" role="tablist">
@@ -361,6 +406,7 @@ function drawTreemap(hold) {
 }
 
 function wire(e) {
+  wireViews();
   document.querySelectorAll(".tab").forEach(b => b.onclick = () => { current = b.dataset.tab; selected = null; store.set("pea-tab", current); render(); });
   document.querySelectorAll("[data-sym]").forEach(t => {
     const pick = () => { selected = selected === t.dataset.sym ? null : t.dataset.sym; render(); document.getElementById("tm").scrollIntoView({block: "nearest", behavior: "smooth"}); };
@@ -417,5 +463,6 @@ async function loadDay(id) {
 })();
 if ("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js").catch(() => {});
 </script>
+<script src="mon-pea.js"></script>
 </body>
 </html>
