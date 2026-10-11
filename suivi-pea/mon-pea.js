@@ -124,11 +124,13 @@ function renderPea() {
   const plusGrosEcart = alloc.slice().sort((a, b) => Math.abs(b.pct - b.cible) - Math.abs(a.pct - a.cible))[0];
 
   app.innerHTML = `
-  ${headerHtml("Mon portefeuille", "Mon PEA · vue d'ensemble")}
+  ${headerHtml(view === "analyse" ? "Analyse de mon portefeuille" : "Mon portefeuille", view === "analyse" ? "Mon PEA · doublons et répartition" : "Mon PEA · vue d'ensemble")}
 
-  ${r.own ? "" : `<div class="card note">Ce sont des <b>chiffres d'exemple</b> (10 000 € en 70/20/10). Entre les tiens dans « Mes chiffres » ci-dessous : ils restent uniquement sur ton appareil.</div>`}
+  ${r.own ? "" : `<div class="card note">Ce sont des <b>chiffres d'exemple</b> (10 000 € en 70/20/10). Entre les tiens dans « Mes chiffres » de l'onglet Mon PEA : ils restent uniquement sur ton appareil.</div>`}
 
-  <section class="card">
+  ${subNav()}
+
+  ${view === "pea" ? (sub() === "chiffres" ? `<section class="card">
     <h2>Mes chiffres</h2>
     <p class="muted small" style="margin:4px 0 0">Recopie-les depuis Trade Republic. Ils sont enregistrés dans ce navigateur seulement.</p>
     <div class="form">
@@ -157,7 +159,7 @@ function renderPea() {
     ${rel.length ? `<div class="legend"><i style="background:var(--accent)"></i><span>Valeur</span><i style="background:var(--muted)"></i><span>Versé</span><span>· ${rel.length} relevé${rel.length > 1 ? "s" : ""}</span></div>` : ""}
   </section>
 
-  <section class="card">
+  ` : `<section class="card">
     <div class="etfhead">
       <div><h2>Et dans ${horizon} ans ?</h2><div class="muted small">Sans jamais vendre, rendement moyen constant</div></div>
       <div class="seg" role="group" aria-label="Horizon">${[10, 20, 30].map(h => `<button class="segbtn" data-h="${h}" aria-pressed="${h === horizon}">${h} ans</button>`).join("")}</div>
@@ -175,7 +177,7 @@ function renderPea() {
     <p class="muted small" style="margin:10px 0 0">${r.cash > 0 && r.hebdo > 0 ? `Tes espèces sont investies à ${eur0(r.hebdo)}/semaine, puis tu ajoutes ${eur0(r.mensuel)}/mois. ` : `Tu ajoutes ${eur0(r.mensuel)}/mois. `}La vraie bourse ne monte pas en ligne droite : certaines années feront −20 % ou pire. Les ${r.taux.toFixed(0)} % sont une moyenne, dividendes réinvestis compris.</p>
   </section>
 
-  <section class="card">
+  `) : sub() === "doublons" ? `<section class="card">
     <h2>Les doublons entre mes ETF</h2>
     <p class="muted small" style="margin:4px 0 0">Combien tu possèdes vraiment de chaque entreprise, tous ETF confondus. ${doublons.length} des plus grosses entreprises sont dans plusieurs de tes ETF.</p>
     <div class="expo">${top.map(x => `
@@ -189,7 +191,7 @@ function renderPea() {
     <p class="muted small" style="margin:6px 0 0">Calculé sur les plus grosses positions de chaque ETF seulement.</p>
   </section>
 
-  <section class="card">
+  ` : sub() === "repartition" ? `<section class="card">
     <h2>Ma répartition</h2>
     <h3 style="margin-top:10px">Par ETF, comparée à mon objectif 70/20/10</h3>
     <div class="cmp">${alloc.map(a => `
@@ -208,8 +210,8 @@ function renderPea() {
     <p class="muted small" style="margin:6px 0 0">La technologie pèse ${techMoi.toFixed(0)} % chez toi${COMPO ? `, contre ${COMPO.secteurs.global["Technologie"].toFixed(0)} % dans le MSCI Monde seul : c'est l'effet de ton Nasdaq 100` : ""}.</p>
     ${COMPO ? `<p class="muted small" style="margin:6px 0 0">Sources : ${esc(COMPO.source)}. ${esc(COMPO.notes.europe_autres)}</p>` : ""}
   </section>
-
-  ${krachHtml(true)}`;
+  ` : krachHtml(true)}
+  ${navHtml()}`;
 
   wirePea();
 }
@@ -267,7 +269,7 @@ function krachHtml(toujours) {
       <li><b>Ne vends pas.</b> Une perte n'est réelle que si tu vends. Tous les krachs de ce tableau ont fini par être effacés.</li>
       <li><b>Garde ton plan.</b> Chaque semaine, tes ${eur0(num("pea-hebdo", 0) || 300)} achètent plus de parts quand c'est bas : c'est là que se prépare la remontée.</li>
       <li><b>Regarde loin.</b> Avec un horizon de plus de 5 ans, une baisse de 10 à 20 % arrive presque chaque année ou deux.</li></ul>`;
-  if (!touches.length) return `<section class="card"><details><summary><h2 style="display:inline">Si ça chute un jour</h2></summary>
+  if (!touches.length) return `<section class="card"><details open><summary><h2 style="display:inline">Si ça chute un jour</h2></summary>
       <p style="margin:8px 0 0">Cette partie devient une alerte quand un de tes ETF recule de plus de 5 % par rapport à son plus haut récent. Voici ce qu'elle te rappellera :</p>${conseils}${tableau}</details></section>`;
   return `<section class="card krach" role="alert">
     <span class="eyebrow">Mode krach</span>
@@ -282,7 +284,7 @@ function calendrierHtml() {
   if (!ag.length) return "";
   const today = new Date(); today.setHours(0, 0, 0, 0);
   const ref = DATA === LATEST ? today : new Date(DATA.date + "T00:00:00");
-  const futurs = ag.filter(a => new Date(a.date + "T00:00:00") >= ref).slice(0, 10);
+  const futurs = ag.filter(a => new Date(a.date + "T00:00:00") >= ref).slice(0, 6);
   if (!futurs.length) return "";
   const etfs = (LATEST || DATA).etfs;
   const poidsEur = a => etfs.reduce((s, e) => s + e.holdings.filter(h => (a.tickers || []).includes(h.s)).reduce((t, h) => t + invested(e) * h.w / 100, 0), 0);

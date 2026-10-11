@@ -152,6 +152,14 @@ details summary{cursor:pointer;font-weight:600}
 .chip.bank{background:var(--down-soft);color:var(--ink)}
 .recaplist{margin:10px 0 8px;padding-left:20px;display:flex;flex-direction:column;gap:6px}
 details summary h2{cursor:pointer}
+.wrap{padding-bottom:calc(84px + env(safe-area-inset-bottom, 0px))}
+.bottomnav{position:fixed;left:0;right:0;bottom:0;z-index:10;display:grid;grid-template-columns:repeat(5,1fr);background:var(--card);border-top:1px solid var(--line);padding:6px max(8px, calc((100% - 760px) / 2)) calc(6px + env(safe-area-inset-bottom, 0px))}
+.navbtn{border:0;background:transparent;color:var(--muted);font:inherit;font-size:.72rem;font-weight:600;display:flex;flex-direction:column;align-items:center;gap:2px;padding:4px 2px;border-radius:10px;cursor:pointer;min-width:0}
+.navbtn[aria-current="page"]{color:var(--accent);background:var(--accent-soft)}
+.subnav{display:flex;gap:4px;background:var(--line);border-radius:12px;padding:4px;overflow-x:auto}
+.subbtn{flex:1;white-space:nowrap;border:0;background:transparent;color:var(--ink);font:inherit;font-weight:600;font-size:.85rem;padding:7px 10px;border-radius:9px;cursor:pointer}
+.subbtn[aria-pressed="true"]{background:var(--card);color:var(--accent);box-shadow:0 1px 3px rgba(0,0,0,.12)}
+.navbtn:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
 @media (max-width:480px){
   h1{font-size:1.55rem}.hero .big{font-size:1.9rem}
   .kpis{grid-template-columns:1fr 1fr}
@@ -203,7 +211,7 @@ const store = {
   set(k, v) { try { localStorage.setItem(k, v); } catch {} }
 };
 current = store.get("pea-tab") || "nasdaq";
-view = store.get("pea-view") === "pea" ? "pea" : "jour";
+view = ["jour", "pourquoi", "agenda", "pea", "analyse"].includes(store.get("pea-view")) ? store.get("pea-view") : "jour";
 
 const EXEMPLE = {global: 7000, nasdaq: 2000, europe: 1000};
 function invested(e) {
@@ -284,15 +292,35 @@ function headerHtml(title, eyebrow) {
   return `<header>
     <span class="eyebrow">${esc(eyebrow)}</span>
     <h1>${esc(title)}</h1>
-    <div class="views" role="group" aria-label="Vue"><button class="viewbtn" data-view="jour" aria-pressed="${view === "jour"}">La séance</button><button class="viewbtn" data-view="pea" aria-pressed="${view === "pea"}">Mon PEA</button></div>
   </header>`;
 }
+const VUES = [["jour", "Séance", "M3 17l5-5 4 4 8-8M14 8h6v6"], ["pourquoi", "Pourquoi", "M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zm0 13v.01M12 7.5c1.6 0 2.8 1 2.8 2.4 0 1.9-2.8 2-2.8 3.9"], ["agenda", "Agenda", "M4 6h16v14H4zM4 10h16M8 3v4M16 3v4"], ["pea", "Mon PEA", "M3 10l9-6 9 6v10H3zM9 20v-6h6v6"], ["analyse", "Analyse", "M12 3v9h9A9 9 0 1 1 12 3zM15 3.5A9 9 0 0 1 20.5 9H15z"]];
+function navHtml() {
+  return `<nav class="bottomnav" aria-label="Pages">${VUES.map(([id, nom, d]) => `<button class="navbtn" data-view="${id}" aria-current="${view === id ? "page" : "false"}"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="${d}" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg><span>${nom}</span></button>`).join("")}</nav>`;
+}
+let SUB = {};
+try { SUB = JSON.parse(localStorage.getItem("pea-sub") || "{}") || {}; } catch {}
+const SUBS = {
+  pourquoi: [["explications", "Explications"], ["classement", "Qui a pesé"]],
+  agenda: [["calendrier", "Calendrier"], ["recap", "Récap semaine"]],
+  pea: [["chiffres", "Mes chiffres"], ["projection", "Projection"]],
+  analyse: [["doublons", "Doublons"], ["repartition", "Répartition"], ["krach", "Si ça chute"]]
+};
+function sub() {
+  const l = SUBS[view] || [];
+  return l.some(x => x[0] === SUB[view]) ? SUB[view] : (l[0] || [])[0];
+}
+function subNav() {
+  const l = SUBS[view]; if (!l) return "";
+  return `<div class="subnav" role="group" aria-label="Sous-pages">${l.map(([id, nom]) => `<button class="subbtn" data-sub="${id}" aria-pressed="${sub() === id}">${nom}</button>`).join("")}</div>`;
+}
 function wireViews() {
-  document.querySelectorAll(".viewbtn").forEach(b => b.onclick = () => { view = b.dataset.view; store.set("pea-view", view); render(); scrollTo(0, 0); });
+  document.querySelectorAll(".subbtn").forEach(b => b.onclick = () => { SUB[view] = b.dataset.sub; store.set("pea-sub", JSON.stringify(SUB)); render(); scrollTo(0, 0); });
+  document.querySelectorAll(".navbtn").forEach(b => b.onclick = () => { view = b.dataset.view; store.set("pea-view", view); render(); scrollTo(0, 0); });
 }
 
 function render() {
-  if (view === "pea" && typeof renderPea === "function") return renderPea();
+  if ((view === "pea" || view === "analyse") && typeof renderPea === "function") return renderPea();
   const app = document.getElementById("app");
   const etfs = DATA.etfs;
   if (!etfs.find(e => e.id === current)) current = etfs[0].id;
@@ -310,10 +338,45 @@ function render() {
   const word = WORDS[(new Date(DATA.date).getDate() + new Date(DATA.date).getMonth() * 31) % WORDS.length];
   const sel = selected && hold.find(h => h.s === selected);
 
-  app.innerHTML = `
-  ${headerHtml("Ce qui a fait bouger mon argent", "Mon PEA · séance du " + DATA.label)}
+  const days = dayList.length > 1 ? `<div class="days" role="group" aria-label="Choisir une séance">${dayList.map(d => `<button class="day" data-day="${esc(d.id)}" aria-pressed="${d.id === DATA.date}">${esc(d.short)}</button>`).join("")}</div>` : "";
+  const tabs = `
+  <nav class="tabs" role="tablist">
+    ${etfs.map(x => `<button class="tab" role="tab" data-tab="${x.id}" aria-selected="${x.id === current}">
+      <span>${esc(x.short)}</span><span class="num ${x.id === current ? "" : cls(x.day)}">${fmtPct(x.day)}</span></button>`).join("")}
+  </nav>`;
+  const titres = {jour: "Ce qui a fait bouger mon argent", pourquoi: "Pourquoi ça a bougé", agenda: "Ce qui arrive"};
+  let page;
+  if (view === "pourquoi") page = `${days}
+${subNav()}
+${tabs}
 
-  ${dayList.length > 1 ? `<div class="days" role="group" aria-label="Choisir une séance">${dayList.map(d => `<button class="day" data-day="${esc(d.id)}" aria-pressed="${d.id === DATA.date}">${esc(d.short)}</button>`).join("")}</div>` : ""}
+${sub() === "classement" ? `  <section class="card">
+    <h2>Qui a tiré l'ETF vers le haut ou le bas</h2>
+    <p class="muted small" style="margin:4px 0 0">${winner && winner.ct > 0 ? `<b class="up">${esc(winner.n)}</b> a le plus aidé, ` : ""}${loser && loser.ct < 0 ? `<b class="down">${esc(loser.n)}</b> a le plus pesé.` : ""} Chiffre de droite : effet en euros sur ton argent.</p>
+    <div class="bars">${contrib.map(c => {
+      const wPct = Math.abs(c.ct) / maxCt * 50;
+      const left = c.ct >= 0 ? 50 : 50 - wPct;
+      return `<button class="bar" data-sym="${esc(c.s)}" aria-label="${esc(c.n)} ${fmtPct(c.c)}, ${fmtEur(c.eur)}">
+        <span class="name">${esc(c.n)}</span>
+        <span class="track"><span class="fill" style="left:${left}%;width:${Math.max(wPct, .6)}%;background:${c.ct >= 0 ? "var(--up)" : "var(--down)"}"></span></span>
+        <span class="num ${cls(c.c)}">${fmtEur(c.eur)}</span></button>`;
+    }).join("")}</div>
+  </section>` : `<section class="card">
+    <h2>Les explications du jour</h2>
+    <div class="news" style="margin-top:10px">
+      ${newsHere.length ? newsHere.map(n => `<article class="newsitem ${n.sens === "up" ? "up" : n.sens === "down" ? "down" : ""}">
+        <h3>${esc(n.titre)}</h3><p>${esc(n.texte)}</p>
+        <div class="chips">${(n.tickers || []).map(t => `<span class="chip">${esc(t)}</span>`).join("")}</div>
+        <span class="muted small">Source : ${esc(n.source)}</span></article>`).join("") : `<p class="muted">Pas d'annonce marquante pour cet ETF ce jour-là.</p>`}
+    </div>
+  </section>
+
+  <section class="card word">
+    <span class="eyebrow">Le mot du jour</span>
+    <h3>${esc(word[0])}</h3><p>${esc(word[1])}</p>
+  </section>`}`;
+  else if (view === "agenda") page = `${subNav()}${typeof recapHtml === "function" ? (sub() === "recap" ? recapHtml() : calendrierHtml()) : ""}`;
+  else page = `${days}
 
   <section class="card">
     <div class="hero">
@@ -327,10 +390,7 @@ function render() {
     ${hasOwn() ? "" : `<p class="muted small" style="margin:8px 0 0">Entre tes montants dans l'onglet « Mon PEA » : ils restent uniquement sur ton appareil.</p>`}
   </section>
 
-  <nav class="tabs" role="tablist">
-    ${etfs.map(x => `<button class="tab" role="tab" data-tab="${x.id}" aria-selected="${x.id === current}">
-      <span>${esc(x.short)}</span><span class="num ${x.id === current ? "" : cls(x.day)}">${fmtPct(x.day)}</span></button>`).join("")}
-  </nav>
+${tabs}
 
   <section class="card">
     <div class="etfhead">
@@ -353,44 +413,17 @@ function render() {
     ${sel ? detailHtml(sel, inv) : `<p class="muted small" style="margin:10px 0 0">Ces ${hold.length} entreprises représentent ${covered.toFixed(0)} % de l'ETF.</p>`}
   </section>
 
-  <section class="card">
-    <h2>Qui a tiré l'ETF vers le haut ou le bas</h2>
-    <p class="muted small" style="margin:4px 0 0">${winner && winner.ct > 0 ? `<b class="up">${esc(winner.n)}</b> a le plus aidé, ` : ""}${loser && loser.ct < 0 ? `<b class="down">${esc(loser.n)}</b> a le plus pesé.` : ""} Chiffre de droite : effet en euros sur ton argent.</p>
-    <div class="bars">${contrib.map(c => {
-      const wPct = Math.abs(c.ct) / maxCt * 50;
-      const left = c.ct >= 0 ? 50 : 50 - wPct;
-      return `<button class="bar" data-sym="${esc(c.s)}" aria-label="${esc(c.n)} ${fmtPct(c.c)}, ${fmtEur(c.eur)}">
-        <span class="name">${esc(c.n)}</span>
-        <span class="track"><span class="fill" style="left:${left}%;width:${Math.max(wPct, .6)}%;background:${c.ct >= 0 ? "var(--up)" : "var(--down)"}"></span></span>
-        <span class="num ${cls(c.c)}">${fmtEur(c.eur)}</span></button>`;
-    }).join("")}</div>
-  </section>
-
-  <section class="card">
-    <h2>Pourquoi ça a bougé</h2>
-    <div class="news" style="margin-top:10px">
-      ${newsHere.length ? newsHere.map(n => `<article class="newsitem ${n.sens === "up" ? "up" : n.sens === "down" ? "down" : ""}">
-        <h3>${esc(n.titre)}</h3><p>${esc(n.texte)}</p>
-        <div class="chips">${(n.tickers || []).map(t => `<span class="chip">${esc(t)}</span>`).join("")}</div>
-        <span class="muted small">Source : ${esc(n.source)}</span></article>`).join("") : `<p class="muted">Pas d'annonce marquante pour cet ETF ce jour-là.</p>`}
-    </div>
-  </section>
-
-  ${typeof recapHtml === "function" ? recapHtml() + calendrierHtml() : ""}
-
-  <section class="card word">
-    <span class="eyebrow">Le mot du jour</span>
-    <h3>${esc(word[0])}</h3><p>${esc(word[1])}</p>
-  </section>
-
   <footer class="foot">
     <details><summary>D'où viennent les chiffres ?</summary>
       <p>Cours de clôture du ${esc(DATA.label)} (StockAnalysis, Investing.com). ${esc(e.proxyNote)} Les variations de ton ETF en euros peuvent différer légèrement à cause du taux de change. Compositions au ${esc(e.holdingsDate.split("-").reverse().join("/"))}, seules les plus grosses positions sont affichées. Les montants « Mon argent dedans » sont enregistrés uniquement dans ton navigateur, jamais en ligne.</p>
     </details>
     <span>Mis à jour chaque soir de semaine après la clôture américaine. Dernière mise à jour : ${new Date(DATA.updatedAt).toLocaleString("fr-FR", {dateStyle: "medium", timeStyle: "short"})}.</span>
   </footer>`;
+  app.innerHTML = `${headerHtml(titres[view] || titres.jour, "Mon PEA · séance du " + DATA.label)}
+${page}
+${navHtml()}`;
 
-  drawTreemap(hold);
+  if (document.getElementById("tm")) drawTreemap(hold);
   wire(e);
 }
 
@@ -423,7 +456,7 @@ function wire(e) {
   wireViews();
   document.querySelectorAll(".tab").forEach(b => b.onclick = () => { current = b.dataset.tab; selected = null; store.set("pea-tab", current); render(); });
   document.querySelectorAll("[data-sym]").forEach(t => {
-    const pick = () => { selected = selected === t.dataset.sym ? null : t.dataset.sym; render(); document.getElementById("tm").scrollIntoView({block: "nearest", behavior: "smooth"}); };
+    const pick = () => { selected = selected === t.dataset.sym ? null : t.dataset.sym; if (view !== "jour" && selected) { view = "jour"; store.set("pea-view", view); } render(); document.getElementById("tm")?.scrollIntoView({block: "nearest", behavior: "smooth"}); };
     t.onclick = pick;
     t.onkeydown = ev => { if (ev.key === "Enter" || ev.key === " ") { ev.preventDefault(); pick(); } };
   });
