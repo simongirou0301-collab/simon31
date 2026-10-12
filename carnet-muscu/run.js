@@ -288,7 +288,7 @@ async function showMap(el, pts){
   let ll = pts.map(p => [p[0], p[1]]); if (ll.length > 800) { const k = Math.ceil(ll.length / 800); ll = ll.filter((_, i) => i % k === 0 || i === ll.length - 1); }
   el.innerHTML = "";
   try {
-    const map = L.map(el, {zoomControl: true, dragging: false, touchZoom: false, scrollWheelZoom: false, doubleClickZoom: false, boxZoom: false, keyboard: false, tap: false});
+    const map = L.map(el, {zoomControl: true, dragging: false, touchZoom: true, bounceAtZoomLimits: false, scrollWheelZoom: false, doubleClickZoom: true, boxZoom: false, keyboard: false, tap: false});
     L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {maxZoom: 19, attribution: "© OpenStreetMap"}).addTo(map);
     L.polyline(ll, {color: "#fff", weight: 8, opacity: .9, lineCap: "round", lineJoin: "round"}).addTo(map);
     L.polyline(ll, {color: "#0a84ff", weight: 5, lineCap: "round", lineJoin: "round"}).addTo(map);
