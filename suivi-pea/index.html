@@ -452,6 +452,7 @@ ${sub() === "classement" ? `  <section class="card">
       <span class="pill ${cls(totalImpact)} num">${fmtPct(totalInv ? totalImpact / totalInv * 100 : 0)}</span>
     </div>
     <p class="resume" style="margin-top:12px">${esc(DATA.resume)}</p>
+    ${DATA.enCours ? `<p class="muted small" style="margin:8px 0 0">⏱ ${esc(DATA.enCours)}</p>` : ""}
     ${hasOwn() ? "" : `<p class="muted small" style="margin:8px 0 0">Entre tes montants dans l'onglet « Mon PEA » : ils restent uniquement sur ton appareil.</p>`}
   </section>
 
