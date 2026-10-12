@@ -118,9 +118,9 @@ function bestEfforts(s){
 async function getStreams(id){
   if (streamCache[id]) return streamCache[id];
   let s = await idbGet("icu-" + id);
-  if (!s) {
+  if (!s || s._v !== 2) {
     const raw = await api(`/activity/${encodeURIComponent(id)}/streams.json?types=time,distance,heartrate,velocity_smooth,altitude,fixed_altitude,cadence,latlng`);
-    s = {};
+    s = {_v: 2};
     for (const st of (Array.isArray(raw) ? raw : [])) {
       if (!st || !st.type || !st.data) continue;
       if (st.type === "latlng") { if (st.data2) s.latlng = st.data.map((la, i) => [la, st.data2[i]]); else s.latlng = st.data; }
@@ -265,6 +265,40 @@ function routeSvg(pts, opt){
 async function lastRouteMap(h){
   const r = runs.list[0]; if (!r || !connected()) return "";
   try { const s = await getStreams(r.id); return s && s.latlng ? routeSvg(s.latlng, {h, out: 2}) : ""; } catch (e) { return ""; }
+}
+
+/* ---------- Carte (Leaflet + tuiles CARTO/OpenStreetMap) ---------- */
+let leafletP = null;
+function loadLeaflet(){
+  if (window.L) return Promise.resolve(true);
+  if (leafletP) return leafletP;
+  leafletP = new Promise(res => {
+    const l = document.createElement("link"); l.rel = "stylesheet"; l.href = "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"; document.head.appendChild(l);
+    const sc = document.createElement("script"); sc.src = "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js";
+    sc.onload = () => res(!!window.L); sc.onerror = () => { leafletP = null; res(false); }; document.head.appendChild(sc);
+    setTimeout(() => res(!!window.L), 8000);
+  });
+  return leafletP;
+}
+async function showMap(el, pts){
+  if (!el) return;
+  const ok = await loadLeaflet();
+  if (!el.isConnected) return;
+  if (!ok) { el.innerHTML = routeSvg(pts) || '<p class="muted">Carte indisponible hors connexion.</p>'; return; }
+  let ll = pts.map(p => [p[0], p[1]]); if (ll.length > 800) { const k = Math.ceil(ll.length / 800); ll = ll.filter((_, i) => i % k === 0 || i === ll.length - 1); }
+  el.innerHTML = "";
+  try {
+    const map = L.map(el, {zoomControl: true, dragging: false, touchZoom: false, scrollWheelZoom: false, doubleClickZoom: false, boxZoom: false, keyboard: false, tap: false});
+    const style = matchMedia("(prefers-color-scheme: dark)").matches ? "dark_all" : "rastertiles/voyager";
+    L.tileLayer(`https://{s}.basemaps.cartocdn.com/${style}/{z}/{x}/{y}{r}.png`, {subdomains: "abcd", maxZoom: 19, attribution: "© OpenStreetMap © CARTO"}).addTo(map);
+    L.polyline(ll, {color: "#fff", weight: 8, opacity: .9, lineCap: "round", lineJoin: "round"}).addTo(map);
+    L.polyline(ll, {color: "#0a84ff", weight: 5, lineCap: "round", lineJoin: "round"}).addTo(map);
+    L.circleMarker(ll[0], {radius: 7, color: "#fff", weight: 3, fillColor: "#30d158", fillOpacity: 1}).addTo(map);
+    L.circleMarker(ll[ll.length - 1], {radius: 7, color: "#fff", weight: 3, fillColor: "#1c1c1e", fillOpacity: 1}).addTo(map);
+    map.fitBounds(L.latLngBounds(ll), {padding: [28, 28]});
+    map.on("zoomstart", () => map.dragging.enable());
+    setTimeout(() => map.invalidateSize(), 250);
+  } catch (e) { el.innerHTML = routeSvg(pts) || '<p class="muted">Carte indisponible.</p>'; }
 }
 
 /* ---------- Analyse d'une course ---------- */
@@ -571,10 +605,12 @@ async function renderDetail(id){
     html += `<div class="card"><h3>Zones cardiaques</h3><div class="zones">${z.map((t, i) => `<div class="zone"><span>Z${i+1}</span><div class="zb"><i style="width:${(t/tot*100).toFixed(1)}%;background:${cols[i]}"></i></div><span>${fmtDur(t)}</span></div>`).join("")}</div>
       <p class="muted">${names.map((n, i) => `Z${i+1} ${n}`).join(" · ")} · FC max ${fcMax()} bpm</p></div>`;
   }
-  const rs = s.latlng ? routeSvg(s.latlng) : "";
-  if (rs) html += `<div class="card"><h3>Parcours</h3>${rs}<p class="muted">Point vert : départ · point noir : arrivée.</p></div>`;
+  const gps = (s.latlng || []).filter(p => Array.isArray(p) && isFinite(p[0]) && isFinite(p[1]) && (p[0] || p[1]));
+  html += gps.length > 1 ? `<div class="card"><h3>Parcours</h3><div id="rmap" class="rmap"><p class="muted">Chargement de la carte…</p></div><p class="muted">Point vert : départ · point noir : arrivée.</p></div>`
+    : `<div class="card"><h3>Parcours</h3><p class="muted">Pas de tracé GPS pour cette course.</p></div>`;
   document.getElementById("sv-detail").innerHTML = html || `<div class="card"><p class="muted">Pas de courbes pour cette activité.</p></div>`;
   bindCursor();
+  if (gps.length > 1) showMap(document.getElementById("rmap"), gps);
 }
 
 

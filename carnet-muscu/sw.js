@@ -1,4 +1,4 @@
-const CACHE = "carnet-v26";
+const CACHE = "carnet-v27";
 const FILES = [
   "./", "index.html", "manifest.json", "run.js", "run.css", "apple.css",
   "icons/icon-180.png", "icons/icon-192.png", "icons/icon-512.png",
@@ -28,7 +28,7 @@ self.addEventListener("fetch", e => {
   if (e.request.method !== "GET") return;
   const url = new URL(e.request.url);
   if (url.hostname.endsWith("intervals.icu")) return;
-  if (url.origin !== location.origin && !url.hostname.endsWith("googleapis.com") && !url.hostname.endsWith("gstatic.com")) return;
+  if (url.origin !== location.origin && !url.hostname.endsWith("googleapis.com") && !url.hostname.endsWith("gstatic.com") && url.hostname !== "cdnjs.cloudflare.com") return;
   const fresh = url.origin === location.origin && (e.request.mode === "navigate" || /\/(index\.html|run\.js|run\.css|apple\.css)$/.test(url.pathname));
   if (fresh) {
     const key = e.request.mode === "navigate" ? "index.html" : e.request;
