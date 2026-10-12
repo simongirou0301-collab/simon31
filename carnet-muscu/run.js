@@ -223,7 +223,7 @@ function bindCursor(){
   });
 }
 
-const tileHref = (z, x, y) => `https://basemaps.cartocdn.com/${matchMedia("(prefers-color-scheme: dark)").matches ? "dark_all" : "rastertiles/voyager"}/${z}/${x}/${y}@2x.png`;
+const tileHref = (z, x, y) => `https://tile.openstreetmap.org/${z}/${x}/${y}.png`;
 function tilesFor(ox, oy, VW, VH, z){
   const n = Math.pow(2, z); let t = "";
   for (let tx = Math.floor(ox / 256); tx <= Math.floor((ox + VW) / 256); tx++) for (let ty = Math.floor(oy / 256); ty <= Math.floor((oy + VH) / 256); ty++) {
@@ -237,7 +237,7 @@ function baseMapSvg(lat, lon, z, h){
   const cx = (lon + 180) / 360 * n, cy = (0.5 - Math.log((1 + sn) / (1 - sn)) / (4 * Math.PI)) * n, ox = cx - VW / 2, oy = cy - VH / 2;
   return `<svg class="route map" viewBox="0 0 ${VW} ${VH}" role="img" aria-label="Carte"><defs><clipPath id="mb"><rect width="${VW}" height="${VH}" rx="14"/></clipPath></defs><g clip-path="url(#mb)"><rect width="${VW}" height="${VH}" fill="#e8e6df"/><g class="tiles">${tilesFor(ox, oy, VW, VH, z)}</g>
     <circle cx="${VW / 2}" cy="${VH / 2}" r="14" fill="#0a84ff" fill-opacity=".2"/><circle cx="${VW / 2}" cy="${VH / 2}" r="7" fill="#0a84ff" stroke="#fff" stroke-width="3"/>
-    <text x="${VW - 6}" y="${VH - 6}" text-anchor="end" class="attr">© OpenStreetMap © CARTO</text></g></svg>`;
+    <text x="${VW - 6}" y="${VH - 6}" text-anchor="end" class="attr">© OpenStreetMap</text></g></svg>`;
 }
 function routeSvg(pts, opt){
   opt = opt || {};
@@ -260,7 +260,7 @@ function routeSvg(pts, opt){
     <path d="${d}" class="rcase"/><path d="${d}" class="rline"/>
     <circle cx="${s0[0].toFixed(1)}" cy="${s0[1].toFixed(1)}" r="6" fill="#30d158" stroke="#fff" stroke-width="2.5"/>
     <circle cx="${e[0].toFixed(1)}" cy="${e[1].toFixed(1)}" r="6" fill="#1c1c1e" stroke="#fff" stroke-width="2.5"/>
-    <text x="${VW - 6}" y="${VH - 6}" text-anchor="end" class="attr">© OpenStreetMap © CARTO</text></g></svg>`;
+    <text x="${VW - 6}" y="${VH - 6}" text-anchor="end" class="attr">© OpenStreetMap</text></g></svg>`;
 }
 async function lastRouteMap(h){
   const r = runs.list[0]; if (!r || !connected()) return "";
@@ -289,8 +289,7 @@ async function showMap(el, pts){
   el.innerHTML = "";
   try {
     const map = L.map(el, {zoomControl: true, dragging: false, touchZoom: false, scrollWheelZoom: false, doubleClickZoom: false, boxZoom: false, keyboard: false, tap: false});
-    const style = matchMedia("(prefers-color-scheme: dark)").matches ? "dark_all" : "rastertiles/voyager";
-    L.tileLayer(`https://{s}.basemaps.cartocdn.com/${style}/{z}/{x}/{y}{r}.png`, {subdomains: "abcd", maxZoom: 19, attribution: "© OpenStreetMap © CARTO"}).addTo(map);
+    L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {maxZoom: 19, attribution: "© OpenStreetMap"}).addTo(map);
     L.polyline(ll, {color: "#fff", weight: 8, opacity: .9, lineCap: "round", lineJoin: "round"}).addTo(map);
     L.polyline(ll, {color: "#0a84ff", weight: 5, lineCap: "round", lineJoin: "round"}).addTo(map);
     L.circleMarker(ll[0], {radius: 7, color: "#fff", weight: 3, fillColor: "#30d158", fillOpacity: 1}).addTo(map);

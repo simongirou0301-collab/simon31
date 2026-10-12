@@ -84,3 +84,5 @@ ol.steps{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:4px;f
 
 .rmap{height:280px;border-radius:14px;overflow:hidden;isolation:isolate;position:relative;z-index:0;background:var(--bg)}
 .rmap .leaflet-control-attribution{font-size:9px}
+
+@media (prefers-color-scheme:dark){.rmap .leaflet-tile-pane{filter:invert(1) hue-rotate(180deg) brightness(.9) contrast(.9)}}
