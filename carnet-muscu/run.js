@@ -344,7 +344,7 @@ function zonesOf(s, max){
 /* ---------- Écrans ---------- */
 function render(){
   if (document.getElementById("run-view").hidden) return;
-  charts = [];
+  charts = []; tcharts = {};
   if (!connected()) return renderSetup();
   if (cmp) return renderCompare();
   if (current) return renderDetail(current);
@@ -362,6 +362,7 @@ function subnav(){
 function bindSubnav(){
   view.querySelectorAll("[data-sub]").forEach(b => b.addEventListener("click", () => { sub = b.dataset.sub; window.scrollTo(0, 0); render(); }));
   const sb = document.getElementById("sv-sync"); if (sb) sb.addEventListener("click", () => sync(true));
+  bindTimeCharts();
 }
 function syncBar(title){
   return `<div class="row spread"><h2>${title}</h2><button class="btn" id="sv-sync" type="button" ${syncing ? "disabled" : ""}>${syncing ? "Synchro…" : "Actualiser"}</button></div>`;
@@ -614,6 +615,7 @@ async function renderDetail(id){
 
 
 /* ---------- Graphiques dans le temps ---------- */
+let tcharts = {}, tcN = 0;
 function timeChart(dates, series, opt){
   opt = opt || {};
   const n = dates.length; if (!n) return `<p class="muted">Pas encore de données.</p>`;
@@ -646,7 +648,29 @@ function timeChart(dates, series, opt){
     }
   }
   const legend = series.length > 1 ? `<div class="legend">${series.map(s => `<span><i style="background:${s.color}"></i>${esc(s.name)}</span>`).join("")}</div>` : "";
-  return `<svg class="chart" viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(opt.label || "")}">${g}</svg>${legend}`;
+  const id = "tc" + (++tcN);
+  tcharts[id] = {dates, series, n, bw, opt, yfmt};
+  return `<svg class="chart" data-tc="${id}" viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(opt.label || "")}">${g}<line class="cursor" id="tcur-${id}" x1="0" x2="0" y1="${PT}" y2="${H-PB}" visibility="hidden"/></svg>${legend}<div class="tc-read" id="tr-${id}">Touche un jour pour voir sa valeur.</div>`;
+}
+function bindTimeCharts(){
+  view.querySelectorAll("svg[data-tc]").forEach(svg => {
+    const c = tcharts[svg.dataset.tc]; if (!c) return;
+    const cur = document.getElementById("tcur-" + svg.dataset.tc), out = document.getElementById("tr-" + svg.dataset.tc);
+    const show = ev => {
+      const r = svg.getBoundingClientRect(), p = ev.touches ? ev.touches[0] : ev;
+      const xv = (p.clientX - r.left) / r.width * W;
+      const i = Math.max(0, Math.min(c.n - 1, Math.floor((xv - PL) / c.bw)));
+      const x = PL + c.bw * (i + .5);
+      cur.setAttribute("x1", x); cur.setAttribute("x2", x); cur.setAttribute("visibility", "visible");
+      const d = c.dates[i], dl = c.opt.xfmt ? c.opt.xfmt(d) : d.toLocaleDateString("fr-FR", {weekday: "short", day: "numeric", month: "short"});
+      const f = c.opt.rfmt || (v => c.yfmt(v) + (c.opt.unit || ""));
+      const vals = c.series.map(s => { const v = s.ys[i]; return `${c.series.length > 1 ? esc(s.name) + " : " : ""}<b>${v != null && isFinite(v) ? esc(f(v)) : "pas de donnée"}</b>`; });
+      out.innerHTML = `<span>${esc(dl)}</span> ${vals.join(" · ")}`;
+    };
+    svg.addEventListener("pointerdown", show);
+    svg.addEventListener("pointermove", e => { if (e.buttons || e.pointerType === "touch") show(e); });
+    svg.addEventListener("touchmove", show, {passive: true});
+  });
 }
 const dayKey = d => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
 const runDate = r => new Date(r.start.replace("Z", ""));
@@ -813,10 +837,10 @@ function renderSante(){
     ["steps", latest("steps"), v => Math.round(v).toLocaleString("fr-FR"), "pas"],
   ];
   const charts_ = [];
-  if (sleepH.some(v => v != null)) charts_.push(`<div class="card"><div class="chead"><h3>Sommeil · 30 jours</h3></div>${timeChart(days30, [{ys: sleepH, color: "var(--indigo)", type: "bar"}], {min0: true, fmt: v => v + "h", label: "Heures de sommeil"})}</div>`);
-  const rhr = days30.map(d => get(d, "rhr")); if (rhr.some(v => v != null)) charts_.push(`<div class="card"><div class="chead"><h3>FC au repos · 30 jours</h3></div>${timeChart(days30, [{ys: rhr, color: "var(--hr)"}], {label: "Fréquence cardiaque au repos"})}<p class="muted">Une FC au repos qui monte de plusieurs battements peut signaler de la fatigue ou un début de maladie.</p></div>`);
-  const hrv = days30.map(d => get(d, "hrv")); if (hrv.some(v => v != null)) charts_.push(`<div class="card"><div class="chead"><h3>VFC · 30 jours</h3></div>${timeChart(days30, [{ys: hrv, color: "var(--done)"}], {label: "Variabilité de la fréquence cardiaque"})}<p class="muted">Plus elle est haute par rapport à ta normale, mieux tu as récupéré.</p></div>`);
-  const steps = days30.map(d => get(d, "steps")); if (steps.some(v => v != null)) charts_.push(`<div class="card"><div class="chead"><h3>Pas · 30 jours</h3></div>${timeChart(days30, [{ys: steps, color: "var(--pace)", type: "bar"}], {min0: true, fmt: v => v >= 1000 ? Math.round(v / 1000) + "k" : v, label: "Pas par jour"})}</div>`);
+  if (sleepH.some(v => v != null)) charts_.push(`<div class="card"><div class="chead"><h3>Sommeil · 30 jours</h3></div>${timeChart(days30, [{ys: sleepH, color: "var(--indigo)", type: "bar"}], {min0: true, fmt: v => v + "h", rfmt: v => `${Math.floor(v)}h${pad(Math.round(v % 1 * 60))}`, label: "Heures de sommeil"})}</div>`);
+  const rhr = days30.map(d => get(d, "rhr")); if (rhr.some(v => v != null)) charts_.push(`<div class="card"><div class="chead"><h3>FC au repos · 30 jours</h3></div>${timeChart(days30, [{ys: rhr, color: "var(--hr)"}], {unit: " bpm", label: "Fréquence cardiaque au repos"})}<p class="muted">Une FC au repos qui monte de plusieurs battements peut signaler de la fatigue ou un début de maladie.</p></div>`);
+  const hrv = days30.map(d => get(d, "hrv")); if (hrv.some(v => v != null)) charts_.push(`<div class="card"><div class="chead"><h3>VFC · 30 jours</h3></div>${timeChart(days30, [{ys: hrv, color: "var(--done)"}], {unit: " ms", label: "Variabilité de la fréquence cardiaque"})}<p class="muted">Plus elle est haute par rapport à ta normale, mieux tu as récupéré.</p></div>`);
+  const steps = days30.map(d => get(d, "steps")); if (steps.some(v => v != null)) charts_.push(`<div class="card"><div class="chead"><h3>Pas · 30 jours</h3></div>${timeChart(days30, [{ys: steps, color: "var(--pace)", type: "bar"}], {min0: true, fmt: v => v >= 1000 ? Math.round(v / 1000) + "k" : v, rfmt: v => Math.round(v).toLocaleString("fr-FR") + " pas", label: "Pas par jour"})}</div>`);
   const vo2 = days90.map(d => get(d, "vo2")); if (vo2.some(v => v != null)) charts_.push(`<div class="card"><div class="chead"><h3>VO2 max · 90 jours</h3></div>${timeChart(days90, [{ys: vo2, color: "var(--orange)"}], {label: "VO2 max"})}</div>`);
   view.innerHTML = `${subnav()}
     <div class="card">${syncBar("Santé")}

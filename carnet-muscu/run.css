@@ -86,3 +86,7 @@ ol.steps{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:4px;f
 .rmap .leaflet-control-attribution{font-size:9px}
 
 @media (prefers-color-scheme:dark){.rmap .leaflet-tile-pane{filter:invert(1) hue-rotate(180deg) brightness(.9) contrast(.9)}}
+
+.tc-read{font-size:.85rem;color:var(--muted);min-height:1.3em}
+.tc-read span{margin-right:4px}.tc-read span::first-letter{text-transform:uppercase}
+.tc-read b{color:var(--ink);font-family:var(--mono)}
