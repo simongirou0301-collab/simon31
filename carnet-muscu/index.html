@@ -164,7 +164,7 @@ const EX = {
     {id:"push-3", rest:120, n:"Chest press prise serrée", s:3, r:"10-12 · échec", note:"Prise serrée, à plat"},
     {id:"push-6", rest:150, n:"Développé militaire à la Smith, assis", s:4, r:"8 · échec", note:"3 à 4 séries"},
     {id:"push-4", rest:75, n:"Élévation latérale unilatérale à la poulie", s:3, r:"10 lourdes + 12 légères", note:"Enchaîne les deux sans pause · pour chaque épaule"},
-    {id:"push-5", rest:90, n:"Élévation latérale aux haltères", s:3, r:"6-8 · échec", note:"Lourd, sans balancer le buste"},
+    {id:"push-5", rest:90, n:"Élévation latérale aux haltères", s:3, r:"6 lourdes + 12 légères", note:"Enchaîne les deux sans pause · sans balancer le buste"},
     {id:"push-7", rest:90, n:"Extension triceps poulie haute, barre", s:3, r:"10-12 · échec", note:"Coudes collés aux côtes"},
     {id:"push-8", rest:75, n:"Extension triceps unilatérale à la poulie", s:3, r:"10-12 · échec", note:"Bras calé contre la barre"}
   ],
@@ -180,7 +180,7 @@ const EX = {
 };
 const DEFAULT_LOADS = {
   "push-1":{kg:"20",unit:"kg / côté"}, "push-2":{kg:"",unit:"conseillé 30-35 kg"}, "push-3":{kg:"40",unit:"kg"},
-  "push-4":{kg:"10 / 5",unit:"kg (lourd / léger)"}, "push-5":{kg:"",unit:"conseillé 8-10 kg / haltère"}, "push-6":{kg:"10",unit:"kg / côté"},
+  "push-4":{kg:"10 / 5",unit:"kg (lourd / léger)"}, "push-5":{kg:"8 / 4",unit:"kg / haltère (lourd / léger)"}, "push-6":{kg:"10",unit:"kg / côté"},
   "push-7":{kg:"30",unit:"kg"}, "push-8":{kg:"",unit:"conseillé 7-10 kg"},
   "pull-1":{kg:"60",unit:"kg"}, "pull-2":{kg:"40 / 25",unit:"kg (lourd / léger)"}, "pull-3":{kg:"",unit:"conseillé 30 kg"},
   "pull-4":{kg:"",unit:"conseillé 15-20 kg"}, "pull-5":{kg:"35 / 20",unit:"kg (lourd / léger)"},
@@ -207,6 +207,7 @@ function applyProg(){
 applyProg();
 st.mig = st.mig || {};
 if (!st.mig.push4) { st.mig.push4 = 1; st.loads["push-4"] = {...st.loads["push-4"], kg: "10 / 5", unit: "kg (lourd / léger)"}; }
+if (!st.mig.push5) { st.mig.push5 = 1; st.loads["push-5"] = {...st.loads["push-5"], kg: "8 / 4", unit: "kg / haltère (lourd / léger)"}; }
 const save = () => { try { localStorage.setItem(KEY, JSON.stringify(st)); } catch (e) {} };
 save();
 if (navigator.storage && navigator.storage.persist) navigator.storage.persist().catch(() => {});
