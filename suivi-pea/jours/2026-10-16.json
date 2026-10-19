@@ -10,7 +10,7 @@
    "name": "PEA Global (MSCI ACWI)",
    "proxy": "ACWI",
    "proxyNote": "Variation et courbe : cours réel en euros sur LS Exchange, la bourse utilisée par Trade Republic. Détail par entreprise : via l'ETF ACWI (même indice, coté en dollars).",
-   "day": -0.55,
+   "day": -1.18,
    "holdingsDate": "2026-10-01",
    "total": "≈ 2 500 entreprises",
    "holdings": [
@@ -180,9 +180,9 @@
     "ticker": "GPEA",
     "lsId": 4996087,
     "source": "LS Exchange (dernier cours de la journée, comme Trade Republic)",
-    "close": 5.111,
+    "close": 5.079,
     "prev": 5.1395,
-    "day": -0.55,
+    "day": -1.18,
     "date": "2026-10-16"
    }
   },
@@ -192,7 +192,7 @@
    "name": "PEA Nasdaq 100",
    "proxy": "QQQ",
    "proxyNote": "Variation et courbe : cours réel en euros sur LS Exchange, la bourse utilisée par Trade Republic. Détail par entreprise : via l'ETF QQQ (même indice, coté en dollars).",
-   "day": -1.43,
+   "day": -2.46,
    "holdingsDate": "2026-10-08",
    "total": "100 entreprises",
    "holdings": [
@@ -402,9 +402,9 @@
     "ticker": "PUST",
     "lsId": 1371888,
     "source": "LS Exchange (dernier cours de la journée, comme Trade Republic)",
-    "close": 105.36,
+    "close": 104.26,
     "prev": 106.89,
-    "day": -1.43,
+    "day": -2.46,
     "date": "2026-10-16"
    }
   },
@@ -414,7 +414,7 @@
    "name": "PEA MSCI Europe",
    "proxy": "IEUR",
    "proxyNote": "Variation et courbe : cours réel en euros sur LS Exchange, la bourse utilisée par Trade Republic. Détail par entreprise : via l'ETF IEUR (actions européennes, coté en dollars).",
-   "day": 0.23,
+   "day": -0.23,
    "holdingsDate": "2026-10-01",
    "total": "≈ 400 entreprises",
    "holdings": [
@@ -568,9 +568,9 @@
     "ticker": "PCEU",
     "lsId": 1371936,
     "source": "LS Exchange (dernier cours de la journée, comme Trade Republic)",
-    "close": 39.765,
+    "close": 39.585,
     "prev": 39.675,
-    "day": 0.23,
+    "day": -0.23,
     "date": "2026-10-16"
    }
   }
@@ -788,12 +788,12 @@
   "du": "2026-10-12",
   "au": "2026-10-16",
   "etfs": {
-   "global": -1.82,
-   "nasdaq": -4.82,
-   "europe": 1.57
+   "global": -2.43,
+   "nasdaq": -5.82,
+   "europe": 1.11
   },
   "lignes": [
-   "Semaine difficile pour la tech : Nasdaq 100 −4,8 %, Monde −1,8 %, mais Europe +1,6 % (cours LS en euros, vendredi à vendredi, chiffres de vendredi 18h30).",
+   "Semaine difficile pour la tech : Nasdaq 100 −5,8 %, Monde −2,4 %, mais Europe +1,1 % (cours LS en euros, clôture du vendredi à clôture du vendredi).",
    "Lundi et mardi, les valeurs de l'IA « physique » (fibre optique, puces mémoire) sont vendues en bloc, puis le chinois CXMT fait chuter la mémoire : SK Hynix et Samsung perdent plus de 20 % en trois jours.",
    "Mercredi, l'inflation américaine (3,7 %) relance la peur d'une hausse des taux de la Fed, ce qui pèse sur les valeurs de croissance.",
    "Les banques ouvrent la saison des résultats en ordre dispersé (Goldman brillant, Bank of America déçoit), ASML et TSMC publient des chiffres solides, et la santé (Eli Lilly, AstraZeneca, Roche, Novartis) sert de refuge.",
@@ -816,6 +816,5 @@
    "lsId": 1371891,
    "note": "ETF S&P 500 éligible PEA, coté en euros sur LS Exchange (inclut l'effet euro/dollar)."
   }
- ],
- "enCours": "Mise à jour à 18h30 : Wall Street est encore ouvert (jusqu'à 22h) et LS Exchange cote jusqu'à 23h, les chiffres peuvent encore bouger."
+ ]
 }

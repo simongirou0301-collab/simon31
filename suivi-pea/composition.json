@@ -318,6 +318,22 @@
   "SAF": {
    "d": "Safran : moteurs d'avions (CFM avec GE) et équipements aéronautiques.",
    "an": 4.08
+  },
+  "V": {
+   "d": "Gère le premier réseau mondial de paiement par carte : Visa touche une petite commission sur chaque transaction.",
+   "an": 17.58
+  },
+  "AMGN": {
+   "d": "Grand laboratoire américain de biotechnologie : médicaments contre le cholestérol, l'ostéoporose, les cancers, et un traitement de l'obésité en développement.",
+   "an": 42.89
+  },
+  "LIN": {
+   "d": "Numéro un mondial des gaz industriels (oxygène, azote, hydrogène) livrés aux usines, hôpitaux et fabricants de puces.",
+   "an": 11.24
+  },
+  "ABBN": {
+   "d": "Groupe suisse d'électrotechnique et d'automatisation : réseaux électriques, robots industriels, bornes de recharge.",
+   "an": 27.91
   }
  },
  "fiches_source": "Variation sur 1 an : StockAnalysis, au 9 octobre 2026, en monnaie locale.",
