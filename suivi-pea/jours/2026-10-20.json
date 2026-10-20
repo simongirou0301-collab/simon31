@@ -1,0 +1,826 @@
+{
+ "date": "2026-10-20",
+ "label": "mardi 20 octobre 2026",
+ "updatedAt": "2026-10-20T16:28:22Z",
+ "resume": "Séance calme : la santé brille (Eli Lilly +4,6 %, Roche +2,6 %, Novartis, AstraZeneca) et porte l'Europe (+0,8 %), tandis que les fabricants d'équipements pour puces reculent (ASML −2,7 %, Lam Research −2,7 %). Nasdaq 100 −0,1 %, Monde +0,1 %, en attendant les résultats de Netflix et SpaceX ce soir.",
+ "etfs": [
+  {
+   "id": "global",
+   "short": "Monde",
+   "name": "PEA Global (MSCI ACWI)",
+   "proxy": "ACWI",
+   "proxyNote": "Variation et courbe : cours réel en euros sur LS Exchange, la bourse utilisée par Trade Republic. Détail par entreprise : via l'ETF ACWI (même indice, coté en dollars).",
+   "day": 0.06,
+   "holdingsDate": "2026-10-15",
+   "total": "≈ 2 500 entreprises",
+   "holdings": [
+    {
+     "s": "AAPL",
+     "n": "Apple",
+     "w": 4.88,
+     "c": -0.73,
+     "sec": "Tech",
+     "pays": "États-Unis"
+    },
+    {
+     "s": "NVDA",
+     "n": "Nvidia",
+     "w": 4.85,
+     "c": -0.11,
+     "sec": "Tech",
+     "pays": "États-Unis"
+    },
+    {
+     "s": "MSFT",
+     "n": "Microsoft",
+     "w": 3.7,
+     "c": -0.43,
+     "sec": "Tech",
+     "pays": "États-Unis"
+    },
+    {
+     "s": "AMZN",
+     "n": "Amazon",
+     "w": 2.4,
+     "c": 0.13,
+     "sec": "Commerce",
+     "pays": "États-Unis"
+    },
+    {
+     "s": "GOOGL",
+     "n": "Alphabet A",
+     "w": 1.99,
+     "c": -0.79,
+     "sec": "Communication",
+     "pays": "États-Unis"
+    },
+    {
+     "s": "TSM",
+     "n": "TSMC",
+     "w": 1.8,
+     "c": 1.69,
+     "sec": "Tech",
+     "pays": "Taïwan"
+    },
+    {
+     "s": "META",
+     "n": "Meta",
+     "w": 1.57,
+     "c": -2.22,
+     "sec": "Communication",
+     "pays": "États-Unis"
+    },
+    {
+     "s": "GOOG",
+     "n": "Alphabet C",
+     "w": 1.57,
+     "c": -0.76,
+     "sec": "Communication",
+     "pays": "États-Unis"
+    },
+    {
+     "s": "AVGO",
+     "n": "Broadcom",
+     "w": 1.51,
+     "c": 0.09,
+     "sec": "Tech",
+     "pays": "États-Unis"
+    },
+    {
+     "s": "MU",
+     "n": "Micron",
+     "w": 1.02,
+     "c": 0.65,
+     "sec": "Tech",
+     "pays": "États-Unis"
+    },
+    {
+     "s": "TSLA",
+     "n": "Tesla",
+     "w": 1.01,
+     "c": 1.42,
+     "sec": "Auto",
+     "pays": "États-Unis"
+    },
+    {
+     "s": "LLY",
+     "n": "Eli Lilly",
+     "w": 0.97,
+     "c": 4.57,
+     "sec": "Santé",
+     "pays": "États-Unis"
+    },
+    {
+     "s": "AMD",
+     "n": "AMD",
+     "w": 0.89,
+     "c": 0.64,
+     "sec": "Tech",
+     "pays": "États-Unis"
+    },
+    {
+     "s": "JPM",
+     "n": "JPMorgan",
+     "w": 0.87,
+     "c": 0.7,
+     "sec": "Finance",
+     "pays": "États-Unis"
+    },
+    {
+     "s": "BRK.B",
+     "n": "Berkshire Hathaway",
+     "w": 0.72,
+     "c": 1.08,
+     "sec": "Finance",
+     "pays": "États-Unis"
+    },
+    {
+     "s": "SMSN",
+     "n": "Samsung",
+     "w": 0.71,
+     "c": -2.98,
+     "sec": "Tech",
+     "pays": "Corée du Sud"
+    },
+    {
+     "s": "XOM",
+     "n": "ExxonMobil",
+     "w": 0.7,
+     "c": -0.93,
+     "sec": "Énergie",
+     "pays": "États-Unis"
+    },
+    {
+     "s": "V",
+     "n": "Visa",
+     "w": 0.64,
+     "c": 1.07,
+     "sec": "Finance",
+     "pays": "États-Unis"
+    },
+    {
+     "s": "ASML",
+     "n": "ASML",
+     "w": 0.62,
+     "c": -2.71,
+     "sec": "Tech",
+     "pays": "Pays-Bas"
+    },
+    {
+     "s": "JNJ",
+     "n": "Johnson & Johnson",
+     "w": 0.59,
+     "c": 2.15,
+     "sec": "Santé",
+     "pays": "États-Unis"
+    }
+   ],
+   "eur": {
+    "isin": "FR0014017NX3",
+    "ticker": "GPEA",
+    "lsId": 4996087,
+    "source": "LS Exchange (dernier cours de la journée, comme Trade Republic)",
+    "close": 5.1105,
+    "prev": 5.1075,
+    "day": 0.06,
+    "date": "2026-10-20"
+   }
+  },
+  {
+   "id": "nasdaq",
+   "short": "Nasdaq 100",
+   "name": "PEA Nasdaq 100",
+   "proxy": "QQQ",
+   "proxyNote": "Variation et courbe : cours réel en euros sur LS Exchange, la bourse utilisée par Trade Republic. Détail par entreprise : via l'ETF QQQ (même indice, coté en dollars).",
+   "day": -0.15,
+   "holdingsDate": "2026-10-16",
+   "total": "100 entreprises",
+   "holdings": [
+    {
+     "s": "NVDA",
+     "n": "Nvidia",
+     "w": 8.14,
+     "c": -0.11,
+     "sec": "Tech",
+     "pays": "États-Unis"
+    },
+    {
+     "s": "AAPL",
+     "n": "Apple",
+     "w": 7.91,
+     "c": -0.73,
+     "sec": "Tech",
+     "pays": "États-Unis"
+    },
+    {
+     "s": "MSFT",
+     "n": "Microsoft",
+     "w": 6.2,
+     "c": -0.43,
+     "sec": "Tech",
+     "pays": "États-Unis"
+    },
+    {
+     "s": "MU",
+     "n": "Micron",
+     "w": 4.32,
+     "c": 0.65,
+     "sec": "Tech",
+     "pays": "États-Unis"
+    },
+    {
+     "s": "AMZN",
+     "n": "Amazon",
+     "w": 4.25,
+     "c": 0.13,
+     "sec": "Commerce",
+     "pays": "États-Unis"
+    },
+    {
+     "s": "AMD",
+     "n": "AMD",
+     "w": 3.76,
+     "c": 0.64,
+     "sec": "Tech",
+     "pays": "États-Unis"
+    },
+    {
+     "s": "META",
+     "n": "Meta",
+     "w": 3.33,
+     "c": -2.22,
+     "sec": "Communication",
+     "pays": "États-Unis"
+    },
+    {
+     "s": "GOOGL",
+     "n": "Alphabet A",
+     "w": 3.15,
+     "c": -0.79,
+     "sec": "Communication",
+     "pays": "États-Unis"
+    },
+    {
+     "s": "TSLA",
+     "n": "Tesla",
+     "w": 2.94,
+     "c": 1.42,
+     "sec": "Auto",
+     "pays": "États-Unis"
+    },
+    {
+     "s": "GOOG",
+     "n": "Alphabet C",
+     "w": 2.94,
+     "c": -0.76,
+     "sec": "Communication",
+     "pays": "États-Unis"
+    },
+    {
+     "s": "SPCX",
+     "n": "SpaceX",
+     "w": 2.73,
+     "c": null,
+     "sec": "Industrie",
+     "pays": "États-Unis"
+    },
+    {
+     "s": "WMT",
+     "n": "Walmart",
+     "w": 2.52,
+     "c": -0.54,
+     "sec": "Commerce",
+     "pays": "États-Unis"
+    },
+    {
+     "s": "AVGO",
+     "n": "Broadcom",
+     "w": 2.47,
+     "c": 0.09,
+     "sec": "Tech",
+     "pays": "États-Unis"
+    },
+    {
+     "s": "INTC",
+     "n": "Intel",
+     "w": 2.06,
+     "c": 1.3,
+     "sec": "Tech",
+     "pays": "États-Unis"
+    },
+    {
+     "s": "COST",
+     "n": "Costco",
+     "w": 1.91,
+     "c": -0.03,
+     "sec": "Commerce",
+     "pays": "États-Unis"
+    },
+    {
+     "s": "PLTR",
+     "n": "Palantir",
+     "w": 1.86,
+     "c": 0.19,
+     "sec": "Tech",
+     "pays": "États-Unis"
+    },
+    {
+     "s": "CSCO",
+     "n": "Cisco",
+     "w": 1.84,
+     "c": -0.38,
+     "sec": "Tech",
+     "pays": "États-Unis"
+    },
+    {
+     "s": "LRCX",
+     "n": "Lam Research",
+     "w": 1.44,
+     "c": -2.67,
+     "sec": "Tech",
+     "pays": "États-Unis"
+    },
+    {
+     "s": "AMAT",
+     "n": "Applied Materials",
+     "w": 1.41,
+     "c": -1.96,
+     "sec": "Tech",
+     "pays": "États-Unis"
+    },
+    {
+     "s": "NFLX",
+     "n": "Netflix",
+     "w": 1.28,
+     "c": -0.31,
+     "sec": "Communication",
+     "pays": "États-Unis"
+    },
+    {
+     "s": "PANW",
+     "n": "Palo Alto Networks",
+     "w": 1.21,
+     "c": -1.86,
+     "sec": "Tech",
+     "pays": "États-Unis"
+    },
+    {
+     "s": "TXN",
+     "n": "Texas Instruments",
+     "w": 1.1,
+     "c": 1.5,
+     "sec": "Tech",
+     "pays": "États-Unis"
+    },
+    {
+     "s": "AMGN",
+     "n": "Amgen",
+     "w": 1.02,
+     "c": 2.14,
+     "sec": "Santé",
+     "pays": "États-Unis"
+    },
+    {
+     "s": "CRWD",
+     "n": "CrowdStrike",
+     "w": 1.01,
+     "c": -1.01,
+     "sec": "Tech",
+     "pays": "États-Unis"
+    },
+    {
+     "s": "LIN",
+     "n": "Linde",
+     "w": 1.0,
+     "c": -1.13,
+     "sec": "Industrie",
+     "pays": "Royaume-Uni"
+    }
+   ],
+   "eur": {
+    "isin": "FR0011871110",
+    "ticker": "PUST",
+    "lsId": 1371888,
+    "source": "LS Exchange (dernier cours de la journée, comme Trade Republic)",
+    "close": 105.53,
+    "prev": 105.69,
+    "day": -0.15,
+    "date": "2026-10-20"
+   }
+  },
+  {
+   "id": "europe",
+   "short": "Europe",
+   "name": "PEA MSCI Europe",
+   "proxy": "IEUR",
+   "proxyNote": "Variation et courbe : cours réel en euros sur LS Exchange, la bourse utilisée par Trade Republic. Détail par entreprise : via l'ETF IEUR (actions européennes, coté en dollars).",
+   "day": 0.8,
+   "holdingsDate": "2026-10-16",
+   "total": "≈ 400 entreprises",
+   "holdings": [
+    {
+     "s": "ASML",
+     "n": "ASML",
+     "w": 4.19,
+     "c": -2.71,
+     "sec": "Tech",
+     "pays": "Pays-Bas"
+    },
+    {
+     "s": "HSBA",
+     "n": "HSBC",
+     "w": 2.13,
+     "c": -0.86,
+     "sec": "Finance",
+     "pays": "Royaume-Uni"
+    },
+    {
+     "s": "ROG",
+     "n": "Roche",
+     "w": 2.1,
+     "c": 2.58,
+     "sec": "Santé",
+     "pays": "Suisse"
+    },
+    {
+     "s": "SHEL",
+     "n": "Shell",
+     "w": 1.97,
+     "c": -0.81,
+     "sec": "Énergie",
+     "pays": "Royaume-Uni"
+    },
+    {
+     "s": "NOVN",
+     "n": "Novartis",
+     "w": 1.8,
+     "c": 1.85,
+     "sec": "Santé",
+     "pays": "Suisse"
+    },
+    {
+     "s": "NESN",
+     "n": "Nestlé",
+     "w": 1.68,
+     "c": 0.68,
+     "sec": "Conso",
+     "pays": "Suisse"
+    },
+    {
+     "s": "AZN",
+     "n": "AstraZeneca",
+     "w": 1.63,
+     "c": 1.76,
+     "sec": "Santé",
+     "pays": "Royaume-Uni"
+    },
+    {
+     "s": "SAP",
+     "n": "SAP",
+     "w": 1.48,
+     "c": 0.86,
+     "sec": "Tech",
+     "pays": "Allemagne"
+    },
+    {
+     "s": "SIE",
+     "n": "Siemens",
+     "w": 1.43,
+     "c": -2.24,
+     "sec": "Industrie",
+     "pays": "Allemagne"
+    },
+    {
+     "s": "SAN",
+     "n": "Santander",
+     "w": 1.25,
+     "c": -0.37,
+     "sec": "Finance",
+     "pays": "Espagne"
+    },
+    {
+     "s": "ALV",
+     "n": "Allianz",
+     "w": 1.2,
+     "c": 1.34,
+     "sec": "Finance",
+     "pays": "Allemagne"
+    },
+    {
+     "s": "TTE",
+     "n": "TotalEnergies",
+     "w": 1.15,
+     "c": -0.73,
+     "sec": "Énergie",
+     "pays": "France"
+    },
+    {
+     "s": "SU",
+     "n": "Schneider Electric",
+     "w": 1.02,
+     "c": -3.29,
+     "sec": "Industrie",
+     "pays": "France"
+    },
+    {
+     "s": "IBE",
+     "n": "Iberdrola",
+     "w": 0.98,
+     "c": null,
+     "sec": "Services publics",
+     "pays": "Espagne"
+    },
+    {
+     "s": "RR",
+     "n": "Rolls-Royce",
+     "w": 0.98,
+     "c": -0.68,
+     "sec": "Industrie",
+     "pays": "Royaume-Uni"
+    },
+    {
+     "s": "UBSG",
+     "n": "UBS",
+     "w": 0.97,
+     "c": 0.05,
+     "sec": "Finance",
+     "pays": "Suisse"
+    },
+    {
+     "s": "BBVA",
+     "n": "BBVA",
+     "w": 0.95,
+     "c": -0.18,
+     "sec": "Finance",
+     "pays": "Espagne"
+    },
+    {
+     "s": "ABBN",
+     "n": "ABB",
+     "w": 0.93,
+     "c": -5.01,
+     "sec": "Industrie",
+     "pays": "Suisse"
+    }
+   ],
+   "eur": {
+    "isin": "FR0013412038",
+    "ticker": "PCEU",
+    "lsId": 1371936,
+    "source": "LS Exchange (dernier cours de la journée, comme Trade Republic)",
+    "close": 39.575,
+    "prev": 39.2625,
+    "day": 0.8,
+    "date": "2026-10-20"
+   }
+  }
+ ],
+ "news": [
+  {
+   "id": "sante",
+   "sens": "up",
+   "titre": "La santé tire le marché",
+   "texte": "Eli Lilly +4,6 % (proche de son record), Roche +2,6 %, Johnson & Johnson +2,2 %, Amgen +2,1 %, Novartis +1,9 %, AstraZeneca +1,8 %. Pour Lilly, pas d'annonce précise ce jour : les analystes citent la demande pour ses traitements contre l'obésité et une hausse d'objectif de BofA la veille. AstraZeneca lance aussi un partenariat IA avec Oracle pour ses essais cliniques.",
+   "tickers": [
+    "LLY",
+    "ROG",
+    "JNJ",
+    "AMGN",
+    "NOVN",
+    "AZN"
+   ],
+   "etfs": [
+    "global",
+    "europe",
+    "nasdaq"
+   ],
+   "source": "TradingKey, Newsquawk, stockanalysis (20 oct.)"
+  },
+  {
+   "id": "puces",
+   "sens": "down",
+   "titre": "Les équipements pour puces rechutent",
+   "texte": "Après un seul jour de rebond, les valeurs des semi-conducteurs reculent de nouveau, Wall Street appelant à la prudence sur les puces d'IA : ASML −2,7 %, Lam Research −2,7 %, Applied Materials −2 %. Nvidia est quasi stable (−0,1 %) malgré des commandes chinoises de plus de 35 milliards de dollars (ByteDance, Alibaba, Tencent) selon Reuters.",
+   "tickers": [
+    "ASML",
+    "LRCX",
+    "AMAT",
+    "NVDA"
+   ],
+   "etfs": [
+    "nasdaq",
+    "global",
+    "europe"
+   ],
+   "source": "TipRanks, Barron's, Reuters (20 oct.)"
+  },
+  {
+   "id": "memoire",
+   "sens": "down",
+   "titre": "Samsung et SK Hynix rechutent",
+   "texte": "Samsung −3 %, SK Hynix −4,2 % : selon la presse, les géants américains de la tech exigent des prix plus bas pour les puces mémoire en mettant en avant des fournisseurs chinois.",
+   "tickers": [
+    "SMSN",
+    "SKH"
+   ],
+   "etfs": [
+    "global"
+   ],
+   "source": "Newsquawk (20 oct.)"
+  },
+  {
+   "id": "abb",
+   "sens": "down",
+   "titre": "ABB et Schneider Electric reculent",
+   "texte": "ABB −5 % : bénéfice trimestriel inférieur aux attentes, malgré des commandes record tirées par les centres de données et un objectif de croissance relevé. Schneider Electric −3,3 % : augmentation de capital de 6 milliards d'euros pour financer le rachat de PTC.",
+   "tickers": [
+    "ABBN",
+    "SU"
+   ],
+   "etfs": [
+    "europe"
+   ],
+   "source": "Newsquawk (20 oct.)"
+  },
+  {
+   "id": "meta",
+   "sens": "down",
+   "titre": "Meta recule avant ses résultats",
+   "texte": "Meta −2,2 % à la veille de ses résultats (mercredi soir) : le marché s'inquiète de ses énormes dépenses dans l'IA. Aucune annonce propre au groupe ce jour.",
+   "tickers": [
+    "META"
+   ],
+   "etfs": [
+    "nasdaq",
+    "global"
+   ],
+   "source": "Reuters (20 oct.)"
+  }
+ ],
+ "agenda": [
+  {
+   "date": "2026-10-20",
+   "type": "resultats",
+   "titre": "Netflix et SpaceX",
+   "texte": "Netflix : abonnés et revenus publicitaires. SpaceX : premiers résultats scrutés, notamment la croissance de Starlink.",
+   "tickers": [
+    "NFLX",
+    "SPCX"
+   ],
+   "etfs": [
+    "nasdaq"
+   ]
+  },
+  {
+   "date": "2026-10-21",
+   "type": "resultats",
+   "titre": "Tesla, SAP, Meta, Lam Research et Texas Instruments",
+   "texte": "Grosse soirée : Tesla (marges), SAP (cloud), Meta (dépenses dans l'IA), Lam Research et Texas Instruments (puces), juste après la chute des semi-conducteurs.",
+   "tickers": [
+    "TSLA",
+    "SAP",
+    "META",
+    "LRCX",
+    "TXN"
+   ],
+   "etfs": [
+    "nasdaq",
+    "global",
+    "europe"
+   ]
+  },
+  {
+   "date": "2026-10-28",
+   "type": "resultats",
+   "titre": "Microsoft et Alphabet",
+   "texte": "Deux géants le même soir, qui pèsent ensemble environ 12 % du Nasdaq 100. Le marché regardera surtout leurs dépenses dans l'IA.",
+   "tickers": [
+    "MSFT",
+    "GOOGL",
+    "GOOG"
+   ],
+   "etfs": [
+    "nasdaq",
+    "global"
+   ]
+  },
+  {
+   "date": "2026-10-28",
+   "type": "banque",
+   "titre": "Réserve fédérale (Fed)",
+   "texte": "Décision sur le taux directeur américain. Une baisse aide en général les actions de croissance ; une surprise peut secouer le Nasdaq.",
+   "tickers": [],
+   "etfs": [
+    "nasdaq",
+    "global"
+   ]
+  },
+  {
+   "date": "2026-10-29",
+   "type": "banque",
+   "titre": "Banque centrale européenne (BCE)",
+   "texte": "Décision sur les taux de la zone euro. Elle joue sur les banques européennes et sur le cours euro/dollar, donc sur la valeur en euros de tes actions américaines.",
+   "tickers": [],
+   "etfs": [
+    "europe",
+    "global"
+   ]
+  },
+  {
+   "date": "2026-10-29",
+   "type": "resultats",
+   "titre": "Amazon",
+   "texte": "Croissance d'AWS, son activité cloud.",
+   "tickers": [
+    "AMZN"
+   ],
+   "etfs": [
+    "nasdaq",
+    "global"
+   ]
+  },
+  {
+   "date": "2026-11-02",
+   "type": "resultats",
+   "titre": "Apple",
+   "texte": "Premier trimestre avec les ventes de l'iPhone 18, alors que des baisses de commandes ont été rapportées le 9 octobre.",
+   "tickers": [
+    "AAPL"
+   ],
+   "etfs": [
+    "nasdaq",
+    "global"
+   ]
+  },
+  {
+   "date": "2026-11-18",
+   "type": "resultats",
+   "titre": "Nvidia",
+   "texte": "1re position du Nasdaq 100 et de ton ETF Monde. Souvent la publication la plus attendue du trimestre.",
+   "tickers": [
+    "NVDA"
+   ],
+   "etfs": [
+    "nasdaq",
+    "global"
+   ]
+  },
+  {
+   "date": "2026-12-09",
+   "type": "banque",
+   "titre": "Réserve fédérale (Fed)",
+   "texte": "Dernière décision de l'année, avec les nouvelles prévisions économiques de la Fed.",
+   "tickers": [],
+   "etfs": [
+    "nasdaq",
+    "global"
+   ]
+  },
+  {
+   "date": "2026-12-17",
+   "type": "banque",
+   "titre": "Banque centrale européenne (BCE)",
+   "texte": "Dernière décision de l'année pour la zone euro.",
+   "tickers": [],
+   "etfs": [
+    "europe",
+    "global"
+   ]
+  }
+ ],
+ "recap": {
+  "semaine": "du 12 au 16 octobre 2026",
+  "du": "2026-10-12",
+  "au": "2026-10-16",
+  "etfs": {
+   "global": -2.43,
+   "nasdaq": -5.82,
+   "europe": 1.11
+  },
+  "lignes": [
+   "Semaine difficile pour la tech : Nasdaq 100 −5,8 %, Monde −2,4 %, mais Europe +1,1 % (cours LS en euros, clôture du vendredi à clôture du vendredi).",
+   "Lundi et mardi, les valeurs de l'IA « physique » (fibre optique, puces mémoire) sont vendues en bloc, puis le chinois CXMT fait chuter la mémoire : SK Hynix et Samsung perdent plus de 20 % en trois jours.",
+   "Mercredi, l'inflation américaine (3,7 %) relance la peur d'une hausse des taux de la Fed, ce qui pèse sur les valeurs de croissance.",
+   "Les banques ouvrent la saison des résultats en ordre dispersé (Goldman brillant, Bank of America déçoit), ASML et TSMC publient des chiffres solides, et la santé (Eli Lilly, AstraZeneca, Roche, Novartis) sert de refuge.",
+   "Vendredi, la cybersécurité plonge. À suivre : Netflix (20/10), Tesla et SAP (21/10), puis les géants de la tech et la Fed fin octobre."
+  ],
+  "source": "TheStreet, Benzinga, 24/7 Wall St., TradingKey, LS Exchange"
+ },
+ "indices": [
+  {
+   "id": "cac",
+   "nom": "CAC 40",
+   "etf": "Amundi CAC 40 (FR0007052782)",
+   "lsId": 288775,
+   "note": "ETF CAC 40 coté en euros sur LS Exchange (dividendes distribués, donc légèrement désavantagé)."
+  },
+  {
+   "id": "sp500",
+   "nom": "S&P 500",
+   "etf": "Amundi PEA S&P 500 (FR0011871128)",
+   "lsId": 1371891,
+   "note": "ETF S&P 500 éligible PEA, coté en euros sur LS Exchange (inclut l'effet euro/dollar)."
+  }
+ ],
+ "enCours": "Mise à jour à 18h40 : Wall Street est encore ouvert (jusqu'à 22h) et LS Exchange cote jusqu'à 23h, les chiffres peuvent encore bouger."
+}
