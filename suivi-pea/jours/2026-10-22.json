@@ -2,7 +2,7 @@
  "date": "2026-10-22",
  "label": "jeudi 22 octobre 2026",
  "updatedAt": "2026-10-22T16:28:53Z",
- "resume": "Journée rouge pour les puces : Lam Research (−9,7 %) inquiète sur les dépenses d'IA et entraîne AMD, Intel, Micron, TSMC, Nvidia et ASML. Meta chute de 6,5 % après ses résultats. Nasdaq 100 −2,0 %, Monde −1,0 %, Europe −0,6 % malgré SAP (+3,2 %) et la santé, qui sert de refuge.",
+ "resume": "Journée rouge pour les puces : Lam Research (−9,7 %) inquiète sur les dépenses d'IA et entraîne AMD, Intel, Micron, TSMC, Nvidia et ASML. Meta chute de 6,5 % après ses résultats. Nasdaq 100 −2,9 %, Monde −1,2 %, Europe −0,7 % malgré SAP (+3,2 %) et la santé, qui sert de refuge.",
  "etfs": [
   {
    "id": "global",
@@ -10,7 +10,7 @@
    "name": "PEA Global (MSCI ACWI)",
    "proxy": "ACWI",
    "proxyNote": "Variation et courbe : cours réel en euros sur LS Exchange, la bourse utilisée par Trade Republic. Détail par entreprise : via l'ETF ACWI (même indice, coté en dollars).",
-   "day": -0.99,
+   "day": -1.2,
    "holdingsDate": "2026-10-15",
    "total": "≈ 2 500 entreprises",
    "holdings": [
@@ -180,9 +180,9 @@
     "ticker": "GPEA",
     "lsId": 4996087,
     "source": "LS Exchange (dernier cours de la journée, comme Trade Republic)",
-    "close": 5.0955,
+    "close": 5.0845,
     "prev": 5.1465,
-    "day": -0.99,
+    "day": -1.2,
     "date": "2026-10-22"
    }
   },
@@ -192,7 +192,7 @@
    "name": "PEA Nasdaq 100",
    "proxy": "QQQ",
    "proxyNote": "Variation et courbe : cours réel en euros sur LS Exchange, la bourse utilisée par Trade Republic. Détail par entreprise : via l'ETF QQQ (même indice, coté en dollars).",
-   "day": -2.01,
+   "day": -2.92,
    "holdingsDate": "2026-10-16",
    "total": "100 entreprises",
    "holdings": [
@@ -402,9 +402,9 @@
     "ticker": "PUST",
     "lsId": 1371888,
     "source": "LS Exchange (dernier cours de la journée, comme Trade Republic)",
-    "close": 104.43,
+    "close": 103.46,
     "prev": 106.57,
-    "day": -2.01,
+    "day": -2.92,
     "date": "2026-10-22"
    }
   },
@@ -414,7 +414,7 @@
    "name": "PEA MSCI Europe",
    "proxy": "IEUR",
    "proxyNote": "Variation et courbe : cours réel en euros sur LS Exchange, la bourse utilisée par Trade Republic. Détail par entreprise : via l'ETF IEUR (actions européennes, coté en dollars).",
-   "day": -0.57,
+   "day": -0.68,
    "holdingsDate": "2026-10-16",
    "total": "≈ 400 entreprises",
    "holdings": [
@@ -568,9 +568,9 @@
     "ticker": "PCEU",
     "lsId": 1371936,
     "source": "LS Exchange (dernier cours de la journée, comme Trade Republic)",
-    "close": 39.525,
+    "close": 39.48,
     "prev": 39.75,
-    "day": -0.57,
+    "day": -0.68,
     "date": "2026-10-22"
    }
   }
@@ -816,6 +816,5 @@
    "lsId": 1371891,
    "note": "ETF S&P 500 éligible PEA, coté en euros sur LS Exchange (inclut l'effet euro/dollar)."
   }
- ],
- "enCours": "Mise à jour à 18h40 : Wall Street est encore ouvert (jusqu'à 22h) et LS Exchange cote jusqu'à 23h, les chiffres peuvent encore bouger."
+ ]
 }
