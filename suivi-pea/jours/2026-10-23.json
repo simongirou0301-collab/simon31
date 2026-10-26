@@ -2,7 +2,7 @@
  "date": "2026-10-23",
  "label": "vendredi 23 octobre 2026",
  "updatedAt": "2026-10-23T16:28:53Z",
- "resume": "Séance de reprise de souffle après la chute de jeudi : les puces mémoire et la cybersécurité rebondissent, le pétrole porte TotalEnergies et Shell. Rolls-Royce plonge (−7,6 %). Nasdaq 100 +0,6 %, Monde −0,2 %, Europe −0,4 %.",
+ "resume": "Séance de reprise de souffle après la chute de jeudi : les puces mémoire et la cybersécurité rebondissent, le pétrole porte TotalEnergies et Shell. Rolls-Royce plonge (−7,6 %). Nasdaq 100 +0,5 %, Monde −0,2 %, Europe −0,4 %.",
  "etfs": [
   {
    "id": "global",
@@ -10,7 +10,7 @@
    "name": "PEA Global (MSCI ACWI)",
    "proxy": "ACWI",
    "proxyNote": "Variation et courbe : cours réel en euros sur LS Exchange, la bourse utilisée par Trade Republic. Détail par entreprise : via l'ETF ACWI (même indice, coté en dollars).",
-   "day": -0.18,
+   "day": -0.22,
    "holdingsDate": "2026-10-15",
    "total": "≈ 2 500 entreprises",
    "holdings": [
@@ -180,9 +180,9 @@
     "ticker": "GPEA",
     "lsId": 4996087,
     "source": "LS Exchange (dernier cours de la journée, comme Trade Republic)",
-    "close": 5.0755,
+    "close": 5.0735,
     "prev": 5.0845,
-    "day": -0.18,
+    "day": -0.22,
     "date": "2026-10-23"
    }
   },
@@ -192,7 +192,7 @@
    "name": "PEA Nasdaq 100",
    "proxy": "QQQ",
    "proxyNote": "Variation et courbe : cours réel en euros sur LS Exchange, la bourse utilisée par Trade Republic. Détail par entreprise : via l'ETF QQQ (même indice, coté en dollars).",
-   "day": 0.63,
+   "day": 0.48,
    "holdingsDate": "2026-10-16",
    "total": "100 entreprises",
    "holdings": [
@@ -402,9 +402,9 @@
     "ticker": "PUST",
     "lsId": 1371888,
     "source": "LS Exchange (dernier cours de la journée, comme Trade Republic)",
-    "close": 104.11,
+    "close": 103.96,
     "prev": 103.46,
-    "day": 0.63,
+    "day": 0.48,
     "date": "2026-10-23"
    }
   },
@@ -414,7 +414,7 @@
    "name": "PEA MSCI Europe",
    "proxy": "IEUR",
    "proxyNote": "Variation et courbe : cours réel en euros sur LS Exchange, la bourse utilisée par Trade Republic. Détail par entreprise : via l'ETF IEUR (actions européennes, coté en dollars).",
-   "day": -0.41,
+   "day": -0.42,
    "holdingsDate": "2026-10-16",
    "total": "≈ 400 entreprises",
    "holdings": [
@@ -568,9 +568,9 @@
     "ticker": "PCEU",
     "lsId": 1371936,
     "source": "LS Exchange (dernier cours de la journée, comme Trade Republic)",
-    "close": 39.3175,
+    "close": 39.3125,
     "prev": 39.48,
-    "day": -0.41,
+    "day": -0.42,
     "date": "2026-10-23"
    }
   }
@@ -754,12 +754,12 @@
   "du": "2026-10-19",
   "au": "2026-10-23",
   "etfs": {
-   "global": -0.07,
-   "nasdaq": -0.14,
-   "europe": -0.68
+   "global": -0.11,
+   "nasdaq": -0.29,
+   "europe": -0.69
   },
   "lignes": [
-   "Semaine presque à plat sur la balance, mais très agitée : Monde −0,1 %, Nasdaq 100 −0,1 %, Europe −0,7 % (cours LS en euros, vendredi à vendredi, chiffres de vendredi 18h45).",
+   "Semaine presque à plat sur la balance, mais très agitée : Monde −0,1 %, Nasdaq 100 −0,3 %, Europe −0,7 % (cours LS en euros, clôture du vendredi à clôture du vendredi).",
    "Lundi, la tech rebondit après sa pire semaine depuis des années (Amazon +5 %), tandis que l'Europe recule sur les inquiétudes autour des finances françaises.",
    "Mardi et mercredi, la santé puis SpaceX (+10 % après son premier bénéfice) portent les marchés ; Netflix chute de 5 % après des prévisions décevantes.",
    "Jeudi, Lam Research (−9,7 %) et Meta (−6,5 %, dépenses en IA) ravivent la peur sur le financement de l'IA : le Nasdaq 100 perd 2,9 % en euros, ASML 5 %.",
@@ -782,6 +782,5 @@
    "lsId": 1371891,
    "note": "ETF S&P 500 éligible PEA, coté en euros sur LS Exchange (inclut l'effet euro/dollar)."
   }
- ],
- "enCours": "Mise à jour à 18h45 : Wall Street est encore ouvert (jusqu'à 22h) et LS Exchange cote jusqu'à 23h, les chiffres peuvent encore bouger."
+ ]
 }

@@ -334,6 +334,14 @@
   "ABBN": {
    "d": "Groupe suisse d'électrotechnique et d'automatisation : réseaux électriques, robots industriels, bornes de recharge.",
    "an": 27.91
+  },
+  "ULVR": {
+   "d": "Géant britannique des produits du quotidien : Dove, Axe, Knorr, Hellmann's, glaces Magnum et Ben & Jerry's.",
+   "an": -6.67
+  },
+  "BP": {
+   "d": "Major pétrolière britannique : extraction de pétrole et de gaz, raffinage et stations-service, avec une activité croissante dans l'électricité et la recharge.",
+   "an": 45.17
   }
  },
  "fiches_source": "Variation sur 1 an : StockAnalysis, au 9 octobre 2026, en monnaie locale.",
