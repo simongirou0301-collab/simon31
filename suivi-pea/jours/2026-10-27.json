@@ -2,7 +2,7 @@
  "date": "2026-10-27",
  "label": "mardi 27 octobre 2026",
  "updatedAt": "2026-10-27T17:30:18Z",
- "resume": "Les puces poursuivent leur rebond, portées par l'introduction en Bourse d'Anthropic et l'accord entre AMD et Meta : Nasdaq 100 +1,4 % en euros. L'Europe progresse aussi (+0,8 %) avec ASML et Schneider, malgré la chute de HSBC (−5,4 %). Monde +0,9 %, à la veille de la décision de la Fed.",
+ "resume": "Les puces poursuivent leur rebond, portées par l'introduction en Bourse d'Anthropic et l'accord entre AMD et Meta : Nasdaq 100 +1,6 % en euros. L'Europe progresse aussi (+0,8 %) avec ASML et Schneider, malgré la chute de HSBC (−5,4 %). Monde +1,0 %, à la veille de la décision de la Fed.",
  "etfs": [
   {
    "id": "global",
@@ -10,7 +10,7 @@
    "name": "PEA Global (MSCI ACWI)",
    "proxy": "ACWI",
    "proxyNote": "Variation et courbe : cours réel en euros sur LS Exchange, la bourse utilisée par Trade Republic. Détail par entreprise : via l'ETF ACWI (même indice, coté en dollars).",
-   "day": 0.95,
+   "day": 1.01,
    "holdingsDate": "2026-10-23",
    "total": "≈ 2 500 entreprises",
    "holdings": [
@@ -180,9 +180,9 @@
     "ticker": "GPEA",
     "lsId": 4996087,
     "source": "LS Exchange (dernier cours de la journée, comme Trade Republic)",
-    "close": 5.155,
+    "close": 5.158,
     "prev": 5.1065,
-    "day": 0.95,
+    "day": 1.01,
     "date": "2026-10-27"
    }
   },
@@ -192,7 +192,7 @@
    "name": "PEA Nasdaq 100",
    "proxy": "QQQ",
    "proxyNote": "Variation et courbe : cours réel en euros sur LS Exchange, la bourse utilisée par Trade Republic. Détail par entreprise : via l'ETF QQQ (même indice, coté en dollars).",
-   "day": 1.43,
+   "day": 1.62,
    "holdingsDate": "2026-10-23",
    "total": "100 entreprises",
    "holdings": [
@@ -402,9 +402,9 @@
     "ticker": "PUST",
     "lsId": 1371888,
     "source": "LS Exchange (dernier cours de la journée, comme Trade Republic)",
-    "close": 106.74,
+    "close": 106.93,
     "prev": 105.23,
-    "day": 1.43,
+    "day": 1.62,
     "date": "2026-10-27"
    }
   },
@@ -789,6 +789,5 @@
    "lsId": 1371891,
    "note": "ETF S&P 500 éligible PEA, coté en euros sur LS Exchange (inclut l'effet euro/dollar)."
   }
- ],
- "enCours": "Mise à jour à 18h40 : Wall Street est encore ouvert (jusqu'à 22h) et LS Exchange cote jusqu'à 23h, les chiffres peuvent encore bouger."
+ ]
 }
