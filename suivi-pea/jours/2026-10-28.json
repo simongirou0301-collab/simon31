@@ -2,7 +2,7 @@
  "date": "2026-10-28",
  "label": "mercredi 28 octobre 2026",
  "updatedAt": "2026-10-28T17:29:05Z",
- "resume": "Séance d'attente avant la Fed (19h) et les résultats de Microsoft et Alphabet ce soir : Monde +0,1 %, Nasdaq 100 −0,1 %, Europe +0,1 %. Les résultats records de SK Hynix font bondir Samsung (+9 %) et les fabricants d'équipements pour puces, tandis que Santander chute de 5,6 %.",
+ "resume": "Séance d'attente avant la Fed (19h) et les résultats de Microsoft et Alphabet ce soir : Monde stable, Nasdaq 100 −0,4 %, Europe +0,2 %. Les résultats records de SK Hynix font bondir Samsung (+9 %) et les fabricants d'équipements pour puces, tandis que Santander chute de 5,6 %.",
  "etfs": [
   {
    "id": "global",
@@ -10,7 +10,7 @@
    "name": "PEA Global (MSCI ACWI)",
    "proxy": "ACWI",
    "proxyNote": "Variation et courbe : cours réel en euros sur LS Exchange, la bourse utilisée par Trade Republic. Détail par entreprise : via l'ETF ACWI (même indice, coté en dollars).",
-   "day": 0.09,
+   "day": -0.03,
    "holdingsDate": "2026-10-23",
    "total": "≈ 2 500 entreprises",
    "holdings": [
@@ -180,9 +180,9 @@
     "ticker": "GPEA",
     "lsId": 4996087,
     "source": "LS Exchange (dernier cours de la journée, comme Trade Republic)",
-    "close": 5.1625,
+    "close": 5.1565,
     "prev": 5.158,
-    "day": 0.09,
+    "day": -0.03,
     "date": "2026-10-28"
    }
   },
@@ -192,7 +192,7 @@
    "name": "PEA Nasdaq 100",
    "proxy": "QQQ",
    "proxyNote": "Variation et courbe : cours réel en euros sur LS Exchange, la bourse utilisée par Trade Republic. Détail par entreprise : via l'ETF QQQ (même indice, coté en dollars).",
-   "day": -0.1,
+   "day": -0.39,
    "holdingsDate": "2026-10-23",
    "total": "100 entreprises",
    "holdings": [
@@ -402,9 +402,9 @@
     "ticker": "PUST",
     "lsId": 1371888,
     "source": "LS Exchange (dernier cours de la journée, comme Trade Republic)",
-    "close": 106.82,
+    "close": 106.51,
     "prev": 106.93,
-    "day": -0.1,
+    "day": -0.39,
     "date": "2026-10-28"
    }
   },
@@ -414,7 +414,7 @@
    "name": "PEA MSCI Europe",
    "proxy": "IEUR",
    "proxyNote": "Variation et courbe : cours réel en euros sur LS Exchange, la bourse utilisée par Trade Republic. Détail par entreprise : via l'ETF IEUR (actions européennes, coté en dollars).",
-   "day": 0.13,
+   "day": 0.18,
    "holdingsDate": "2026-10-23",
    "total": "≈ 400 entreprises",
    "holdings": [
@@ -568,9 +568,9 @@
     "ticker": "PCEU",
     "lsId": 1371936,
     "source": "LS Exchange (dernier cours de la journée, comme Trade Republic)",
-    "close": 39.855,
+    "close": 39.8775,
     "prev": 39.805,
-    "day": 0.13,
+    "day": 0.18,
     "date": "2026-10-28"
    }
   }
@@ -759,6 +759,5 @@
    "lsId": 1371891,
    "note": "ETF S&P 500 éligible PEA, coté en euros sur LS Exchange (inclut l'effet euro/dollar)."
   }
- ],
- "enCours": "Mise à jour à 18h40 : Wall Street est encore ouvert (jusqu'à 22h) et LS Exchange cote jusqu'à 23h, les chiffres peuvent encore bouger. La décision de la Fed tombe à 19h."
+ ]
 }
