@@ -2,7 +2,7 @@
  "date": "2026-10-29",
  "label": "jeudi 29 octobre 2026",
  "updatedAt": "2026-10-29T17:29:55Z",
- "resume": "Alphabet s'effondre de 12,7 % après des résultats décevants et pèse sur le Nasdaq 100 (−0,9 % en euros). L'Europe monte (+0,8 %) grâce à la santé et à l'énergie (Novartis, AstraZeneca, Shell), et Eli Lilly bondit de 6 %. Monde −0,2 %.",
+ "resume": "Alphabet s'effondre de 12,7 % après des résultats décevants et pèse sur le Nasdaq 100 (−2,4 % en euros). L'Europe monte (+0,6 %) grâce à la santé et à l'énergie (Novartis, AstraZeneca, Shell), et Eli Lilly bondit de 6 %. Monde −0,8 %.",
  "etfs": [
   {
    "id": "global",
@@ -10,7 +10,7 @@
    "name": "PEA Global (MSCI ACWI)",
    "proxy": "ACWI",
    "proxyNote": "Variation et courbe : cours réel en euros sur LS Exchange, la bourse utilisée par Trade Republic. Détail par entreprise : via l'ETF ACWI (même indice, coté en dollars).",
-   "day": -0.25,
+   "day": -0.77,
    "holdingsDate": "2026-10-23",
    "total": "≈ 2 500 entreprises",
    "holdings": [
@@ -180,9 +180,9 @@
     "ticker": "GPEA",
     "lsId": 4996087,
     "source": "LS Exchange (dernier cours de la journée, comme Trade Republic)",
-    "close": 5.1435,
+    "close": 5.117,
     "prev": 5.1565,
-    "day": -0.25,
+    "day": -0.77,
     "date": "2026-10-29"
    }
   },
@@ -192,7 +192,7 @@
    "name": "PEA Nasdaq 100",
    "proxy": "QQQ",
    "proxyNote": "Variation et courbe : cours réel en euros sur LS Exchange, la bourse utilisée par Trade Republic. Détail par entreprise : via l'ETF QQQ (même indice, coté en dollars).",
-   "day": -0.91,
+   "day": -2.38,
    "holdingsDate": "2026-10-23",
    "total": "100 entreprises",
    "holdings": [
@@ -402,9 +402,9 @@
     "ticker": "PUST",
     "lsId": 1371888,
     "source": "LS Exchange (dernier cours de la journée, comme Trade Republic)",
-    "close": 105.54,
+    "close": 103.97,
     "prev": 106.51,
-    "day": -0.91,
+    "day": -2.38,
     "date": "2026-10-29"
    }
   },
@@ -414,7 +414,7 @@
    "name": "PEA MSCI Europe",
    "proxy": "IEUR",
    "proxyNote": "Variation et courbe : cours réel en euros sur LS Exchange, la bourse utilisée par Trade Republic. Détail par entreprise : via l'ETF IEUR (actions européennes, coté en dollars).",
-   "day": 0.78,
+   "day": 0.61,
    "holdingsDate": "2026-10-23",
    "total": "≈ 400 entreprises",
    "holdings": [
@@ -568,9 +568,9 @@
     "ticker": "PCEU",
     "lsId": 1371936,
     "source": "LS Exchange (dernier cours de la journée, comme Trade Republic)",
-    "close": 40.19,
+    "close": 40.1225,
     "prev": 39.8775,
-    "day": 0.78,
+    "day": 0.61,
     "date": "2026-10-29"
    }
   }
@@ -774,6 +774,5 @@
    "lsId": 1371891,
    "note": "ETF S&P 500 éligible PEA, coté en euros sur LS Exchange (inclut l'effet euro/dollar)."
   }
- ],
- "enCours": "Mise à jour à 18h50 : Wall Street est encore ouvert (jusqu'à 22h) et LS Exchange cote jusqu'à 23h, les chiffres peuvent encore bouger."
+ ]
 }
