@@ -117,15 +117,15 @@
  "fiches": {
   "NVDA": {
    "d": "Conçoit les puces graphiques (GPU) qui font tourner l'intelligence artificielle dans les centres de données.",
-   "an": 21.24
+   "an": 2.72
   },
   "AAPL": {
    "d": "Fabrique l'iPhone, le Mac et l'Apple Watch, et vend des services (App Store, iCloud, Apple Music).",
-   "an": 30.45
+   "an": 25.87
   },
   "MSFT": {
    "d": "Windows, Office, et surtout Azure, son cloud, partenaire d'OpenAI dans l'IA.",
-   "an": 1.95
+   "an": 1.32
   },
   "AMZN": {
    "d": "Commerce en ligne et AWS, le premier fournisseur de cloud au monde.",
@@ -133,47 +133,47 @@
   },
   "GOOGL": {
    "d": "Maison mère de Google (recherche, publicité), YouTube et Google Cloud.",
-   "an": 43.76
+   "an": 0.41
   },
   "GOOG": {
    "d": "Maison mère de Google (recherche, publicité), YouTube et Google Cloud. Seconde classe d'actions.",
-   "an": 43.76
+   "an": -0.29
   },
   "META": {
    "d": "Facebook, Instagram et WhatsApp ; vit de la publicité et investit massivement dans l'IA.",
-   "an": 0.12
+   "an": -5.76
   },
   "AVGO": {
    "d": "Broadcom : puces pour les réseaux et l'IA sur mesure, plus des logiciels d'entreprise.",
-   "an": 4.64
+   "an": -10.86
   },
   "MU": {
    "d": "Micron : mémoires (DRAM, HBM) indispensables aux serveurs d'IA.",
-   "an": 423.56
+   "an": 290.39
   },
   "TSLA": {
    "d": "Voitures électriques, batteries de stockage et projets de conduite autonome.",
-   "an": -12.76
+   "an": -10.04
   },
   "AMD": {
    "d": "Processeurs pour PC et serveurs, et puces d'IA concurrentes de Nvidia.",
-   "an": 158.15
+   "an": 90.4
   },
   "LLY": {
    "d": "Eli Lilly : laboratoire pharmaceutique, leader des traitements contre le diabète et l'obésité.",
-   "an": 39.44
+   "an": 62.63
   },
   "JPM": {
    "d": "JPMorgan Chase : la plus grande banque américaine.",
-   "an": 9.53
+   "an": 9.79
   },
   "BRK.B": {
    "d": "Berkshire Hathaway : le conglomérat de Warren Buffett (assurance, rail, énergie, participations).",
-   "an": 3.16
+   "an": 15.54
   },
   "XOM": {
    "d": "ExxonMobil : pétrole et gaz, de l'extraction à la raffinerie.",
-   "an": 48.17
+   "an": 60.8
   },
   "JNJ": {
    "d": "Johnson & Johnson : médicaments et dispositifs médicaux.",
@@ -181,11 +181,11 @@
   },
   "TSM": {
    "d": "TSMC : fabrique les puces les plus avancées du monde pour Apple, Nvidia et AMD.",
-   "an": 48.86
+   "an": 33.12
   },
   "ASML": {
    "d": "Seul fabricant au monde des machines de lithographie EUV nécessaires aux puces de pointe.",
-   "an": 88.03
+   "an": 53.6
   },
   "SPCX": {
    "d": "SpaceX : lanceurs spatiaux et internet par satellite Starlink, cotée depuis peu.",
@@ -193,35 +193,35 @@
   },
   "INTC": {
    "d": "Intel : processeurs pour PC et serveurs, et usines de fabrication de puces.",
-   "an": 179.72
+   "an": 56.64
   },
   "WMT": {
    "d": "Walmart : le plus grand distributeur au monde (supermarchés, e-commerce).",
-   "an": 8.21
+   "an": 25.21
   },
   "PLTR": {
    "d": "Palantir : logiciels d'analyse de données et d'IA pour les gouvernements et les entreprises.",
-   "an": 13.89
+   "an": -8.22
   },
   "CSCO": {
    "d": "Cisco : équipements réseau et cybersécurité pour les entreprises.",
-   "an": 68.34
+   "an": 46.52
   },
   "COST": {
    "d": "Costco : grandes surfaces vendues sur abonnement.",
-   "an": 3.51
+   "an": 13.12
   },
   "AMAT": {
    "d": "Applied Materials : machines utilisées pour fabriquer les puces.",
-   "an": 133.11
+   "an": 67.41
   },
   "LRCX": {
    "d": "Lam Research : équipements de gravure et de dépôt pour l'industrie des puces.",
-   "an": 123.69
+   "an": 48.35
   },
   "PANW": {
    "d": "Palo Alto Networks : cybersécurité (pare-feu, protection du cloud).",
-   "an": 92.29
+   "an": 64.94
   },
   "NFLX": {
    "d": "Netflix : streaming vidéo par abonnement, avec une offre financée par la publicité.",
@@ -229,27 +229,27 @@
   },
   "CRWD": {
    "d": "CrowdStrike : protection des ordinateurs et serveurs contre les cyberattaques.",
-   "an": 115.74
+   "an": 83.02
   },
   "TXN": {
    "d": "Texas Instruments : puces analogiques pour l'industrie et l'automobile.",
-   "an": 56.24
+   "an": 91.38
   },
   "KLAC": {
    "d": "KLA : machines d'inspection et de contrôle qualité des puces.",
-   "an": 84.05
+   "an": 31.14
   },
   "MRVL": {
    "d": "Marvell : puces pour centres de données et réseaux.",
-   "an": 197.6
+   "an": 91.33
   },
   "SMSN": {
    "d": "Samsung Electronics : smartphones, écrans et premier fabricant mondial de mémoires.",
-   "an": 194.38
+   "an": 113.02
   },
   "SKH": {
    "d": "SK hynix : mémoires, notamment la HBM utilisée par les puces d'IA de Nvidia.",
-   "an": 411.39
+   "an": 163.33
   },
   "HSBA": {
    "d": "HSBC : grande banque britannique très présente en Asie.",
@@ -257,27 +257,27 @@
   },
   "ROG": {
    "d": "Roche : laboratoire suisse, médicaments contre le cancer et diagnostics.",
-   "an": 22.83
+   "an": 53.42
   },
   "SHEL": {
    "d": "Shell : pétrole, gaz et énergies, groupe britannique.",
-   "an": 37.25
+   "an": 37.7
   },
   "NOVN": {
    "d": "Novartis : laboratoire pharmaceutique suisse.",
-   "an": 13.44
+   "an": 32.49
   },
   "AZN": {
    "d": "AstraZeneca : laboratoire britannique, fort dans le cancer.",
-   "an": -4.29
+   "an": 11.15
   },
   "NESN": {
    "d": "Nestlé : premier groupe alimentaire mondial (Nescafé, KitKat, Purina).",
-   "an": 1.44
+   "an": 10.24
   },
   "SIE": {
    "d": "Siemens : automatisation industrielle, infrastructures et logiciels.",
-   "an": 10.95
+   "an": 10.1
   },
   "SAP": {
    "d": "SAP : logiciels de gestion pour les entreprises, premier éditeur européen.",
@@ -285,63 +285,63 @@
   },
   "SAN": {
    "d": "Santander : grande banque espagnole présente en Europe et en Amérique latine.",
-   "an": 37.18
+   "an": 18.15
   },
   "SU": {
    "d": "Schneider Electric : gestion de l'énergie et automatisation, très lié aux centres de données.",
-   "an": 7.07
+   "an": -2.11
   },
   "ALV": {
    "d": "Allianz : assureur allemand, l'un des plus grands au monde.",
-   "an": 12.37
+   "an": 26.48
   },
   "TTE": {
    "d": "TotalEnergies : pétrole, gaz et électricité, groupe français.",
-   "an": 53.62
+   "an": 55.27
   },
   "RR": {
    "d": "Rolls-Royce : moteurs d'avions et systèmes d'énergie.",
-   "an": 20.19
+   "an": 9.36
   },
   "BBVA": {
    "d": "BBVA : banque espagnole, forte au Mexique.",
-   "an": 41.26
+   "an": 23.77
   },
   "UBSG": {
    "d": "UBS : première banque suisse, spécialiste de la gestion de fortune.",
-   "an": 23.39
+   "an": 29.74
   },
   "IBE": {
    "d": "Iberdrola : électricité, leader des énergies renouvelables.",
-   "an": 30.02
+   "an": 26.62
   },
   "SAF": {
    "d": "Safran : moteurs d'avions (CFM avec GE) et équipements aéronautiques.",
-   "an": 4.08
+   "an": -7.99
   },
   "V": {
    "d": "Gère le premier réseau mondial de paiement par carte : Visa touche une petite commission sur chaque transaction.",
-   "an": 17.58
+   "an": 25.06
   },
   "AMGN": {
    "d": "Grand laboratoire américain de biotechnologie : médicaments contre le cholestérol, l'ostéoporose, les cancers, et un traitement de l'obésité en développement.",
-   "an": 42.89
+   "an": 56.35
   },
   "LIN": {
    "d": "Numéro un mondial des gaz industriels (oxygène, azote, hydrogène) livrés aux usines, hôpitaux et fabricants de puces.",
-   "an": 11.24
+   "an": 24.39
   },
   "ABBN": {
    "d": "Groupe suisse d'électrotechnique et d'automatisation : réseaux électriques, robots industriels, bornes de recharge.",
-   "an": 27.91
+   "an": 19.58
   },
   "ULVR": {
    "d": "Géant britannique des produits du quotidien : Dove, Axe, Knorr, Hellmann's, glaces Magnum et Ben & Jerry's.",
-   "an": -6.67
+   "an": -5.07
   },
   "BP": {
    "d": "Major pétrolière britannique : extraction de pétrole et de gaz, raffinage et stations-service, avec une activité croissante dans l'électricité et la recharge.",
-   "an": 45.17
+   "an": 35.66
   }
  },
  "fiches_source": "Variation sur 1 an : StockAnalysis, au 9 octobre 2026, en monnaie locale.",

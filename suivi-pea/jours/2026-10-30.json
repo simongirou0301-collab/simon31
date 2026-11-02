@@ -2,7 +2,7 @@
  "date": "2026-10-30",
  "label": "vendredi 30 octobre 2026",
  "updatedAt": "2026-10-30T17:30:13Z",
- "resume": "Nouvelle déroute des puces après les résultats d'Intel (−29,9 %) et d'Amazon : AMD −11,7 %, Applied Materials −8 %, ASML −6,1 %. Nasdaq 100 −1,9 % en euros, Monde −1,1 %. L'Europe limite la casse (−0,5 %) grâce à AstraZeneca (+7 %) et aux valeurs défensives.",
+ "resume": "Nouvelle déroute des puces après les résultats d'Intel (−29,9 %) et d'Amazon : AMD −11,7 %, Applied Materials −8 %, ASML −6,1 %. Nasdaq 100 −1,9 % en euros, Monde −1,1 %. L'Europe limite la casse (−0,4 %) grâce à AstraZeneca (+7 %) et aux valeurs défensives.",
  "etfs": [
   {
    "id": "global",
@@ -10,7 +10,7 @@
    "name": "PEA Global (MSCI ACWI)",
    "proxy": "ACWI",
    "proxyNote": "Variation et courbe : cours réel en euros sur LS Exchange, la bourse utilisée par Trade Republic. Détail par entreprise : via l'ETF ACWI (même indice, coté en dollars).",
-   "day": -1.13,
+   "day": -1.08,
    "holdingsDate": "2026-10-23",
    "total": "≈ 2 500 entreprises",
    "holdings": [
@@ -180,9 +180,9 @@
     "ticker": "GPEA",
     "lsId": 4996087,
     "source": "LS Exchange (dernier cours de la journée, comme Trade Republic)",
-    "close": 5.059,
+    "close": 5.0615,
     "prev": 5.117,
-    "day": -1.13,
+    "day": -1.08,
     "date": "2026-10-30"
    }
   },
@@ -192,7 +192,7 @@
    "name": "PEA Nasdaq 100",
    "proxy": "QQQ",
    "proxyNote": "Variation et courbe : cours réel en euros sur LS Exchange, la bourse utilisée par Trade Republic. Détail par entreprise : via l'ETF QQQ (même indice, coté en dollars).",
-   "day": -1.95,
+   "day": -1.84,
    "holdingsDate": "2026-10-23",
    "total": "100 entreprises",
    "holdings": [
@@ -402,9 +402,9 @@
     "ticker": "PUST",
     "lsId": 1371888,
     "source": "LS Exchange (dernier cours de la journée, comme Trade Republic)",
-    "close": 101.94,
+    "close": 102.06,
     "prev": 103.97,
-    "day": -1.95,
+    "day": -1.84,
     "date": "2026-10-30"
    }
   },
@@ -414,7 +414,7 @@
    "name": "PEA MSCI Europe",
    "proxy": "IEUR",
    "proxyNote": "Variation et courbe : cours réel en euros sur LS Exchange, la bourse utilisée par Trade Republic. Détail par entreprise : via l'ETF IEUR (actions européennes, coté en dollars).",
-   "day": -0.54,
+   "day": -0.44,
    "holdingsDate": "2026-10-23",
    "total": "≈ 400 entreprises",
    "holdings": [
@@ -568,9 +568,9 @@
     "ticker": "PCEU",
     "lsId": 1371936,
     "source": "LS Exchange (dernier cours de la journée, comme Trade Republic)",
-    "close": 39.905,
+    "close": 39.945,
     "prev": 40.1225,
-    "day": -0.54,
+    "day": -0.44,
     "date": "2026-10-30"
    }
   }
@@ -727,16 +727,16 @@
   "du": "2026-10-26",
   "au": "2026-10-30",
   "etfs": {
-   "global": -0.29,
-   "nasdaq": -1.94,
-   "europe": 1.51
+   "global": -0.24,
+   "nasdaq": -1.83,
+   "europe": 1.61
   },
   "lignes": [
-   "La semaine des résultats des géants de la tech : Nasdaq 100 −1,9 %, Monde −0,3 %, mais Europe +1,5 % (cours LS en euros, vendredi à vendredi, chiffres de vendredi 18h45).",
+   "La semaine des résultats des géants de la tech : Nasdaq 100 −1,8 %, Monde −0,2 %, mais Europe +1,6 % (cours LS en euros, clôture du vendredi à clôture du vendredi).",
    "Lundi et mardi, les puces rebondissent fortement : Tesla gagne 6 % après une recommandation de Barclays, AMD et Nvidia investissent dans Meta, et l'introduction en Bourse d'Anthropic relance l'enthousiasme pour l'IA.",
    "Mercredi, SK Hynix publie des résultats records et Samsung bondit de 9 % ; la Fed maintient ses taux le soir.",
    "Jeudi, Alphabet plonge de 12,7 % (flux de trésorerie négatif à cause de l'IA) tandis qu'Eli Lilly, Novartis et Shell brillent ; vendredi, Intel (−30 %) et Amazon font chuter les puces (AMD −12 %, ASML −6 %).",
-   "La santé et l'énergie servent de refuge (AstraZeneca +7 % vendredi). À suivre : Apple (2/11) et Nvidia (18/11)."
+   "La santé et l'énergie servent de refuge (AstraZeneca +7 % vendredi). À suivre : Apple (2/11) et Nvidia (17/11)."
   ],
   "source": "Benzinga, Yahoo Finance, Reuters, TheStreet, Stock Titan, LS Exchange"
  },
@@ -755,6 +755,5 @@
    "lsId": 1371891,
    "note": "ETF S&P 500 éligible PEA, coté en euros sur LS Exchange (inclut l'effet euro/dollar)."
   }
- ],
- "enCours": "Mise à jour à 18h45 : Wall Street est encore ouvert (jusqu'à 22h) et LS Exchange cote jusqu'à 23h, les chiffres peuvent encore bouger."
+ ]
 }
