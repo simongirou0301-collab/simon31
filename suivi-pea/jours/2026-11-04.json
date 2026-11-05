@@ -2,7 +2,7 @@
  "date": "2026-11-04",
  "label": "mercredi 4 novembre 2026",
  "updatedAt": "2026-11-04T17:30:42Z",
- "resume": "Les marchés saluent la victoire des démocrates aux élections de mi-mandat : l'Europe signe sa meilleure séance depuis six mois (+2,7 %), portée par les banques. À Wall Street, Amazon, Apple et Microsoft bondissent de plus de 6 %, mais les puces reculent. Nasdaq 100 +0,8 %, Monde +1,4 %.",
+ "resume": "Les marchés saluent la victoire des démocrates aux élections de mi-mandat : l'Europe signe sa meilleure séance depuis six mois (+2,7 %), portée par les banques. À Wall Street, Amazon, Apple et Microsoft bondissent de plus de 6 %, mais les puces reculent. Nasdaq 100 +0,5 %, Monde +1,3 %.",
  "etfs": [
   {
    "id": "global",
@@ -10,7 +10,7 @@
    "name": "PEA Global (MSCI ACWI)",
    "proxy": "ACWI",
    "proxyNote": "Variation et courbe : cours réel en euros sur LS Exchange, la bourse utilisée par Trade Republic. Détail par entreprise : via l'ETF ACWI (même indice, coté en dollars).",
-   "day": 1.36,
+   "day": 1.32,
    "holdingsDate": "2026-10-29",
    "total": "≈ 2 500 entreprises",
    "holdings": [
@@ -180,9 +180,9 @@
     "ticker": "GPEA",
     "lsId": 4996087,
     "source": "LS Exchange (dernier cours de la journée, comme Trade Republic)",
-    "close": 5.118,
+    "close": 5.116,
     "prev": 5.0495,
-    "day": 1.36,
+    "day": 1.32,
     "date": "2026-11-04"
    }
   },
@@ -192,7 +192,7 @@
    "name": "PEA Nasdaq 100",
    "proxy": "QQQ",
    "proxyNote": "Variation et courbe : cours réel en euros sur LS Exchange, la bourse utilisée par Trade Republic. Détail par entreprise : via l'ETF QQQ (même indice, coté en dollars).",
-   "day": 0.85,
+   "day": 0.51,
    "holdingsDate": "2026-10-30",
    "total": "100 entreprises",
    "holdings": [
@@ -402,9 +402,9 @@
     "ticker": "PUST",
     "lsId": 1371888,
     "source": "LS Exchange (dernier cours de la journée, comme Trade Republic)",
-    "close": 102.18,
+    "close": 101.84,
     "prev": 101.32,
-    "day": 0.85,
+    "day": 0.51,
     "date": "2026-11-04"
    }
   },
@@ -414,7 +414,7 @@
    "name": "PEA MSCI Europe",
    "proxy": "IEUR",
    "proxyNote": "Variation et courbe : cours réel en euros sur LS Exchange, la bourse utilisée par Trade Republic. Détail par entreprise : via l'ETF IEUR (actions européennes, coté en dollars).",
-   "day": 2.74,
+   "day": 2.7,
    "holdingsDate": "2026-10-23",
    "total": "≈ 400 entreprises",
    "holdings": [
@@ -568,9 +568,9 @@
     "ticker": "PCEU",
     "lsId": 1371936,
     "source": "LS Exchange (dernier cours de la journée, comme Trade Republic)",
-    "close": 40.915,
+    "close": 40.9,
     "prev": 39.825,
-    "day": 2.74,
+    "day": 2.7,
     "date": "2026-11-04"
    }
   }
@@ -823,6 +823,5 @@
    "lsId": 1371891,
    "note": "ETF S&P 500 éligible PEA, coté en euros sur LS Exchange (inclut l'effet euro/dollar)."
   }
- ],
- "enCours": "Mise à jour à 18h40 : Wall Street est encore ouvert (jusqu'à 22h) et LS Exchange cote jusqu'à 23h, les chiffres peuvent encore bouger."
+ ]
 }
