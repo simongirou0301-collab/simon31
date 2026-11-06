@@ -2,7 +2,7 @@
  "date": "2026-11-05",
  "label": "jeudi 5 novembre 2026",
  "updatedAt": "2026-11-05T21:14:19Z",
- "resume": "Lourde chute à Wall Street : la peur que la victoire démocrate freine la construction de centres de données fait plonger les valeurs de l'IA et des puces (AMD, Micron, Lam Research, Tesla, Nvidia). Nasdaq 100 −6,6 % en euros, Monde −4,4 %. L'Europe, en hausse le matin, finit en baisse (−1,8 %), entraînée par ASML.",
+ "resume": "Lourde chute à Wall Street : la peur que la victoire démocrate freine la construction de centres de données fait plonger les valeurs de l'IA et des puces (AMD, Micron, Lam Research, Tesla, Nvidia). Nasdaq 100 −7,0 % en euros, Monde −4,7 %. L'Europe, en hausse le matin, finit en baisse (−1,8 %), entraînée par ASML.",
  "etfs": [
   {
    "id": "global",
@@ -10,7 +10,7 @@
    "name": "PEA Global (MSCI ACWI)",
    "proxy": "ACWI",
    "proxyNote": "Variation et courbe : cours réel en euros sur LS Exchange, la bourse utilisée par Trade Republic. Détail par entreprise : via l'ETF ACWI (même indice, coté en dollars).",
-   "day": -4.44,
+   "day": -4.67,
    "holdingsDate": "2026-10-29",
    "total": "≈ 2 500 entreprises",
    "holdings": [
@@ -50,7 +50,7 @@
      "s": "TSM",
      "n": "TSMC",
      "w": 1.77,
-     "c": -11.12,
+     "c": -10.78,
      "sec": "Tech",
      "pays": "Taïwan"
     },
@@ -106,7 +106,7 @@
      "s": "MU",
      "n": "Micron",
      "w": 1.03,
-     "c": -17.16,
+     "c": -17.46,
      "sec": "Tech",
      "pays": "États-Unis"
     },
@@ -180,9 +180,9 @@
     "ticker": "GPEA",
     "lsId": 4996087,
     "source": "LS Exchange (dernier cours de la journée, comme Trade Republic)",
-    "close": 4.889,
+    "close": 4.877,
     "prev": 5.116,
-    "day": -4.44,
+    "day": -4.67,
     "date": "2026-11-05"
    }
   },
@@ -192,7 +192,7 @@
    "name": "PEA Nasdaq 100",
    "proxy": "QQQ",
    "proxyNote": "Variation et courbe : cours réel en euros sur LS Exchange, la bourse utilisée par Trade Republic. Détail par entreprise : via l'ETF QQQ (même indice, coté en dollars).",
-   "day": -6.58,
+   "day": -6.95,
    "holdingsDate": "2026-10-30",
    "total": "100 entreprises",
    "holdings": [
@@ -224,7 +224,7 @@
      "s": "MU",
      "n": "Micron",
      "w": 4.47,
-     "c": -17.16,
+     "c": -17.46,
      "sec": "Tech",
      "pays": "États-Unis"
     },
@@ -344,7 +344,7 @@
      "s": "LRCX",
      "n": "Lam Research",
      "w": 1.34,
-     "c": -16.46,
+     "c": -16.36,
      "sec": "Tech",
      "pays": "États-Unis"
     },
@@ -402,9 +402,9 @@
     "ticker": "PUST",
     "lsId": 1371888,
     "source": "LS Exchange (dernier cours de la journée, comme Trade Republic)",
-    "close": 95.135,
+    "close": 94.76,
     "prev": 101.84,
-    "day": -6.58,
+    "day": -6.95,
     "date": "2026-11-05"
    }
   },
@@ -836,6 +836,5 @@
    "lsId": 1371891,
    "note": "ETF S&P 500 éligible PEA, coté en euros sur LS Exchange (inclut l'effet euro/dollar)."
   }
- ],
- "enCours": "Mise à jour à 22h14 : Wall Street est fermé, mais LS Exchange cote jusqu'à 23h, les chiffres en euros peuvent encore bouger un peu."
+ ]
 }
