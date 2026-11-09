@@ -2,7 +2,7 @@
  "date": "2026-11-06",
  "label": "vendredi 6 novembre 2026",
  "updatedAt": "2026-11-06T17:30:03Z",
- "resume": "Les puces rebondissent à Wall Street après le krach de la veille (AMD, Lam Research, Intel, Micron), aidées par un bon rapport sur l'emploi américain. Nasdaq 100 +3,0 % en euros, Monde +1,9 %. L'Europe recule encore (−0,2 %), plombée par l'Allemagne et Siemens.",
+ "resume": "Les puces rebondissent à Wall Street après le krach de la veille (AMD, Lam Research, Intel, Micron), aidées par un bon rapport sur l'emploi américain. Nasdaq 100 +2,5 % en euros, Monde +1,5 %. L'Europe recule encore (−0,6 %), plombée par l'Allemagne et Siemens.",
  "etfs": [
   {
    "id": "global",
@@ -10,7 +10,7 @@
    "name": "PEA Global (MSCI ACWI)",
    "proxy": "ACWI",
    "proxyNote": "Variation et courbe : cours réel en euros sur LS Exchange, la bourse utilisée par Trade Republic. Détail par entreprise : via l'ETF ACWI (même indice, coté en dollars).",
-   "day": 1.93,
+   "day": 1.49,
    "holdingsDate": "2026-10-29",
    "total": "≈ 2 500 entreprises",
    "holdings": [
@@ -180,9 +180,9 @@
     "ticker": "GPEA",
     "lsId": 4996087,
     "source": "LS Exchange (dernier cours de la journée, comme Trade Republic)",
-    "close": 4.97125,
+    "close": 4.9495,
     "prev": 4.877,
-    "day": 1.93,
+    "day": 1.49,
     "date": "2026-11-06"
    }
   },
@@ -192,7 +192,7 @@
    "name": "PEA Nasdaq 100",
    "proxy": "QQQ",
    "proxyNote": "Variation et courbe : cours réel en euros sur LS Exchange, la bourse utilisée par Trade Republic. Détail par entreprise : via l'ETF QQQ (même indice, coté en dollars).",
-   "day": 3.03,
+   "day": 2.47,
    "holdingsDate": "2026-10-30",
    "total": "100 entreprises",
    "holdings": [
@@ -402,9 +402,9 @@
     "ticker": "PUST",
     "lsId": 1371888,
     "source": "LS Exchange (dernier cours de la journée, comme Trade Republic)",
-    "close": 97.63,
+    "close": 97.105,
     "prev": 94.76,
-    "day": 3.03,
+    "day": 2.47,
     "date": "2026-11-06"
    }
   },
@@ -414,7 +414,7 @@
    "name": "PEA MSCI Europe",
    "proxy": "IEUR",
    "proxyNote": "Variation et courbe : cours réel en euros sur LS Exchange, la bourse utilisée par Trade Republic. Détail par entreprise : via l'ETF IEUR (actions européennes, coté en dollars).",
-   "day": -0.25,
+   "day": -0.58,
    "holdingsDate": "2026-10-23",
    "total": "≈ 400 entreprises",
    "holdings": [
@@ -568,9 +568,9 @@
     "ticker": "PCEU",
     "lsId": 1371936,
     "source": "LS Exchange (dernier cours de la journée, comme Trade Republic)",
-    "close": 40.085,
+    "close": 39.95,
     "prev": 40.185,
-    "day": -0.25,
+    "day": -0.58,
     "date": "2026-11-06"
    }
   }
@@ -792,12 +792,12 @@
   "du": "2026-11-02",
   "au": "2026-11-06",
   "etfs": {
-   "global": -1.78,
-   "nasdaq": -4.34,
-   "europe": 0.35
+   "global": -2.21,
+   "nasdaq": -4.85,
+   "europe": 0.01
   },
   "lignes": [
-   "Une semaine en montagnes russes : Nasdaq 100 −4,3 %, Monde −1,8 %, Europe +0,3 % (cours LS en euros, clôture du vendredi à clôture du vendredi).",
+   "Une semaine en montagnes russes : Nasdaq 100 −4,8 %, Monde −2,2 %, Europe stable (cours LS en euros, clôture du vendredi à clôture du vendredi).",
    "Lundi, le pétrole chute d'environ 6 % sur l'espoir d'une désescalade avec l'Iran ; les marchés restent prudents avant les élections américaines.",
    "Mercredi, les démocrates remportent le Congrès : les taux baissent, l'Europe signe sa meilleure séance depuis six mois et Amazon, Apple et Microsoft bondissent de plus de 6 %.",
    "Jeudi, la crainte d'un encadrement des centres de données fait plonger l'IA et les puces (AMD et Micron −17 %, Nvidia −9 %) ; la Banque d'Angleterre relève ses taux à 4 %.",
@@ -820,6 +820,5 @@
    "lsId": 1371891,
    "note": "ETF S&P 500 éligible PEA, coté en euros sur LS Exchange (inclut l'effet euro/dollar)."
   }
- ],
- "enCours": "Mise à jour à 18h30 : Wall Street est encore ouvert (jusqu'à 22h) et LS Exchange cote jusqu'à 23h, les chiffres peuvent encore bouger."
+ ]
 }
