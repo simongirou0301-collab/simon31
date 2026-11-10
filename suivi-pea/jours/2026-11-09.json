@@ -2,7 +2,7 @@
  "date": "2026-11-09",
  "label": "lundi 9 novembre 2026",
  "updatedAt": "2026-11-09T17:30:48Z",
- "resume": "Rebond général : le pétrole recule sur l'espoir d'un apaisement avec l'Iran et les puces poursuivent leur remontée (AMD, Applied Materials, Broadcom). Nvidia fait exception, plombée par une enquête interne visant son patron. Nasdaq 100 +2,7 % en euros, Monde +1,8 %, Europe +2,0 %.",
+ "resume": "Rebond général : le pétrole recule sur l'espoir d'un apaisement avec l'Iran et les puces poursuivent leur remontée (AMD, Applied Materials, Broadcom). Nvidia fait exception, plombée par une enquête interne visant son patron. Nasdaq 100 +2,8 % en euros, Monde +2,0 %, Europe +2,3 %.",
  "etfs": [
   {
    "id": "global",
@@ -10,7 +10,7 @@
    "name": "PEA Global (MSCI ACWI)",
    "proxy": "ACWI",
    "proxyNote": "Variation et courbe : cours réel en euros sur LS Exchange, la bourse utilisée par Trade Republic. Détail par entreprise : via l'ETF ACWI (même indice, coté en dollars).",
-   "day": 1.84,
+   "day": 1.97,
    "holdingsDate": "2026-11-06",
    "total": "≈ 2 500 entreprises",
    "holdings": [
@@ -180,9 +180,9 @@
     "ticker": "GPEA",
     "lsId": 4996087,
     "source": "LS Exchange (dernier cours de la journée, comme Trade Republic)",
-    "close": 5.0405,
+    "close": 5.047,
     "prev": 4.9495,
-    "day": 1.84,
+    "day": 1.97,
     "date": "2026-11-09"
    }
   },
@@ -192,7 +192,7 @@
    "name": "PEA Nasdaq 100",
    "proxy": "QQQ",
    "proxyNote": "Variation et courbe : cours réel en euros sur LS Exchange, la bourse utilisée par Trade Republic. Détail par entreprise : via l'ETF QQQ (même indice, coté en dollars).",
-   "day": 2.66,
+   "day": 2.8,
    "holdingsDate": "2026-11-06",
    "total": "100 entreprises",
    "holdings": [
@@ -402,9 +402,9 @@
     "ticker": "PUST",
     "lsId": 1371888,
     "source": "LS Exchange (dernier cours de la journée, comme Trade Republic)",
-    "close": 99.685,
+    "close": 99.82,
     "prev": 97.105,
-    "day": 2.66,
+    "day": 2.8,
     "date": "2026-11-09"
    }
   },
@@ -414,7 +414,7 @@
    "name": "PEA MSCI Europe",
    "proxy": "IEUR",
    "proxyNote": "Variation et courbe : cours réel en euros sur LS Exchange, la bourse utilisée par Trade Republic. Détail par entreprise : via l'ETF IEUR (actions européennes, coté en dollars).",
-   "day": 2.03,
+   "day": 2.29,
    "holdingsDate": "2026-11-06",
    "total": "≈ 400 entreprises",
    "holdings": [
@@ -568,9 +568,9 @@
     "ticker": "PCEU",
     "lsId": 1371936,
     "source": "LS Exchange (dernier cours de la journée, comme Trade Republic)",
-    "close": 40.76,
+    "close": 40.865,
     "prev": 39.95,
-    "day": 2.03,
+    "day": 2.29,
     "date": "2026-11-09"
    }
   }
@@ -823,6 +823,5 @@
    "lsId": 1371891,
    "note": "ETF S&P 500 éligible PEA, coté en euros sur LS Exchange (inclut l'effet euro/dollar)."
   }
- ],
- "enCours": "Mise à jour à 18h30 : Wall Street est encore ouvert (jusqu'à 22h) et LS Exchange cote jusqu'à 23h, les chiffres peuvent encore bouger."
+ ]
 }
