@@ -2,7 +2,7 @@
  "date": "2026-11-12",
  "label": "jeudi 12 novembre 2026",
  "updatedAt": "2026-11-12T17:30:42Z",
- "resume": "Coup de tonnerre chez Nvidia : Jensen Huang démissionne et l'action recule de près de 6 %, mais Broadcom, AMD et Alphabet compensent. Nasdaq 100 +0,6 % en euros, Monde +0,2 %. L'Europe touche un record en séance avant de finir stable (−0,0 %).",
+ "resume": "Coup de tonnerre chez Nvidia : Jensen Huang démissionne et l'action recule de près de 6 %, mais Broadcom, AMD et Alphabet compensent. Nasdaq 100 +0,3 % en euros, Monde −0,2 %. L'Europe touche un record en séance avant de finir en léger repli (−0,4 %).",
  "etfs": [
   {
    "id": "global",
@@ -10,7 +10,7 @@
    "name": "PEA Global (MSCI ACWI)",
    "proxy": "ACWI",
    "proxyNote": "Variation et courbe : cours réel en euros sur LS Exchange, la bourse utilisée par Trade Republic. Détail par entreprise : via l'ETF ACWI (même indice, coté en dollars).",
-   "day": 0.2,
+   "day": -0.18,
    "holdingsDate": "2026-11-06",
    "total": "≈ 2 500 entreprises",
    "holdings": [
@@ -180,9 +180,9 @@
     "ticker": "GPEA",
     "lsId": 4996087,
     "source": "LS Exchange (dernier cours de la journée, comme Trade Republic)",
-    "close": 5.147,
+    "close": 5.1275,
     "prev": 5.1365,
-    "day": 0.2,
+    "day": -0.18,
     "date": "2026-11-12"
    }
   },
@@ -192,7 +192,7 @@
    "name": "PEA Nasdaq 100",
    "proxy": "QQQ",
    "proxyNote": "Variation et courbe : cours réel en euros sur LS Exchange, la bourse utilisée par Trade Republic. Détail par entreprise : via l'ETF QQQ (même indice, coté en dollars).",
-   "day": 0.62,
+   "day": 0.31,
    "holdingsDate": "2026-11-06",
    "total": "100 entreprises",
    "holdings": [
@@ -402,9 +402,9 @@
     "ticker": "PUST",
     "lsId": 1371888,
     "source": "LS Exchange (dernier cours de la journée, comme Trade Republic)",
-    "close": 103.06,
+    "close": 102.74,
     "prev": 102.42,
-    "day": 0.62,
+    "day": 0.31,
     "date": "2026-11-12"
    }
   },
@@ -414,7 +414,7 @@
    "name": "PEA MSCI Europe",
    "proxy": "IEUR",
    "proxyNote": "Variation et courbe : cours réel en euros sur LS Exchange, la bourse utilisée par Trade Republic. Détail par entreprise : via l'ETF IEUR (actions européennes, coté en dollars).",
-   "day": -0.04,
+   "day": -0.39,
    "holdingsDate": "2026-11-06",
    "total": "≈ 400 entreprises",
    "holdings": [
@@ -568,9 +568,9 @@
     "ticker": "PCEU",
     "lsId": 1371936,
     "source": "LS Exchange (dernier cours de la journée, comme Trade Republic)",
-    "close": 41.125,
+    "close": 40.98,
     "prev": 41.14,
-    "day": -0.04,
+    "day": -0.39,
     "date": "2026-11-12"
    }
   }
@@ -816,6 +816,5 @@
    "lsId": 1371891,
    "note": "ETF S&P 500 éligible PEA, coté en euros sur LS Exchange (inclut l'effet euro/dollar)."
   }
- ],
- "enCours": "Mise à jour à 18h30 : Wall Street est encore ouvert (jusqu'à 22h) et LS Exchange cote jusqu'à 23h, les chiffres peuvent encore bouger."
+ ]
 }
