@@ -2,7 +2,7 @@
  "date": "2026-11-13",
  "label": "vendredi 13 novembre 2026",
  "updatedAt": "2026-11-13T17:30:14Z",
- "resume": "Les puces retombent à Wall Street : AMD perd 10 % et Applied Materials recule malgré de bons résultats, sur fond de taux américains au plus haut depuis des années. Nasdaq 100 −1,5 % en euros, Monde −0,5 %. L'Europe résiste (+0,3 %) et conclut sa meilleure semaine depuis juin.",
+ "resume": "Les puces retombent à Wall Street : AMD perd près de 9 % et Applied Materials recule malgré de bons résultats, sur fond de taux américains au plus haut depuis des années. Nasdaq 100 −1,4 % en euros, Monde −0,4 %. L'Europe résiste (+0,5 %) et conclut sa meilleure semaine depuis juin.",
  "etfs": [
   {
    "id": "global",
@@ -10,7 +10,7 @@
    "name": "PEA Global (MSCI ACWI)",
    "proxy": "ACWI",
    "proxyNote": "Variation et courbe : cours réel en euros sur LS Exchange, la bourse utilisée par Trade Republic. Détail par entreprise : via l'ETF ACWI (même indice, coté en dollars).",
-   "day": -0.52,
+   "day": -0.39,
    "holdingsDate": "2026-11-06",
    "total": "≈ 2 500 entreprises",
    "holdings": [
@@ -180,9 +180,9 @@
     "ticker": "GPEA",
     "lsId": 4996087,
     "source": "LS Exchange (dernier cours de la journée, comme Trade Republic)",
-    "close": 5.101,
+    "close": 5.1075,
     "prev": 5.1275,
-    "day": -0.52,
+    "day": -0.39,
     "date": "2026-11-13"
    }
   },
@@ -192,7 +192,7 @@
    "name": "PEA Nasdaq 100",
    "proxy": "QQQ",
    "proxyNote": "Variation et courbe : cours réel en euros sur LS Exchange, la bourse utilisée par Trade Republic. Détail par entreprise : via l'ETF QQQ (même indice, coté en dollars).",
-   "day": -1.54,
+   "day": -1.36,
    "holdingsDate": "2026-11-06",
    "total": "100 entreprises",
    "holdings": [
@@ -402,9 +402,9 @@
     "ticker": "PUST",
     "lsId": 1371888,
     "source": "LS Exchange (dernier cours de la journée, comme Trade Republic)",
-    "close": 101.16,
+    "close": 101.34,
     "prev": 102.74,
-    "day": -1.54,
+    "day": -1.36,
     "date": "2026-11-13"
    }
   },
@@ -414,7 +414,7 @@
    "name": "PEA MSCI Europe",
    "proxy": "IEUR",
    "proxyNote": "Variation et courbe : cours réel en euros sur LS Exchange, la bourse utilisée par Trade Republic. Détail par entreprise : via l'ETF IEUR (actions européennes, coté en dollars).",
-   "day": 0.33,
+   "day": 0.51,
    "holdingsDate": "2026-11-06",
    "total": "≈ 400 entreprises",
    "holdings": [
@@ -568,9 +568,9 @@
     "ticker": "PCEU",
     "lsId": 1371936,
     "source": "LS Exchange (dernier cours de la journée, comme Trade Republic)",
-    "close": 41.115,
+    "close": 41.19,
     "prev": 40.98,
-    "day": 0.33,
+    "day": 0.51,
     "date": "2026-11-13"
    }
   }
@@ -768,16 +768,16 @@
   "du": "2026-11-09",
   "au": "2026-11-13",
   "etfs": {
-   "global": 3.06,
-   "nasdaq": 4.18,
-   "europe": 2.92
+   "global": 3.19,
+   "nasdaq": 4.36,
+   "europe": 3.1
   },
   "lignes": [
-   "Une bonne semaine malgré les secousses : Nasdaq 100 +4,2 %, Monde +3,1 %, Europe +2,9 % (cours LS en euros, clôture du vendredi à clôture du vendredi).",
+   "Une bonne semaine malgré les secousses : Nasdaq 100 +4,4 %, Monde +3,2 %, Europe +3,1 % (cours LS en euros, clôture du vendredi à clôture du vendredi).",
    "Lundi, le pétrole recule sur l'espoir d'un apaisement avec l'Iran et les puces rebondissent, mais Nvidia chute : son conseil enquête sur Jensen Huang.",
    "Mardi, l'inflation américaine ressort plus forte que prévu et la Fed évoque une hausse des taux en décembre ; mercredi, les résultats de CoreWeave relancent toute l'IA (Micron +14 %, Intel +9 %).",
    "Jeudi, Jensen Huang démissionne de Nvidia ; l'Europe touche un record grâce à de bons résultats d'entreprises.",
-   "Vendredi, les puces sont de nouveau vendues (AMD −10 %) et le taux à 10 ans américain dépasse 5,1 %. À suivre : les résultats de Nvidia le 17/11 et l'entrée en Bourse d'Anthropic le 19/11."
+   "Vendredi, les puces sont de nouveau vendues (AMD −9 %) et le taux à 10 ans américain dépasse 5,1 %. À suivre : les résultats de Nvidia le 17/11 et l'entrée en Bourse d'Anthropic le 19/11."
   ],
   "source": "Reuters, Yahoo Finance, Boursorama, TheStreet, LS Exchange"
  },
@@ -796,6 +796,5 @@
    "lsId": 1371891,
    "note": "ETF S&P 500 éligible PEA, coté en euros sur LS Exchange (inclut l'effet euro/dollar)."
   }
- ],
- "enCours": "Mise à jour à 18h30 : Wall Street est encore ouvert (jusqu'à 22h) et LS Exchange cote jusqu'à 23h, les chiffres peuvent encore bouger."
+ ]
 }
