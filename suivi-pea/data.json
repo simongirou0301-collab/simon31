@@ -1399,7 +1399,7 @@
    "id": "fed",
    "sens": "down",
    "titre": "Un responsable de la Fed évoque des hausses de taux",
-   "texte": "Alberto Musalem (Fed de Saint-Louis) estime que plusieurs hausses de taux seront probablement nécessaires d'ici le printemps 2027. Les ventes au détail d'octobre progressent de 0,2 % (0,1 % attendu), mais le moral des constructeurs tombe à son plus bas depuis avril 2012. Microsoft −2,8 %, JPMorgan −2 %.",
+   "texte": "Alberto Musalem (Fed de Saint-Louis) estime que plusieurs hausses de taux seront probablement nécessaires d'ici le printemps 2027. Les ventes au détail d'octobre progressent de 0,2 %, mais le moral des constructeurs tombe à son plus bas depuis avril 2012. Microsoft −2,8 %, JPMorgan −2 %.",
    "tickers": [
     "MSFT",
     "JPM"
@@ -1414,7 +1414,7 @@
    "id": "europe",
    "sens": "down",
    "titre": "L'Europe recule nettement",
-   "texte": "Le FTSE 100 perd 1,4 % et les autres places européennes finissent dans le rouge. SAP −5,6 % sans cause confirmée. UBS −3,3 % : selon Reuters, la banque s'apprête à accepter les nouvelles règles de fonds propres suisses qu'elle contestait. Schneider Electric −2 %, Santander −2 %, HSBC −2 %.",
+   "texte": "Les places européennes finissent dans le rouge : DAX −2 %, CAC 40 −1,6 %. SAP −5,6 %, dans un repli des éditeurs de logiciels européens. UBS −3,3 % : selon Reuters, la banque s'apprête à accepter les nouvelles règles de fonds propres suisses qu'elle contestait. Schneider Electric −2 %, Santander −2 %, HSBC −2 %.",
    "tickers": [
     "SAP",
     "UBSG",
@@ -1426,7 +1426,7 @@
     "europe",
     "global"
    ],
-   "source": "Reuters, 24/7 Wall St, stockanalysis (17 nov.)"
+   "source": "Reuters, finanzen.net, BFM Bourse, stockanalysis (17 nov.)"
   },
   {
    "id": "securite",
