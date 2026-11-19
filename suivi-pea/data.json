@@ -1,8 +1,8 @@
 {
- "date": "2026-11-18",
- "label": "mercredi 18 novembre 2026",
- "updatedAt": "2026-11-18T17:30:29Z",
- "resume": "Nvidia dépasse les attentes mais son action recule en séance ; Amazon, AMD et Broadcom soutiennent le Nasdaq tandis que l'Europe baisse. Nasdaq 100 +0,8 % en euros, Monde +0,1 %, Europe −0,7 %.",
+ "date": "2026-11-19",
+ "label": "jeudi 19 novembre 2026",
+ "updatedAt": "2026-11-19T17:30:05Z",
+ "resume": "Anthropic s'envole pour son premier jour en Bourse mais l'élan retombe ; AMD chute de près de 7 % et l'Europe recule. Monde −0,9 % en euros, Nasdaq 100 −0,4 %, Europe −1,1 %.",
  "etfs": [
   {
    "id": "global",
@@ -10,12 +10,8 @@
    "name": "PEA Global (MSCI ACWI)",
    "proxy": "ACWI",
    "proxyNote": "Variation et courbe : cours réel en euros sur LS Exchange, la bourse utilisée par Trade Republic. Détail par entreprise : via l'ETF ACWI (même indice, coté en dollars).",
-   "day": 0.08,
+   "day": -0.88,
    "history": [
-    [
-     "2026-10-08",
-     159.79
-    ],
     [
      "2026-10-09",
      160.9
@@ -130,7 +126,11 @@
     ],
     [
      "2026-11-18",
-     151.09
+     150.68
+    ],
+    [
+     "2026-11-19",
+     149.42
     ]
    ],
    "holdingsDate": "2026-11-13",
@@ -140,7 +140,7 @@
      "s": "AAPL",
      "n": "Apple",
      "w": 5.18,
-     "c": 0.49,
+     "c": -0.68,
      "sec": "Tech",
      "pays": "États-Unis"
     },
@@ -148,7 +148,7 @@
      "s": "NVDA",
      "n": "Nvidia",
      "w": 3.71,
-     "c": -1.73,
+     "c": -0.51,
      "sec": "Tech",
      "pays": "États-Unis"
     },
@@ -156,7 +156,7 @@
      "s": "MSFT",
      "n": "Microsoft",
      "w": 3.66,
-     "c": -0.26,
+     "c": 0.65,
      "sec": "Tech",
      "pays": "États-Unis"
     },
@@ -164,7 +164,7 @@
      "s": "AMZN",
      "n": "Amazon",
      "w": 2.56,
-     "c": 3.33,
+     "c": -0.83,
      "sec": "Commerce",
      "pays": "États-Unis"
     },
@@ -180,7 +180,7 @@
      "s": "GOOGL",
      "n": "Alphabet A",
      "w": 1.72,
-     "c": 0.69,
+     "c": 1.2,
      "sec": "Communication",
      "pays": "États-Unis"
     },
@@ -188,7 +188,7 @@
      "s": "AVGO",
      "n": "Broadcom",
      "w": 1.55,
-     "c": 3.1,
+     "c": 0.42,
      "sec": "Tech",
      "pays": "États-Unis"
     },
@@ -196,7 +196,7 @@
      "s": "META",
      "n": "Meta",
      "w": 1.4,
-     "c": -0.21,
+     "c": -0.39,
      "sec": "Communication",
      "pays": "États-Unis"
     },
@@ -204,7 +204,7 @@
      "s": "GOOG",
      "n": "Alphabet C",
      "w": 1.35,
-     "c": 0.59,
+     "c": 1.31,
      "sec": "Communication",
      "pays": "États-Unis"
     },
@@ -212,7 +212,7 @@
      "s": "LLY",
      "n": "Eli Lilly",
      "w": 1.15,
-     "c": -1.71,
+     "c": -1.64,
      "sec": "Santé",
      "pays": "États-Unis"
     },
@@ -220,7 +220,7 @@
      "s": "TSLA",
      "n": "Tesla",
      "w": 1.11,
-     "c": 1.2,
+     "c": -0.79,
      "sec": "Auto",
      "pays": "États-Unis"
     },
@@ -228,7 +228,7 @@
      "s": "JPM",
      "n": "JPMorgan",
      "w": 0.91,
-     "c": -0.88,
+     "c": -1.32,
      "sec": "Finance",
      "pays": "États-Unis"
     },
@@ -236,7 +236,7 @@
      "s": "MU",
      "n": "Micron",
      "w": 0.87,
-     "c": -0.54,
+     "c": 0.37,
      "sec": "Tech",
      "pays": "États-Unis"
     },
@@ -244,7 +244,7 @@
      "s": "AMD",
      "n": "AMD",
      "w": 0.86,
-     "c": 3.21,
+     "c": -6.85,
      "sec": "Tech",
      "pays": "États-Unis"
     },
@@ -252,7 +252,7 @@
      "s": "BRK.B",
      "n": "Berkshire Hathaway",
      "w": 0.83,
-     "c": -1.83,
+     "c": -1.12,
      "sec": "Finance",
      "pays": "États-Unis"
     },
@@ -260,7 +260,7 @@
      "s": "SMSN",
      "n": "Samsung",
      "w": 0.71,
-     "c": 2.31,
+     "c": null,
      "sec": "Tech",
      "pays": "Corée du Sud"
     },
@@ -268,7 +268,7 @@
      "s": "XOM",
      "n": "ExxonMobil",
      "w": 0.7,
-     "c": -3.18,
+     "c": -0.68,
      "sec": "Énergie",
      "pays": "États-Unis"
     },
@@ -276,7 +276,7 @@
      "s": "V",
      "n": "Visa",
      "w": 0.7,
-     "c": 0.21,
+     "c": -2.6,
      "sec": "Finance",
      "pays": "États-Unis"
     },
@@ -284,7 +284,7 @@
      "s": "JNJ",
      "n": "Johnson & Johnson",
      "w": 0.68,
-     "c": -0.78,
+     "c": -1.91,
      "sec": "Santé",
      "pays": "États-Unis"
     },
@@ -292,7 +292,7 @@
      "s": "ASML",
      "n": "ASML",
      "w": 0.57,
-     "c": 1.94,
+     "c": 2.17,
      "sec": "Tech",
      "pays": "Pays-Bas"
     }
@@ -302,15 +302,11 @@
     "ticker": "GPEA",
     "lsId": 4996087,
     "source": "LS Exchange (dernier cours de la journée, comme Trade Republic)",
-    "close": 4.98525,
-    "prev": 4.9815,
-    "day": 0.08,
-    "date": "2026-11-18",
+    "close": 4.9225,
+    "prev": 4.96625,
+    "day": -0.88,
+    "date": "2026-11-19",
     "history": [
-     [
-      "2026-10-08",
-      5.1635
-     ],
      [
       "2026-10-09",
       5.2055
@@ -425,7 +421,11 @@
      ],
      [
       "2026-11-18",
-      4.98525
+      4.96625
+     ],
+     [
+      "2026-11-19",
+      4.9225
      ]
     ]
    }
@@ -436,7 +436,7 @@
    "name": "PEA Nasdaq 100",
    "proxy": "QQQ",
    "proxyNote": "Variation et courbe : cours réel en euros sur LS Exchange, la bourse utilisée par Trade Republic. Détail par entreprise : via l'ETF QQQ (même indice, coté en dollars).",
-   "day": 0.85,
+   "day": -0.36,
    "history": [
     [
      "2026-10-08",
@@ -556,7 +556,7 @@
     ],
     [
      "2026-11-18",
-     661.42
+     659.51
     ]
    ],
    "holdingsDate": "2026-11-13",
@@ -566,7 +566,7 @@
      "s": "AAPL",
      "n": "Apple",
      "w": 8.57,
-     "c": 0.49,
+     "c": -0.68,
      "sec": "Tech",
      "pays": "États-Unis"
     },
@@ -574,7 +574,7 @@
      "s": "NVDA",
      "n": "Nvidia",
      "w": 6.47,
-     "c": -1.73,
+     "c": -0.51,
      "sec": "Tech",
      "pays": "États-Unis"
     },
@@ -582,7 +582,7 @@
      "s": "MSFT",
      "n": "Microsoft",
      "w": 6.41,
-     "c": -0.26,
+     "c": 0.65,
      "sec": "Tech",
      "pays": "États-Unis"
     },
@@ -590,7 +590,7 @@
      "s": "AMZN",
      "n": "Amazon",
      "w": 4.74,
-     "c": 3.33,
+     "c": -0.83,
      "sec": "Commerce",
      "pays": "États-Unis"
     },
@@ -598,7 +598,7 @@
      "s": "MU",
      "n": "Micron",
      "w": 4.0,
-     "c": -0.54,
+     "c": 0.37,
      "sec": "Tech",
      "pays": "États-Unis"
     },
@@ -606,7 +606,7 @@
      "s": "AMD",
      "n": "AMD",
      "w": 3.97,
-     "c": 3.21,
+     "c": -6.85,
      "sec": "Tech",
      "pays": "États-Unis"
     },
@@ -614,7 +614,7 @@
      "s": "TSLA",
      "n": "Tesla",
      "w": 3.38,
-     "c": 1.2,
+     "c": -0.79,
      "sec": "Auto",
      "pays": "États-Unis"
     },
@@ -622,7 +622,7 @@
      "s": "META",
      "n": "Meta",
      "w": 3.14,
-     "c": -0.21,
+     "c": -0.39,
      "sec": "Communication",
      "pays": "États-Unis"
     },
@@ -630,7 +630,7 @@
      "s": "GOOGL",
      "n": "Alphabet A",
      "w": 2.86,
-     "c": 0.69,
+     "c": 1.2,
      "sec": "Communication",
      "pays": "États-Unis"
     },
@@ -638,7 +638,7 @@
      "s": "WMT",
      "n": "Walmart",
      "w": 2.83,
-     "c": -0.55,
+     "c": -0.44,
      "sec": "Commerce",
      "pays": "États-Unis"
     },
@@ -646,7 +646,7 @@
      "s": "AVGO",
      "n": "Broadcom",
      "w": 2.72,
-     "c": 3.1,
+     "c": 0.42,
      "sec": "Tech",
      "pays": "États-Unis"
     },
@@ -662,7 +662,7 @@
      "s": "GOOG",
      "n": "Alphabet C",
      "w": 2.66,
-     "c": 0.59,
+     "c": 1.31,
      "sec": "Communication",
      "pays": "États-Unis"
     },
@@ -670,7 +670,7 @@
      "s": "COST",
      "n": "Costco",
      "w": 2.23,
-     "c": 0.06,
+     "c": -0.6,
      "sec": "Commerce",
      "pays": "États-Unis"
     },
@@ -678,7 +678,7 @@
      "s": "PLTR",
      "n": "Palantir",
      "w": 1.76,
-     "c": -0.38,
+     "c": 1.33,
      "sec": "Tech",
      "pays": "États-Unis"
     },
@@ -686,7 +686,7 @@
      "s": "CSCO",
      "n": "Cisco",
      "w": 1.71,
-     "c": 1.75,
+     "c": -0.63,
      "sec": "Tech",
      "pays": "États-Unis"
     },
@@ -694,7 +694,7 @@
      "s": "INTC",
      "n": "Intel",
      "w": 1.43,
-     "c": -0.62,
+     "c": 4.26,
      "sec": "Tech",
      "pays": "États-Unis"
     },
@@ -702,7 +702,7 @@
      "s": "AMAT",
      "n": "Applied Materials",
      "w": 1.34,
-     "c": 1.13,
+     "c": -1.58,
      "sec": "Tech",
      "pays": "États-Unis"
     },
@@ -710,7 +710,7 @@
      "s": "LRCX",
      "n": "Lam Research",
      "w": 1.29,
-     "c": 0.47,
+     "c": -1.38,
      "sec": "Tech",
      "pays": "États-Unis"
     },
@@ -718,7 +718,7 @@
      "s": "TXN",
      "n": "Texas Instruments",
      "w": 1.26,
-     "c": -0.93,
+     "c": -1.17,
      "sec": "Tech",
      "pays": "États-Unis"
     },
@@ -726,7 +726,7 @@
      "s": "PANW",
      "n": "Palo Alto Networks",
      "w": 1.19,
-     "c": 7.55,
+     "c": 6.62,
      "sec": "Tech",
      "pays": "États-Unis"
     },
@@ -734,7 +734,7 @@
      "s": "NFLX",
      "n": "Netflix",
      "w": 1.18,
-     "c": 0.57,
+     "c": -0.66,
      "sec": "Communication",
      "pays": "États-Unis"
     },
@@ -742,7 +742,7 @@
      "s": "AMGN",
      "n": "Amgen",
      "w": 1.15,
-     "c": -2.16,
+     "c": -1.1,
      "sec": "Santé",
      "pays": "États-Unis"
     },
@@ -750,7 +750,7 @@
      "s": "LIN",
      "n": "Linde",
      "w": 1.1,
-     "c": -0.51,
+     "c": 0.25,
      "sec": "Industrie",
      "pays": "Royaume-Uni"
     },
@@ -758,7 +758,7 @@
      "s": "CRWD",
      "n": "CrowdStrike",
      "w": 1.06,
-     "c": 8.02,
+     "c": 5.24,
      "sec": "Tech",
      "pays": "États-Unis"
     }
@@ -768,15 +768,11 @@
     "ticker": "PUST",
     "lsId": 1371888,
     "source": "LS Exchange (dernier cours de la journée, comme Trade Republic)",
-    "close": 99.42,
-    "prev": 98.585,
-    "day": 0.85,
-    "date": "2026-11-18",
+    "close": 98.685,
+    "prev": 99.04,
+    "day": -0.36,
+    "date": "2026-11-19",
     "history": [
-     [
-      "2026-10-08",
-      110.2
-     ],
      [
       "2026-10-09",
       110.7
@@ -891,7 +887,11 @@
      ],
      [
       "2026-11-18",
-      99.42
+      99.04
+     ],
+     [
+      "2026-11-19",
+      98.685
      ]
     ]
    }
@@ -902,12 +902,8 @@
    "name": "PEA MSCI Europe",
    "proxy": "IEUR",
    "proxyNote": "Variation et courbe : cours réel en euros sur LS Exchange, la bourse utilisée par Trade Republic. Détail par entreprise : via l'ETF IEUR (actions européennes, coté en dollars).",
-   "day": -0.74,
+   "day": -1.12,
    "history": [
-    [
-     "2026-10-08",
-     72.58
-    ],
     [
      "2026-10-09",
      73.1
@@ -1022,7 +1018,11 @@
     ],
     [
      "2026-11-18",
-     73.19
+     72.92
+    ],
+    [
+     "2026-11-19",
+     71.81
     ]
    ],
    "holdingsDate": "2026-11-13",
@@ -1032,7 +1032,7 @@
      "s": "ASML",
      "n": "ASML",
      "w": 3.69,
-     "c": 1.94,
+     "c": 2.17,
      "sec": "Tech",
      "pays": "Pays-Bas"
     },
@@ -1040,7 +1040,7 @@
      "s": "ROG",
      "n": "Roche",
      "w": 2.18,
-     "c": -0.69,
+     "c": -1.04,
      "sec": "Santé",
      "pays": "Suisse"
     },
@@ -1048,7 +1048,7 @@
      "s": "HSBA",
      "n": "HSBC",
      "w": 1.98,
-     "c": -2.09,
+     "c": -0.91,
      "sec": "Finance",
      "pays": "Royaume-Uni"
     },
@@ -1056,7 +1056,7 @@
      "s": "NOVN",
      "n": "Novartis",
      "w": 1.88,
-     "c": -1.35,
+     "c": -3.22,
      "sec": "Santé",
      "pays": "Suisse"
     },
@@ -1064,7 +1064,7 @@
      "s": "SHEL",
      "n": "Shell",
      "w": 1.83,
-     "c": -2.12,
+     "c": -0.58,
      "sec": "Énergie",
      "pays": "Royaume-Uni"
     },
@@ -1072,7 +1072,7 @@
      "s": "AZN",
      "n": "AstraZeneca",
      "w": 1.8,
-     "c": -1.13,
+     "c": -2.51,
      "sec": "Santé",
      "pays": "Royaume-Uni"
     },
@@ -1080,7 +1080,7 @@
      "s": "NESN",
      "n": "Nestlé",
      "w": 1.73,
-     "c": -0.81,
+     "c": -1.84,
      "sec": "Conso",
      "pays": "Suisse"
     },
@@ -1088,7 +1088,7 @@
      "s": "SAP",
      "n": "SAP",
      "w": 1.53,
-     "c": -3.76,
+     "c": -3.56,
      "sec": "Tech",
      "pays": "Allemagne"
     },
@@ -1096,7 +1096,7 @@
      "s": "SIE",
      "n": "Siemens",
      "w": 1.44,
-     "c": -1.41,
+     "c": 0.34,
      "sec": "Industrie",
      "pays": "Allemagne"
     },
@@ -1104,7 +1104,7 @@
      "s": "ALV",
      "n": "Allianz",
      "w": 1.29,
-     "c": -1.05,
+     "c": -0.89,
      "sec": "Finance",
      "pays": "Allemagne"
     },
@@ -1112,7 +1112,7 @@
      "s": "TTE",
      "n": "TotalEnergies",
      "w": 1.13,
-     "c": -2.65,
+     "c": -0.81,
      "sec": "Énergie",
      "pays": "France"
     },
@@ -1120,7 +1120,7 @@
      "s": "SAN",
      "n": "Santander",
      "w": 1.12,
-     "c": -1.46,
+     "c": -0.77,
      "sec": "Finance",
      "pays": "Espagne"
     },
@@ -1128,7 +1128,7 @@
      "s": "IBE",
      "n": "Iberdrola",
      "w": 1.04,
-     "c": -0.52,
+     "c": -0.75,
      "sec": "Services publics",
      "pays": "Espagne"
     },
@@ -1136,7 +1136,7 @@
      "s": "UBSG",
      "n": "UBS",
      "w": 0.97,
-     "c": -1.28,
+     "c": -0.39,
      "sec": "Finance",
      "pays": "Suisse"
     },
@@ -1144,7 +1144,7 @@
      "s": "RR",
      "n": "Rolls-Royce",
      "w": 0.96,
-     "c": 0.27,
+     "c": -0.32,
      "sec": "Industrie",
      "pays": "Royaume-Uni"
     },
@@ -1152,7 +1152,7 @@
      "s": "SU",
      "n": "Schneider Electric",
      "w": 0.95,
-     "c": 0.61,
+     "c": -1.18,
      "sec": "Industrie",
      "pays": "France"
     },
@@ -1160,7 +1160,7 @@
      "s": "BBVA",
      "n": "BBVA",
      "w": 0.93,
-     "c": -1.6,
+     "c": -0.79,
      "sec": "Finance",
      "pays": "Espagne"
     },
@@ -1168,7 +1168,7 @@
      "s": "ULVR",
      "n": "Unilever",
      "w": 0.91,
-     "c": -1.27,
+     "c": -2.22,
      "sec": "Conso",
      "pays": "Royaume-Uni"
     }
@@ -1178,15 +1178,11 @@
     "ticker": "PCEU",
     "lsId": 1371936,
     "source": "LS Exchange (dernier cours de la journée, comme Trade Republic)",
-    "close": 39.9825,
-    "prev": 40.28,
-    "day": -0.74,
-    "date": "2026-11-18",
+    "close": 39.425,
+    "prev": 39.87,
+    "day": -1.12,
+    "date": "2026-11-19",
     "history": [
-     [
-      "2026-10-08",
-      38.8625
-     ],
      [
       "2026-10-09",
       39.15
@@ -1301,7 +1297,11 @@
      ],
      [
       "2026-11-18",
-      39.9825
+      39.87
+     ],
+     [
+      "2026-11-19",
+      39.425
      ]
     ]
    }
@@ -1309,97 +1309,83 @@
  ],
  "news": [
   {
-   "id": "nvidia",
+   "id": "anthropic",
+   "sens": "up",
+   "titre": "Anthropic entre en Bourse",
+   "texte": "Introduite à 83 $, au-dessus de la fourchette prévue, l'action a ouvert à 111,50 $ (+34 %) avant de retomber vers +16 % en milieu de séance. C'est la plus grosse introduction en Bourse de l'histoire (environ 81 milliards levés). Alphabet +1,2 %, Microsoft +0,7 %.",
+   "tickers": [
+    "GOOGL",
+    "MSFT"
+   ],
+   "etfs": [
+    "nasdaq",
+    "global"
+   ],
+   "source": "CNN, Fox News, Benzinga, stockanalysis (19 nov.)"
+  },
+  {
+   "id": "panw",
+   "sens": "up",
+   "titre": "Palo Alto relève ses objectifs",
+   "texte": "Chiffre d'affaires trimestriel de 3,44 milliards de dollars (+39 %, 3,31 attendus) et prévision annuelle relevée à 14,5 milliards. Palo Alto Networks +6,6 %, CrowdStrike +5,2 %.",
+   "tickers": [
+    "PANW",
+    "CRWD"
+   ],
+   "etfs": [
+    "nasdaq",
+    "global"
+   ],
+   "source": "CNBC, Motley Fool, stockanalysis (19 nov.)"
+  },
+  {
+   "id": "amd",
    "sens": "down",
-   "titre": "Nvidia bat les attentes, l'action recule",
-   "texte": "Chiffre d'affaires trimestriel de 115,8 milliards de dollars (environ 108,7 attendus) et prévision de 130 milliards pour le trimestre en cours. L'action a gagné jusqu'à 4,8 % après la clôture d'hier, puis s'est retournée : −1,7 % en séance. Selon la presse, le conseil ne rappellera pas Jensen Huang et la SEC enquêterait sur le groupe.",
+   "titre": "AMD chute après une attaque d'un vendeur à découvert",
+   "texte": "AMD perd 6,9 % après que Hunterbrook a révélé parier contre l'action, en invoquant les risques liés aux exportations vers la Chine. Intel gagne 4,3 %, sans cause trouvée.",
    "tickers": [
-    "NVDA"
-   ],
-   "etfs": [
-    "nasdaq",
-    "global"
-   ],
-   "source": "Kiplinger, Yahoo Finance, BFM Bourse (18 nov.)"
-  },
-  {
-   "id": "securite",
-   "sens": "up",
-   "titre": "La cybersécurité rebondit avant Palo Alto",
-   "texte": "CrowdStrike +8 % et Palo Alto Networks +7,6 %, sans cause trouvée, à quelques heures des résultats de Palo Alto ce soir après la clôture.",
-   "tickers": [
-    "CRWD",
-    "PANW"
-   ],
-   "etfs": [
-    "nasdaq",
-    "global"
-   ],
-   "source": "Yahoo Finance, stockanalysis (18 nov.)"
-  },
-  {
-   "id": "hausses",
-   "sens": "up",
-   "titre": "Amazon et les puces progressent",
-   "texte": "Amazon +3,3 %, AMD +3,2 %, Broadcom +3,1 %, Samsung +2,3 % à Séoul et ASML +1,9 % à Amsterdam. Aucune cause propre n'a été trouvée.",
-   "tickers": [
-    "AMZN",
     "AMD",
-    "AVGO",
-    "SMSN",
-    "ASML"
+    "INTC"
    ],
    "etfs": [
     "nasdaq",
-    "global",
-    "europe"
+    "global"
    ],
-   "source": "Yahoo Finance, Boursorama, stockanalysis (18 nov.)"
+   "source": "StockTitan, CNBC, stockanalysis (19 nov.)"
   },
   {
    "id": "europe",
    "sens": "down",
-   "titre": "L'Europe efface ses gains du matin",
-   "texte": "Euro Stoxx 50 −0,9 %, CAC 40 −0,85 %, DAX −1,1 %, plombés par la chute des métaux (cuivre −5,8 %). Dans ton ETF Europe : SAP −3,8 %, TotalEnergies −2,7 %, Shell −2,1 %, HSBC −2,1 %, sans cause propre trouvée.",
+   "titre": "L'Europe recule, Novartis déçoit",
+   "texte": "DAX −0,9 %, CAC 40 −0,8 %. Novartis −3,2 % après avoir abaissé son objectif de croissance des ventes à 5 % par an jusqu'en 2031. SAP −3,6 % et AstraZeneca −2,5 % sans cause trouvée ; Nestlé −1,8 % avec les valeurs de consommation.",
    "tickers": [
+    "NOVN",
     "SAP",
-    "TTE",
-    "SHEL",
-    "HSBA"
+    "AZN",
+    "NESN"
    ],
    "etfs": [
     "europe",
     "global"
    ],
-   "source": "Boursorama, Investing.com, stockanalysis (18 nov.)"
+   "source": "Reuters, investingLive, finanzen.ch, stockanalysis (19 nov.)"
   },
   {
    "id": "fed",
    "sens": "down",
-   "titre": "La Fed prépare une hausse en décembre",
-   "texte": "Christopher Waller plaide pour une hausse de 0,5 point en décembre, déjà presque entièrement anticipée. Le compte rendu de la dernière réunion paraît ce soir. Le pétrole recule à son plus bas depuis fin août (Brent vers 91,5 $) et Exxon perd 3,2 %. Anthropic entre en Bourse demain sur le Nasdaq.",
+   "titre": "La Fed se prépare à monter ses taux",
+   "texte": "Le compte rendu de la dernière réunion montre que presque tous les responsables attendent de nouvelles hausses ; une hausse en décembre est entièrement anticipée. Les inscriptions au chômage montent à 203 000 (196 000 attendues). Walmart (−0,4 %) bat les attentes mais garde une prévision de ventes jugée prudente.",
    "tickers": [
-    "XOM"
+    "WMT"
    ],
    "etfs": [
+    "nasdaq",
     "global"
    ],
-   "source": "Yahoo Finance, Boursorama, Reuters (18 nov.)"
+   "source": "StockAnalysis, Quartz, 1trader (18-19 nov.)"
   }
  ],
  "agenda": [
-  {
-   "date": "2026-11-18",
-   "type": "resultats",
-   "titre": "Palo Alto Networks",
-   "texte": "Cybersécurité : croissance des abonnements et effet des récentes failles informatiques.",
-   "tickers": [
-    "PANW"
-   ],
-   "etfs": [
-    "nasdaq"
-   ]
-  },
   {
    "date": "2026-11-19",
    "type": "resultats",
@@ -1756,7 +1742,11 @@
    ],
    [
     "2026-11-18",
-    4.98525
+    4.96625
+   ],
+   [
+    "2026-11-19",
+    4.9225
    ]
   ],
   "nasdaq": [
@@ -2006,7 +1996,11 @@
    ],
    [
     "2026-11-18",
-    99.42
+    99.04
+   ],
+   [
+    "2026-11-19",
+    98.685
    ]
   ],
   "europe": [
@@ -2256,7 +2250,11 @@
    ],
    [
     "2026-11-18",
-    39.9825
+    39.87
+   ],
+   [
+    "2026-11-19",
+    39.425
    ]
   ],
   "cac": [
@@ -2506,7 +2504,11 @@
    ],
    [
     "2026-11-18",
-    82.88
+    82.65
+   ],
+   [
+    "2026-11-19",
+    81.84
    ]
   ],
   "sp500": [
@@ -2756,7 +2758,11 @@
    ],
    [
     "2026-11-18",
-    58.9
+    58.69
+   ],
+   [
+    "2026-11-19",
+    58.25
    ]
   ]
  },

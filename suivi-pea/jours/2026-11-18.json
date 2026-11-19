@@ -2,7 +2,7 @@
  "date": "2026-11-18",
  "label": "mercredi 18 novembre 2026",
  "updatedAt": "2026-11-18T17:30:29Z",
- "resume": "Nvidia dépasse les attentes mais son action recule en séance ; Amazon, AMD et Broadcom soutiennent le Nasdaq tandis que l'Europe baisse. Nasdaq 100 +0,8 % en euros, Monde +0,1 %, Europe −0,7 %.",
+ "resume": "Nvidia dépasse les attentes mais son action recule en séance ; Amazon, AMD et Broadcom soutiennent le Nasdaq tandis que l'Europe baisse. Nasdaq 100 +0,5 % en euros, Monde −0,3 %, Europe −1,0 %.",
  "etfs": [
   {
    "id": "global",
@@ -10,7 +10,7 @@
    "name": "PEA Global (MSCI ACWI)",
    "proxy": "ACWI",
    "proxyNote": "Variation et courbe : cours réel en euros sur LS Exchange, la bourse utilisée par Trade Republic. Détail par entreprise : via l'ETF ACWI (même indice, coté en dollars).",
-   "day": 0.08,
+   "day": -0.31,
    "holdingsDate": "2026-11-13",
    "total": "≈ 2 500 entreprises",
    "holdings": [
@@ -180,9 +180,9 @@
     "ticker": "GPEA",
     "lsId": 4996087,
     "source": "LS Exchange (dernier cours de la journée, comme Trade Republic)",
-    "close": 4.98525,
+    "close": 4.96625,
     "prev": 4.9815,
-    "day": 0.08,
+    "day": -0.31,
     "date": "2026-11-18"
    }
   },
@@ -192,7 +192,7 @@
    "name": "PEA Nasdaq 100",
    "proxy": "QQQ",
    "proxyNote": "Variation et courbe : cours réel en euros sur LS Exchange, la bourse utilisée par Trade Republic. Détail par entreprise : via l'ETF QQQ (même indice, coté en dollars).",
-   "day": 0.85,
+   "day": 0.46,
    "holdingsDate": "2026-11-13",
    "total": "100 entreprises",
    "holdings": [
@@ -402,9 +402,9 @@
     "ticker": "PUST",
     "lsId": 1371888,
     "source": "LS Exchange (dernier cours de la journée, comme Trade Republic)",
-    "close": 99.42,
+    "close": 99.04,
     "prev": 98.585,
-    "day": 0.85,
+    "day": 0.46,
     "date": "2026-11-18"
    }
   },
@@ -414,7 +414,7 @@
    "name": "PEA MSCI Europe",
    "proxy": "IEUR",
    "proxyNote": "Variation et courbe : cours réel en euros sur LS Exchange, la bourse utilisée par Trade Republic. Détail par entreprise : via l'ETF IEUR (actions européennes, coté en dollars).",
-   "day": -0.74,
+   "day": -1.02,
    "holdingsDate": "2026-11-13",
    "total": "≈ 400 entreprises",
    "holdings": [
@@ -568,9 +568,9 @@
     "ticker": "PCEU",
     "lsId": 1371936,
     "source": "LS Exchange (dernier cours de la journée, comme Trade Republic)",
-    "close": 39.9825,
+    "close": 39.87,
     "prev": 40.28,
-    "day": -0.74,
+    "day": -1.02,
     "date": "2026-11-18"
    }
   }
@@ -775,6 +775,5 @@
    "lsId": 1371891,
    "note": "ETF S&P 500 éligible PEA, coté en euros sur LS Exchange (inclut l'effet euro/dollar)."
   }
- ],
- "enCours": "Mise à jour à 18h30 : Wall Street est encore ouvert (jusqu'à 22h) et LS Exchange cote jusqu'à 23h, les chiffres peuvent encore bouger."
+ ]
 }
