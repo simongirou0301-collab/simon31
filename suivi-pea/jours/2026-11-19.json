@@ -2,7 +2,7 @@
  "date": "2026-11-19",
  "label": "jeudi 19 novembre 2026",
  "updatedAt": "2026-11-19T17:30:05Z",
- "resume": "Anthropic s'envole pour son premier jour en Bourse mais l'élan retombe ; AMD chute de près de 7 % et l'Europe recule. Monde −0,9 % en euros, Nasdaq 100 −0,4 %, Europe −1,1 %.",
+ "resume": "Anthropic s'envole pour son premier jour en Bourse mais l'élan retombe ; AMD chute de près de 7 % et l'Europe recule. Monde −2,2 % en euros, Nasdaq 100 −2,5 %, Europe −1,7 %.",
  "etfs": [
   {
    "id": "global",
@@ -10,7 +10,7 @@
    "name": "PEA Global (MSCI ACWI)",
    "proxy": "ACWI",
    "proxyNote": "Variation et courbe : cours réel en euros sur LS Exchange, la bourse utilisée par Trade Republic. Détail par entreprise : via l'ETF ACWI (même indice, coté en dollars).",
-   "day": -0.88,
+   "day": -2.24,
    "holdingsDate": "2026-11-13",
    "total": "≈ 2 500 entreprises",
    "holdings": [
@@ -180,9 +180,9 @@
     "ticker": "GPEA",
     "lsId": 4996087,
     "source": "LS Exchange (dernier cours de la journée, comme Trade Republic)",
-    "close": 4.9225,
+    "close": 4.855,
     "prev": 4.96625,
-    "day": -0.88,
+    "day": -2.24,
     "date": "2026-11-19"
    }
   },
@@ -192,7 +192,7 @@
    "name": "PEA Nasdaq 100",
    "proxy": "QQQ",
    "proxyNote": "Variation et courbe : cours réel en euros sur LS Exchange, la bourse utilisée par Trade Republic. Détail par entreprise : via l'ETF QQQ (même indice, coté en dollars).",
-   "day": -0.36,
+   "day": -2.47,
    "holdingsDate": "2026-11-13",
    "total": "100 entreprises",
    "holdings": [
@@ -402,9 +402,9 @@
     "ticker": "PUST",
     "lsId": 1371888,
     "source": "LS Exchange (dernier cours de la journée, comme Trade Republic)",
-    "close": 98.685,
+    "close": 96.595,
     "prev": 99.04,
-    "day": -0.36,
+    "day": -2.47,
     "date": "2026-11-19"
    }
   },
@@ -414,7 +414,7 @@
    "name": "PEA MSCI Europe",
    "proxy": "IEUR",
    "proxyNote": "Variation et courbe : cours réel en euros sur LS Exchange, la bourse utilisée par Trade Republic. Détail par entreprise : via l'ETF IEUR (actions européennes, coté en dollars).",
-   "day": -1.12,
+   "day": -1.66,
    "holdingsDate": "2026-11-13",
    "total": "≈ 400 entreprises",
    "holdings": [
@@ -568,9 +568,9 @@
     "ticker": "PCEU",
     "lsId": 1371936,
     "source": "LS Exchange (dernier cours de la journée, comme Trade Republic)",
-    "close": 39.425,
+    "close": 39.2075,
     "prev": 39.87,
-    "day": -1.12,
+    "day": -1.66,
     "date": "2026-11-19"
    }
   }
@@ -761,6 +761,5 @@
    "lsId": 1371891,
    "note": "ETF S&P 500 éligible PEA, coté en euros sur LS Exchange (inclut l'effet euro/dollar)."
   }
- ],
- "enCours": "Mise à jour à 18h30 : Wall Street est encore ouvert (jusqu'à 22h) et LS Exchange cote jusqu'à 23h, les chiffres peuvent encore bouger."
+ ]
 }
