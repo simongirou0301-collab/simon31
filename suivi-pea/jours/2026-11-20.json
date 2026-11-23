@@ -2,7 +2,7 @@
  "date": "2026-11-20",
  "label": "vendredi 20 novembre 2026",
  "updatedAt": "2026-11-20T17:31:59Z",
- "resume": "Déroute des puces dans le monde : Micron, AMD et Broadcom perdent plus de 11 %, Nvidia 7 % et ASML 9 %. Nasdaq 100 −3,5 % en euros, Monde −2,0 %, Europe −1,5 %.",
+ "resume": "Déroute des puces dans le monde : Micron, AMD et Broadcom perdent plus de 11 %, Nvidia 7 % et ASML 9 %. Nasdaq 100 −4,6 % en euros, Monde −2,9 %, Europe −2,1 %.",
  "etfs": [
   {
    "id": "global",
@@ -10,7 +10,7 @@
    "name": "PEA Global (MSCI ACWI)",
    "proxy": "ACWI",
    "proxyNote": "Variation et courbe : cours réel en euros sur LS Exchange, la bourse utilisée par Trade Republic. Détail par entreprise : via l'ETF ACWI (même indice, coté en dollars).",
-   "day": -2.03,
+   "day": -2.9,
    "holdingsDate": "2026-11-13",
    "total": "≈ 2 500 entreprises",
    "holdings": [
@@ -180,9 +180,9 @@
     "ticker": "GPEA",
     "lsId": 4996087,
     "source": "LS Exchange (dernier cours de la journée, comme Trade Republic)",
-    "close": 4.7565,
+    "close": 4.71425,
     "prev": 4.855,
-    "day": -2.03,
+    "day": -2.9,
     "date": "2026-11-20"
    }
   },
@@ -192,7 +192,7 @@
    "name": "PEA Nasdaq 100",
    "proxy": "QQQ",
    "proxyNote": "Variation et courbe : cours réel en euros sur LS Exchange, la bourse utilisée par Trade Republic. Détail par entreprise : via l'ETF QQQ (même indice, coté en dollars).",
-   "day": -3.52,
+   "day": -4.62,
    "holdingsDate": "2026-11-13",
    "total": "100 entreprises",
    "holdings": [
@@ -402,9 +402,9 @@
     "ticker": "PUST",
     "lsId": 1371888,
     "source": "LS Exchange (dernier cours de la journée, comme Trade Republic)",
-    "close": 93.195,
+    "close": 92.135,
     "prev": 96.595,
-    "day": -3.52,
+    "day": -4.62,
     "date": "2026-11-20"
    }
   },
@@ -414,7 +414,7 @@
    "name": "PEA MSCI Europe",
    "proxy": "IEUR",
    "proxyNote": "Variation et courbe : cours réel en euros sur LS Exchange, la bourse utilisée par Trade Republic. Détail par entreprise : via l'ETF IEUR (actions européennes, coté en dollars).",
-   "day": -1.53,
+   "day": -2.09,
    "holdingsDate": "2026-11-13",
    "total": "≈ 400 entreprises",
    "holdings": [
@@ -568,9 +568,9 @@
     "ticker": "PCEU",
     "lsId": 1371936,
     "source": "LS Exchange (dernier cours de la journée, comme Trade Republic)",
-    "close": 38.6075,
+    "close": 38.3875,
     "prev": 39.2075,
-    "day": -1.53,
+    "day": -2.09,
     "date": "2026-11-20"
    }
   }
@@ -732,16 +732,16 @@
   "du": "2026-11-16",
   "au": "2026-11-20",
   "etfs": {
-   "global": -6.87,
-   "nasdaq": -8.04,
-   "europe": -6.27
+   "global": -7.7,
+   "nasdaq": -9.08,
+   "europe": -6.8
   },
   "lignes": [
-   "Une semaine très dure : Nasdaq 100 −8,0 %, Monde −6,9 %, Europe −6,3 % (cours LS en euros, clôture du vendredi au vendredi, chiffres du jour provisoires).",
+   "Une semaine très dure : Nasdaq 100 −9,1 %, Monde −7,7 %, Europe −6,8 % (cours LS en euros, clôture du vendredi à clôture du vendredi).",
    "Lundi, Washington restreint l'accès à distance aux puces américaines avancées : Intel, Micron et AMD perdent 5 à 7 %.",
    "Mardi, recul avant Nvidia et un responsable de la Fed évoque plusieurs hausses de taux ; mercredi, Nvidia bat les attentes mais son action recule.",
    "Jeudi, Anthropic réussit la plus grosse entrée en Bourse de l'histoire, mais l'élan retombe vite et AMD chute après l'attaque d'un vendeur à découvert.",
-   "Vendredi, déroute des puces (Micron, AMD et Broadcom −11 % ou plus) et le Nasdaq efface ses gains de l'année. À suivre : CrowdStrike le 1/12 et la Fed le 9/12."
+   "Vendredi, déroute des puces (Micron, AMD et Broadcom −11 % ou plus) et le Nasdaq efface ses gains de l'année. À suivre : la Fed le 9/12."
   ],
   "source": "Reuters, Yahoo Finance, CNBC, Trading Economics, LS Exchange"
  },
@@ -760,6 +760,5 @@
    "lsId": 1371891,
    "note": "ETF S&P 500 éligible PEA, coté en euros sur LS Exchange (inclut l'effet euro/dollar)."
   }
- ],
- "enCours": "Mise à jour à 18h31 : Wall Street est encore ouvert (jusqu'à 22h) et LS Exchange cote jusqu'à 23h, les chiffres peuvent encore bouger."
+ ]
 }
