@@ -2,7 +2,7 @@
  "date": "2026-11-24",
  "label": "mardi 24 novembre 2026",
  "updatedAt": "2026-11-24T17:30:37Z",
- "resume": "Les puces rechutent après le rebond d'hier : Nvidia perd 7 % face aux critiques sur le retour de Jensen Huang, Micron et AMD environ 10 %. Les valeurs défensives montent. Nasdaq 100 −2,5 % en euros, Monde −1,5 %, Europe −0,1 %.",
+ "resume": "Les puces rechutent après le rebond d'hier : Nvidia perd près de 6 % face aux critiques sur le retour de Jensen Huang, Micron et AMD environ 10 %. Les valeurs défensives montent. Nasdaq 100 −2,5 % en euros, Monde −1,5 %, Europe −0,1 %.",
  "etfs": [
   {
    "id": "global",
@@ -580,7 +580,7 @@
    "id": "nvidia",
    "sens": "down",
    "titre": "Nvidia rechute",
-   "texte": "Nvidia perd 7,2 % au lendemain de son bond de 31,5 %. Des élus des deux partis critiquent le retour de Jensen Huang, obtenu sous la pression de Donald Trump ; les enquêtes du FBI, du ministère de la Justice et de la SEC se poursuivent, et Jensen Huang doit témoigner devant le Sénat le 3 décembre.",
+   "texte": "Nvidia perd 5,9 % au lendemain de son bond de 31,5 %. Des élus des deux partis critiquent le retour de Jensen Huang, obtenu sous la pression de Donald Trump ; les enquêtes du FBI, du ministère de la Justice et de la SEC se poursuivent, et Jensen Huang doit témoigner devant le Sénat le 3 décembre.",
    "tickers": [
     "NVDA"
    ],
