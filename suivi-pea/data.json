@@ -1,8 +1,8 @@
 {
- "date": "2026-11-25",
- "label": "mercredi 25 novembre 2026",
- "updatedAt": "2026-11-25T17:31:12Z",
- "resume": "Nouvelle journée rouge : une inflation américaine plus forte que prévu et les doutes sur l'IA font encore chuter les puces (Nvidia −7 %, Micron −10 %). Nasdaq 100 −2,9 % en euros, Monde −1,4 %, Europe −1,0 %.",
+ "date": "2026-11-26",
+ "label": "jeudi 26 novembre 2026",
+ "updatedAt": "2026-11-26T17:29:06Z",
+ "resume": "Wall Street fermée pour Thanksgiving ; l'Europe rebondit nettement, soulagée par le calendrier des droits de douane américains. Nasdaq 100 +1,0 % en euros, Monde +0,5 %, Europe −0,2 % (cours LS : l'ETF Europe avait déjà monté hier soir sur LS, après la clôture des Bourses européennes).",
  "etfs": [
   {
    "id": "global",
@@ -10,7 +10,7 @@
    "name": "PEA Global (MSCI ACWI)",
    "proxy": "ACWI",
    "proxyNote": "Variation et courbe : cours réel en euros sur LS Exchange, la bourse utilisée par Trade Republic. Détail par entreprise : via l'ETF ACWI (même indice, coté en dollars).",
-   "day": -1.37,
+   "day": 0.51,
    "history": [
     [
      "2026-10-15",
@@ -130,7 +130,7 @@
     ],
     [
      "2026-11-25",
-     146.44
+     148.0
     ]
    ],
    "holdingsDate": "2026-11-20",
@@ -140,7 +140,7 @@
      "s": "AAPL",
      "n": "Apple",
      "w": 5.42,
-     "c": -0.64,
+     "c": null,
      "sec": "Tech",
      "pays": "États-Unis"
     },
@@ -148,7 +148,7 @@
      "s": "MSFT",
      "n": "Microsoft",
      "w": 3.68,
-     "c": -2.15,
+     "c": null,
      "sec": "Tech",
      "pays": "États-Unis"
     },
@@ -156,7 +156,7 @@
      "s": "NVDA",
      "n": "Nvidia",
      "w": 3.11,
-     "c": -7.48,
+     "c": null,
      "sec": "Tech",
      "pays": "États-Unis"
     },
@@ -164,7 +164,7 @@
      "s": "AMZN",
      "n": "Amazon",
      "w": 2.57,
-     "c": -3.76,
+     "c": null,
      "sec": "Commerce",
      "pays": "États-Unis"
     },
@@ -172,7 +172,7 @@
      "s": "GOOGL",
      "n": "Alphabet A",
      "w": 1.68,
-     "c": -3.53,
+     "c": null,
      "sec": "Communication",
      "pays": "États-Unis"
     },
@@ -188,7 +188,7 @@
      "s": "AVGO",
      "n": "Broadcom",
      "w": 1.48,
-     "c": -4.75,
+     "c": null,
      "sec": "Tech",
      "pays": "États-Unis"
     },
@@ -196,7 +196,7 @@
      "s": "GOOG",
      "n": "Alphabet C",
      "w": 1.33,
-     "c": -3.4,
+     "c": null,
      "sec": "Communication",
      "pays": "États-Unis"
     },
@@ -204,7 +204,7 @@
      "s": "META",
      "n": "Meta",
      "w": 1.33,
-     "c": 0.83,
+     "c": null,
      "sec": "Communication",
      "pays": "États-Unis"
     },
@@ -212,7 +212,7 @@
      "s": "LLY",
      "n": "Eli Lilly",
      "w": 1.16,
-     "c": -1.4,
+     "c": null,
      "sec": "Santé",
      "pays": "États-Unis"
     },
@@ -220,7 +220,7 @@
      "s": "TSLA",
      "n": "Tesla",
      "w": 1.07,
-     "c": -4.71,
+     "c": null,
      "sec": "Auto",
      "pays": "États-Unis"
     },
@@ -228,7 +228,7 @@
      "s": "JPM",
      "n": "JPMorgan",
      "w": 0.89,
-     "c": -0.92,
+     "c": null,
      "sec": "Finance",
      "pays": "États-Unis"
     },
@@ -236,7 +236,7 @@
      "s": "BRK.B",
      "n": "Berkshire Hathaway",
      "w": 0.87,
-     "c": 0.13,
+     "c": null,
      "sec": "Finance",
      "pays": "États-Unis"
     },
@@ -244,7 +244,7 @@
      "s": "AMD",
      "n": "AMD",
      "w": 0.75,
-     "c": -6.97,
+     "c": null,
      "sec": "Tech",
      "pays": "États-Unis"
     },
@@ -252,7 +252,7 @@
      "s": "MU",
      "n": "Micron",
      "w": 0.72,
-     "c": -10.04,
+     "c": null,
      "sec": "Tech",
      "pays": "États-Unis"
     },
@@ -260,7 +260,7 @@
      "s": "V",
      "n": "Visa",
      "w": 0.72,
-     "c": 0.99,
+     "c": null,
      "sec": "Finance",
      "pays": "États-Unis"
     },
@@ -268,7 +268,7 @@
      "s": "XOM",
      "n": "ExxonMobil",
      "w": 0.71,
-     "c": 0.39,
+     "c": null,
      "sec": "Énergie",
      "pays": "États-Unis"
     },
@@ -276,7 +276,7 @@
      "s": "JNJ",
      "n": "Johnson & Johnson",
      "w": 0.7,
-     "c": -0.59,
+     "c": null,
      "sec": "Santé",
      "pays": "États-Unis"
     },
@@ -284,7 +284,7 @@
      "s": "SMSN",
      "n": "Samsung",
      "w": 0.69,
-     "c": -9.87,
+     "c": 0.35,
      "sec": "Tech",
      "pays": "Corée du Sud"
     },
@@ -292,7 +292,7 @@
      "s": "WMT",
      "n": "Walmart",
      "w": 0.6,
-     "c": -0.29,
+     "c": null,
      "sec": "Commerce",
      "pays": "États-Unis"
     }
@@ -302,15 +302,11 @@
     "ticker": "GPEA",
     "lsId": 4996087,
     "source": "LS Exchange (dernier cours de la journée, comme Trade Republic)",
-    "close": 4.81675,
-    "prev": 4.8835,
-    "day": -1.37,
-    "date": "2026-11-25",
+    "close": 4.904,
+    "prev": 4.879,
+    "day": 0.51,
+    "date": "2026-11-26",
     "history": [
-     [
-      "2026-10-15",
-      5.1395
-     ],
      [
       "2026-10-16",
       5.079
@@ -425,7 +421,11 @@
      ],
      [
       "2026-11-25",
-      4.81675
+      4.879
+     ],
+     [
+      "2026-11-26",
+      4.904
      ]
     ]
    }
@@ -436,7 +436,7 @@
    "name": "PEA Nasdaq 100",
    "proxy": "QQQ",
    "proxyNote": "Variation et courbe : cours réel en euros sur LS Exchange, la bourse utilisée par Trade Republic. Détail par entreprise : via l'ETF QQQ (même indice, coté en dollars).",
-   "day": -2.9,
+   "day": 0.98,
    "history": [
     [
      "2026-10-15",
@@ -556,7 +556,7 @@
     ],
     [
      "2026-11-25",
-     620.04
+     633.93
     ]
    ],
    "holdingsDate": "2026-11-20",
@@ -566,7 +566,7 @@
      "s": "AAPL",
      "n": "Apple",
      "w": 9.2,
-     "c": -0.64,
+     "c": null,
      "sec": "Tech",
      "pays": "États-Unis"
     },
@@ -574,7 +574,7 @@
      "s": "MSFT",
      "n": "Microsoft",
      "w": 6.62,
-     "c": -2.15,
+     "c": null,
      "sec": "Tech",
      "pays": "États-Unis"
     },
@@ -582,7 +582,7 @@
      "s": "NVDA",
      "n": "Nvidia",
      "w": 5.57,
-     "c": -7.48,
+     "c": null,
      "sec": "Tech",
      "pays": "États-Unis"
     },
@@ -590,7 +590,7 @@
      "s": "AMZN",
      "n": "Amazon",
      "w": 4.9,
-     "c": -3.76,
+     "c": null,
      "sec": "Commerce",
      "pays": "États-Unis"
     },
@@ -598,7 +598,7 @@
      "s": "AMD",
      "n": "AMD",
      "w": 3.52,
-     "c": -6.97,
+     "c": null,
      "sec": "Tech",
      "pays": "États-Unis"
     },
@@ -606,7 +606,7 @@
      "s": "MU",
      "n": "Micron",
      "w": 3.41,
-     "c": -10.04,
+     "c": null,
      "sec": "Tech",
      "pays": "États-Unis"
     },
@@ -614,7 +614,7 @@
      "s": "TSLA",
      "n": "Tesla",
      "w": 3.34,
-     "c": -4.71,
+     "c": null,
      "sec": "Auto",
      "pays": "États-Unis"
     },
@@ -622,7 +622,7 @@
      "s": "WMT",
      "n": "Walmart",
      "w": 3.16,
-     "c": -0.29,
+     "c": null,
      "sec": "Commerce",
      "pays": "États-Unis"
     },
@@ -630,7 +630,7 @@
      "s": "META",
      "n": "Meta",
      "w": 3.07,
-     "c": 0.83,
+     "c": null,
      "sec": "Communication",
      "pays": "États-Unis"
     },
@@ -638,7 +638,7 @@
      "s": "GOOGL",
      "n": "Alphabet A",
      "w": 2.86,
-     "c": -3.53,
+     "c": null,
      "sec": "Communication",
      "pays": "États-Unis"
     },
@@ -654,7 +654,7 @@
      "s": "GOOG",
      "n": "Alphabet C",
      "w": 2.68,
-     "c": -3.4,
+     "c": null,
      "sec": "Communication",
      "pays": "États-Unis"
     },
@@ -662,7 +662,7 @@
      "s": "AVGO",
      "n": "Broadcom",
      "w": 2.66,
-     "c": -4.75,
+     "c": null,
      "sec": "Tech",
      "pays": "États-Unis"
     },
@@ -670,7 +670,7 @@
      "s": "COST",
      "n": "Costco",
      "w": 2.48,
-     "c": 0.2,
+     "c": null,
      "sec": "Commerce",
      "pays": "États-Unis"
     },
@@ -678,7 +678,7 @@
      "s": "CSCO",
      "n": "Cisco",
      "w": 1.81,
-     "c": -1.43,
+     "c": null,
      "sec": "Tech",
      "pays": "États-Unis"
     },
@@ -686,7 +686,7 @@
      "s": "PLTR",
      "n": "Palantir",
      "w": 1.68,
-     "c": -1.66,
+     "c": null,
      "sec": "Tech",
      "pays": "États-Unis"
     },
@@ -694,7 +694,7 @@
      "s": "PANW",
      "n": "Palo Alto Networks",
      "w": 1.42,
-     "c": -2.58,
+     "c": null,
      "sec": "Tech",
      "pays": "États-Unis"
     },
@@ -702,7 +702,7 @@
      "s": "INTC",
      "n": "Intel",
      "w": 1.37,
-     "c": -6.43,
+     "c": null,
      "sec": "Tech",
      "pays": "États-Unis"
     },
@@ -710,7 +710,7 @@
      "s": "TXN",
      "n": "Texas Instruments",
      "w": 1.22,
-     "c": 1.34,
+     "c": null,
      "sec": "Tech",
      "pays": "États-Unis"
     },
@@ -718,7 +718,7 @@
      "s": "AMAT",
      "n": "Applied Materials",
      "w": 1.22,
-     "c": -7.74,
+     "c": null,
      "sec": "Tech",
      "pays": "États-Unis"
     },
@@ -726,7 +726,7 @@
      "s": "NFLX",
      "n": "Netflix",
      "w": 1.2,
-     "c": -0.7,
+     "c": null,
      "sec": "Communication",
      "pays": "États-Unis"
     },
@@ -734,7 +734,7 @@
      "s": "AMGN",
      "n": "Amgen",
      "w": 1.2,
-     "c": -1.0,
+     "c": null,
      "sec": "Santé",
      "pays": "États-Unis"
     },
@@ -742,7 +742,7 @@
      "s": "CRWD",
      "n": "CrowdStrike",
      "w": 1.19,
-     "c": -5.33,
+     "c": null,
      "sec": "Tech",
      "pays": "États-Unis"
     },
@@ -750,7 +750,7 @@
      "s": "LIN",
      "n": "Linde",
      "w": 1.18,
-     "c": 1.08,
+     "c": null,
      "sec": "Industrie",
      "pays": "Royaume-Uni"
     },
@@ -758,7 +758,7 @@
      "s": "LRCX",
      "n": "Lam Research",
      "w": 1.16,
-     "c": -10.27,
+     "c": null,
      "sec": "Tech",
      "pays": "États-Unis"
     }
@@ -768,15 +768,11 @@
     "ticker": "PUST",
     "lsId": 1371888,
     "source": "LS Exchange (dernier cours de la journée, comme Trade Republic)",
-    "close": 92.97,
-    "prev": 95.745,
-    "day": -2.9,
-    "date": "2026-11-25",
+    "close": 95.815,
+    "prev": 94.885,
+    "day": 0.98,
+    "date": "2026-11-26",
     "history": [
-     [
-      "2026-10-15",
-      106.89
-     ],
      [
       "2026-10-16",
       104.26
@@ -891,7 +887,11 @@
      ],
      [
       "2026-11-25",
-      92.97
+      94.885
+     ],
+     [
+      "2026-11-26",
+      95.815
      ]
     ]
    }
@@ -902,7 +902,7 @@
    "name": "PEA MSCI Europe",
    "proxy": "IEUR",
    "proxyNote": "Variation et courbe : cours réel en euros sur LS Exchange, la bourse utilisée par Trade Republic. Détail par entreprise : via l'ETF IEUR (actions européennes, coté en dollars).",
-   "day": -1.01,
+   "day": -0.17,
    "history": [
     [
      "2026-10-15",
@@ -1022,7 +1022,7 @@
     ],
     [
      "2026-11-25",
-     71.44
+     72.09
     ]
    ],
    "holdingsDate": "2026-11-20",
@@ -1032,7 +1032,7 @@
      "s": "ASML",
      "n": "ASML",
      "w": 3.42,
-     "c": -5.79,
+     "c": 3.23,
      "sec": "Tech",
      "pays": "Pays-Bas"
     },
@@ -1040,7 +1040,7 @@
      "s": "ROG",
      "n": "Roche",
      "w": 2.28,
-     "c": -0.94,
+     "c": 0.75,
      "sec": "Santé",
      "pays": "Suisse"
     },
@@ -1048,7 +1048,7 @@
      "s": "NOVN",
      "n": "Novartis",
      "w": 1.91,
-     "c": -0.39,
+     "c": 0.11,
      "sec": "Santé",
      "pays": "Suisse"
     },
@@ -1056,7 +1056,7 @@
      "s": "HSBA",
      "n": "HSBC",
      "w": 1.9,
-     "c": -1.78,
+     "c": 2.32,
      "sec": "Finance",
      "pays": "Royaume-Uni"
     },
@@ -1064,7 +1064,7 @@
      "s": "SHEL",
      "n": "Shell",
      "w": 1.86,
-     "c": 0.1,
+     "c": 1.91,
      "sec": "Énergie",
      "pays": "Royaume-Uni"
     },
@@ -1072,7 +1072,7 @@
      "s": "AZN",
      "n": "AstraZeneca",
      "w": 1.82,
-     "c": -0.04,
+     "c": 0.6,
      "sec": "Santé",
      "pays": "Royaume-Uni"
     },
@@ -1080,7 +1080,7 @@
      "s": "NESN",
      "n": "Nestlé",
      "w": 1.8,
-     "c": 1.01,
+     "c": 0.57,
      "sec": "Conso",
      "pays": "Suisse"
     },
@@ -1088,7 +1088,7 @@
      "s": "SAP",
      "n": "SAP",
      "w": 1.4,
-     "c": -0.14,
+     "c": 2.28,
      "sec": "Tech",
      "pays": "Allemagne"
     },
@@ -1096,7 +1096,7 @@
      "s": "SIE",
      "n": "Siemens",
      "w": 1.39,
-     "c": -3.59,
+     "c": 1.96,
      "sec": "Industrie",
      "pays": "Allemagne"
     },
@@ -1104,7 +1104,7 @@
      "s": "ALV",
      "n": "Allianz",
      "w": 1.29,
-     "c": -0.4,
+     "c": 1.3,
      "sec": "Finance",
      "pays": "Allemagne"
     },
@@ -1112,7 +1112,7 @@
      "s": "TTE",
      "n": "TotalEnergies",
      "w": 1.14,
-     "c": -0.51,
+     "c": 1.4,
      "sec": "Énergie",
      "pays": "France"
     },
@@ -1120,7 +1120,7 @@
      "s": "SAN",
      "n": "Santander",
      "w": 1.11,
-     "c": -3.96,
+     "c": 4.11,
      "sec": "Finance",
      "pays": "Espagne"
     },
@@ -1128,7 +1128,7 @@
      "s": "IBE",
      "n": "Iberdrola",
      "w": 1.06,
-     "c": -0.57,
+     "c": 1.36,
      "sec": "Services publics",
      "pays": "Espagne"
     },
@@ -1136,7 +1136,7 @@
      "s": "RR",
      "n": "Rolls-Royce",
      "w": 0.95,
-     "c": -3.93,
+     "c": 3.45,
      "sec": "Industrie",
      "pays": "Royaume-Uni"
     },
@@ -1144,7 +1144,7 @@
      "s": "ULVR",
      "n": "Unilever",
      "w": 0.94,
-     "c": 2.24,
+     "c": -0.1,
      "sec": "Conso",
      "pays": "Royaume-Uni"
     },
@@ -1152,7 +1152,7 @@
      "s": "UBSG",
      "n": "UBS",
      "w": 0.94,
-     "c": -1.39,
+     "c": 1.98,
      "sec": "Finance",
      "pays": "Suisse"
     },
@@ -1160,7 +1160,7 @@
      "s": "SU",
      "n": "Schneider Electric",
      "w": 0.94,
-     "c": -4.18,
+     "c": 1.11,
      "sec": "Industrie",
      "pays": "France"
     },
@@ -1168,7 +1168,7 @@
      "s": "BBVA",
      "n": "BBVA",
      "w": 0.92,
-     "c": -3.01,
+     "c": 2.73,
      "sec": "Finance",
      "pays": "Espagne"
     }
@@ -1178,15 +1178,11 @@
     "ticker": "PCEU",
     "lsId": 1371936,
     "source": "LS Exchange (dernier cours de la journée, comme Trade Republic)",
-    "close": 39.0775,
-    "prev": 39.475,
-    "day": -1.01,
-    "date": "2026-11-25",
+    "close": 39.515,
+    "prev": 39.5825,
+    "day": -0.17,
+    "date": "2026-11-26",
     "history": [
-     [
-      "2026-10-15",
-      39.675
-     ],
      [
       "2026-10-16",
       39.585
@@ -1301,7 +1297,11 @@
      ],
      [
       "2026-11-25",
-      39.0775
+      39.5825
+     ],
+     [
+      "2026-11-26",
+      39.515
      ]
     ]
    }
@@ -1309,42 +1309,22 @@
  ],
  "news": [
   {
-   "id": "inflation",
-   "sens": "down",
-   "titre": "L'inflation américaine accélère",
-   "texte": "L'indice PCE, suivi de près par la Fed, monte à 3,8 % sur un an en octobre (3,6 % en septembre) ; hors énergie et alimentation, 3,3 %, au plus haut depuis 2023 (3,2 % attendus). La croissance du 3e trimestre est relevée à 4,3 % en rythme annuel. Une hausse des taux de la Fed le 9 décembre est quasi certaine (98 %). Le taux à 10 ans recule toutefois vers 4,83 %, les investisseurs se réfugiant sur les obligations.",
+   "id": "europe",
+   "sens": "up",
+   "titre": "L'Europe rebondit",
+   "texte": "Euro Stoxx 50 +2,1 %, DAX +2,1 %, FTSE 100 +1,8 %, CAC 40 +1,6 %. Les valeurs technologiques repartent et les droits de douane proposés par Washington rassurent : ils ne s'ajouteront pas à ceux de juillet et ne devraient pas s'appliquer avant février ou mars 2027.",
    "tickers": [],
    "etfs": [
-    "global",
-    "nasdaq"
-   ],
-   "source": "Yahoo Finance, AP, CME FedWatch (25 nov.)"
-  },
-  {
-   "id": "puces",
-   "sens": "down",
-   "titre": "Les puces chutent encore",
-   "texte": "Lam Research −10,3 %, Micron −10 %, Applied Materials −7,7 %, Nvidia −7,5 %, AMD −7 %, Intel −6,4 %. Samsung perd 9,9 % à Séoul, les investisseurs étrangers continuant de vendre. Les doutes sur la rentabilité de l'IA reprennent le dessus après le rebond de lundi.",
-   "tickers": [
-    "LRCX",
-    "MU",
-    "AMAT",
-    "NVDA",
-    "AMD",
-    "INTC",
-    "SMSN"
-   ],
-   "etfs": [
-    "nasdaq",
+    "europe",
     "global"
    ],
-   "source": "Yahoo Finance, StockTitan, Invezz, stockanalysis (25 nov.)"
+   "source": "Investing.com, finanzen.net, MarketSpeaker (26 nov.)"
   },
   {
    "id": "asml",
-   "sens": "down",
-   "titre": "ASML recule de près de 6 %",
-   "texte": "ASML perd 5,8 % à Amsterdam. Selon Invezz et Reuters, le gouvernement néerlandais tente d'empêcher l'adoption d'un projet de loi américain qui durcirait les restrictions d'exportation de puces.",
+   "sens": "up",
+   "titre": "ASML reprend 3 %",
+   "texte": "ASML gagne 3,2 % à Amsterdam. Selon Techi, les machines de fabrication de puces sont exclues du projet de droits de douane américains.",
    "tickers": [
     "ASML"
    ],
@@ -1352,44 +1332,52 @@
     "europe",
     "global"
    ],
-   "source": "Invezz, Reuters, stockanalysis (25 nov.)"
+   "source": "Techi, stockanalysis (26 nov.)"
   },
   {
-   "id": "europe",
-   "sens": "down",
-   "titre": "L'Europe baisse, les défensives résistent",
-   "texte": "Euro Stoxx 50 −1,8 %, DAX −1,3 % (au plus bas depuis juillet), CAC 40 −0,75 %. Schneider Electric −4,2 %, Santander −4 %, Rolls-Royce −3,9 %, Siemens −3,6 %, BBVA −3 %, sans cause propre trouvée. Unilever +2,2 % et Nestlé +1 %.",
+   "id": "banques",
+   "sens": "up",
+   "titre": "Banques et défense en tête",
+   "texte": "Santander +4,1 %, Rolls-Royce +3,5 %, BBVA +2,7 %, HSBC +2,3 %, UBS +2 %. Un important contrat de défense britannique (8,7 milliards de livres pour Babcock) soutient l'aéronautique ; pas de cause propre trouvée pour les banques.",
    "tickers": [
-    "SU",
     "SAN",
     "RR",
-    "SIE",
     "BBVA",
-    "ULVR",
-    "NESN"
+    "HSBA",
+    "UBSG"
    ],
    "etfs": [
     "europe",
     "global"
    ],
-   "source": "dpa-AFX, Boursorama, stockanalysis (25 nov.)"
+   "source": "Invezz, finanzen.at, stockanalysis (26 nov.)"
   },
   {
-   "id": "tarifs",
+   "id": "wallst",
    "sens": "down",
-   "titre": "Le Nasdaq 100 proche du marché baissier",
-   "texte": "Selon Yahoo Finance, le Nasdaq 100 se dirige vers une baisse de plus de 20 % depuis son sommet. Tesla −4,7 %, Amazon −3,8 %, Alphabet −3,5 %, CrowdStrike −5,3 %. Washington propose des droits de douane sur 14 économies (jusqu'à 20 % pour l'UE, plafonnés à 15 % en cas d'accord), avec une consultation jusqu'au 5 janvier ; la réaction est limitée. Wall Street est fermée demain pour Thanksgiving.",
+   "titre": "Wall Street a limité la casse hier",
+   "texte": "Mercredi, le S&P 500 a fini en baisse de 0,3 % après avoir perdu jusqu'à 3,2 % ; le Nasdaq 100 (−0,6 %) a évité de justesse le marché baissier et reste 16,6 % sous son record. Nvidia −3,9 % : S&P Global Ratings menace d'abaisser sa note en raison de sa gouvernance. Micron −4,5 %. Wall Street rouvre demain pour une demi-séance.",
    "tickers": [
-    "TSLA",
-    "AMZN",
-    "GOOGL",
-    "CRWD"
+    "NVDA",
+    "MU"
    ],
    "etfs": [
     "nasdaq",
     "global"
    ],
-   "source": "Yahoo Finance, StockTitan, Newsquawk (25 nov.)"
+   "source": "AP, TMoney Daily (25-26 nov.)"
+  },
+  {
+   "id": "bce",
+   "sens": "down",
+   "titre": "La BCE penche pour une hausse",
+   "texte": "Le compte rendu de la réunion d'octobre montre que de nombreux membres de la BCE étaient favorables à une hausse des taux ; les marchés l'anticipent à 90 % pour décembre. Le taux allemand à 10 ans remonte vers 3,25 %.",
+   "tickers": [],
+   "etfs": [
+    "europe",
+    "global"
+   ],
+   "source": "Investing.com, MarketScreener (26 nov.)"
   }
  ],
  "agenda": [
@@ -1756,7 +1744,11 @@
    ],
    [
     "2026-11-25",
-    4.81675
+    4.879
+   ],
+   [
+    "2026-11-26",
+    4.904
    ]
   ],
   "nasdaq": [
@@ -2026,7 +2018,11 @@
    ],
    [
     "2026-11-25",
-    92.97
+    94.885
+   ],
+   [
+    "2026-11-26",
+    95.815
    ]
   ],
   "europe": [
@@ -2296,7 +2292,11 @@
    ],
    [
     "2026-11-25",
-    39.0775
+    39.5825
+   ],
+   [
+    "2026-11-26",
+    39.515
    ]
   ],
   "cac": [
@@ -2566,7 +2566,11 @@
    ],
    [
     "2026-11-25",
-    81.61
+    82.63
+   ],
+   [
+    "2026-11-26",
+    82.42
    ]
   ],
   "sp500": [
@@ -2836,9 +2840,13 @@
    ],
    [
     "2026-11-25",
-    56.71
+    57.5
+   ],
+   [
+    "2026-11-26",
+    57.96
    ]
   ]
  },
- "enCours": "Mise à jour à 18h31 : Wall Street est encore ouvert (jusqu'à 22h) et LS Exchange cote jusqu'à 23h, les chiffres peuvent encore bouger."
+ "enCours": "Mise à jour à 18h29 : Wall Street est fermée aujourd'hui (Thanksgiving) ; LS Exchange cote jusqu'à 23h, les chiffres peuvent encore bouger."
 }
