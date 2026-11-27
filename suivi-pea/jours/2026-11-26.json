@@ -2,7 +2,7 @@
  "date": "2026-11-26",
  "label": "jeudi 26 novembre 2026",
  "updatedAt": "2026-11-26T17:29:06Z",
- "resume": "Wall Street fermée pour Thanksgiving ; l'Europe rebondit nettement, soulagée par le calendrier des droits de douane américains. Nasdaq 100 +1,0 % en euros, Monde +0,5 %, Europe −0,2 % (cours LS : l'ETF Europe avait déjà monté hier soir sur LS, après la clôture des Bourses européennes).",
+ "resume": "Wall Street fermée pour Thanksgiving ; l'Europe rebondit nettement, soulagée par le calendrier des droits de douane américains. Nasdaq 100 +1,1 % en euros, Monde +0,6 %, Europe −0,2 % (cours LS : l'ETF Europe avait déjà monté hier soir sur LS, après la clôture des Bourses européennes).",
  "etfs": [
   {
    "id": "global",
@@ -10,7 +10,7 @@
    "name": "PEA Global (MSCI ACWI)",
    "proxy": "ACWI",
    "proxyNote": "Variation et courbe : cours réel en euros sur LS Exchange, la bourse utilisée par Trade Republic. Détail par entreprise : via l'ETF ACWI (même indice, coté en dollars).",
-   "day": 0.51,
+   "day": 0.63,
    "holdingsDate": "2026-11-20",
    "total": "≈ 2 500 entreprises",
    "holdings": [
@@ -180,9 +180,9 @@
     "ticker": "GPEA",
     "lsId": 4996087,
     "source": "LS Exchange (dernier cours de la journée, comme Trade Republic)",
-    "close": 4.904,
+    "close": 4.9095,
     "prev": 4.879,
-    "day": 0.51,
+    "day": 0.63,
     "date": "2026-11-26"
    }
   },
@@ -192,7 +192,7 @@
    "name": "PEA Nasdaq 100",
    "proxy": "QQQ",
    "proxyNote": "Variation et courbe : cours réel en euros sur LS Exchange, la bourse utilisée par Trade Republic. Détail par entreprise : via l'ETF QQQ (même indice, coté en dollars).",
-   "day": 0.98,
+   "day": 1.15,
    "holdingsDate": "2026-11-20",
    "total": "100 entreprises",
    "holdings": [
@@ -402,9 +402,9 @@
     "ticker": "PUST",
     "lsId": 1371888,
     "source": "LS Exchange (dernier cours de la journée, comme Trade Republic)",
-    "close": 95.815,
+    "close": 95.98,
     "prev": 94.885,
-    "day": 0.98,
+    "day": 1.15,
     "date": "2026-11-26"
    }
   },
@@ -414,7 +414,7 @@
    "name": "PEA MSCI Europe",
    "proxy": "IEUR",
    "proxyNote": "Variation et courbe : cours réel en euros sur LS Exchange, la bourse utilisée par Trade Republic. Détail par entreprise : via l'ETF IEUR (actions européennes, coté en dollars).",
-   "day": -0.17,
+   "day": -0.18,
    "holdingsDate": "2026-11-20",
    "total": "≈ 400 entreprises",
    "holdings": [
@@ -568,9 +568,9 @@
     "ticker": "PCEU",
     "lsId": 1371936,
     "source": "LS Exchange (dernier cours de la journée, comme Trade Republic)",
-    "close": 39.515,
+    "close": 39.51,
     "prev": 39.5825,
-    "day": -0.17,
+    "day": -0.18,
     "date": "2026-11-26"
    }
   }
@@ -743,6 +743,5 @@
    "lsId": 1371891,
    "note": "ETF S&P 500 éligible PEA, coté en euros sur LS Exchange (inclut l'effet euro/dollar)."
   }
- ],
- "enCours": "Mise à jour à 18h29 : Wall Street est fermée aujourd'hui (Thanksgiving) ; LS Exchange cote jusqu'à 23h, les chiffres peuvent encore bouger."
+ ]
 }
